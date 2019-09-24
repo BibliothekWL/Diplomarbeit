@@ -11,27 +11,32 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','PagesController@home');
+Route::get('/contact','PagesController@contact');
+
+
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('auth/logout', 'Auth\AuthController@logout');
+
+Route::resource('books', 'BooksController');
+    /*
+    Route::get('/books', 'BooksController@index');
+
+    Route::post('/books', 'BooksController@store');
+
+    Route::get('/books/create', 'BooksController@create');
+
+    Route::get('books/{books}', 'BooksController@show');
+
+    Route::get('books/{books}/edit', 'BooksController@edit');
+
+    Route::patch('books/{books}', 'BooksController@update');
+
+    Route::delete('books/{books}', 'BooksController@destroy');
+    */
