@@ -20,6 +20,8 @@ class CreateBooksTable extends Migration
             $table->text('medium');
             $table->text('content');
             $table->integer('BNR');
+            $table->tinyInteger('borrowed')->default(0);
+            $table->integer('borrower')->default(0);
             $table->timestamps();
         });
     }
