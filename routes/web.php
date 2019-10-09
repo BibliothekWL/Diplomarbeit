@@ -15,17 +15,16 @@ Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
 
 
-
-Auth::routes();
-
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('auth/logout', 'Auth\AuthController@logout');
 
+//Route::get('auth/logout', 'Auth\AuthController@logout');
+
+Route::patch('/books/{books}/borrow', 'BooksController@addToCart');
 Route::resource('books', 'BooksController');
-    /*
+/*
     Route::get('/books', 'BooksController@index');
 
     Route::post('/books', 'BooksController@store');
@@ -40,3 +39,4 @@ Route::resource('books', 'BooksController');
 
     Route::delete('books/{books}', 'BooksController@destroy');
     */
+
