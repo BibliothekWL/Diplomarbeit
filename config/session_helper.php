@@ -1,7 +1,8 @@
 <?php
 
-if (session_status() == PHP_SESSION_NONE) {
+/*if (session_status() == PHP_SESSION_NONE) {
     session_start();
-}
+    $_SESSION['cart'] = array();
+    $_SESSION['cartWithBooks'] = array();
+}*/
 
-$_SESSION['cart'] = array();

@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 use \App\Book;
 use \App\Author;
-use \App\AuthorsToBooks;
-use \App\UsersToBooks;
-
-//include '../../../config/session_helper.php';
+use Illuminate\Routing\Redirector;
 
 class BooksController extends Controller
 {
     public function index(){
         $books = Book::all();
-
         return view('books.index', compact('books'));
     }
 
@@ -24,81 +21,71 @@ class BooksController extends Controller
 
     }
     public function store(){
-        $book = new Book();
-        $author = new Author();
-
-        $author->firstname = request('firstname');
-        $author->surname = request('surname');
-        $author->save();
-
-        $book->title = request('title');
-        $book->content = request('content');
-        $book->systematik = request('systematik');
-        $book->medium = request('medium');
-        $book->BNR = request('BNR');
-        $book->save();
-
-        $this->storeAuthorsToBooks($author->id,$book->id);
-
-        return $this->index();
+       Book::create(request()->all());
     }
-
-    public function storeAuthorsToBooks($authorID,$bookID){
-        $authorsToBooks = new AuthorsToBooks();
-        $authorsToBooks->author_id = $authorID;
-        $authorsToBooks->book_id = $bookID;
-        $authorsToBooks->save();
-    }
-
 
     public function show(){
+
     }
 
-    public function edit($id){
-        $book = Book::find($id);
+    public function edit(Book $book){
         return view('books.edit',compact('book'));
     }
 
-    public function update($id){
-        $this->updateBook($id, request()->all());
+    /**
+     * adds the option to update a book as an admin user
+     * @param Book $book
+     * @return RedirectResponse|Redirector
+     */
+
+    public function update(Book $book){
+        $book->update(request()->all());
         return(redirect('/books'));
     }
 
-    public function updateBook($id, $request){
-        $book = Book::find($id);
-        $book->title = $request['title'];
-        $book->systematik = $request['systematik'];
-        $book->medium = $request['medium'];
-        $book->content = $request['content'];
-        $book->BNR = $request['BNR'];
-        $book->save();
-        return;
-    }
-
-    public function destroy($id){
-        $book = Book::find($id)->delete();
+    /**
+     * adds the option to delete a book as an admin user
+     * @param Book $book
+     * @return RedirectResponse|Redirector
+     * @throws \Exception
+     */
+    public function destroy(Book $book){
+        $book->delete();
         return(redirect('/books/'));
     }
 
-    public function addToCart($id){
-        $book = Book::find($id);
-        array_push($_SESSION['cart'],$book->id);
-        dd($_SESSION['cart']);
-    }
-    public function borrowBook($id){
+    /**
+     * checks if a book is already borrowed
+     * @param $id
+     * @return bool
+     */
+    public function checkAvailability($id){
         $book = Book::find($id);
         if($book->borrowed == 1){
             dd('this book is already borrowed by someone');
+            return false;
         }
         else{
-            $book->borrowed = 1;
-            $userID = auth()->user()->id;
-            $book->borrower = $userID;
-            $book->save();
-            $usersToBooks = new \UsersToBooks();
-            $usersToBooks->user_id = $userID;
-            $usersToBooks->book_id = $book->id;
-            $usersToBooks->save();
+            dd('this book is not borrowed out right now');
+            return true;
+        }
+    }
+
+    /**
+     * adds a function to borrow the books that are in your shopping cart
+     * @param $books
+     */
+    public function borrowBooks($books){
+        foreach($books as $item){
+            if($this->checkAvailability($item)){
+                $book = Book::find($item);
+                $book->borrowed = 1;
+                $book->borrower = auth()->user()->id;
+                $book->save();
+            }
+            else{
+                dd('this book is not available right now');
+            }
         }
     }
 
@@ -106,10 +93,10 @@ class BooksController extends Controller
      * creates an array filled with book objects from the session variable "cart", which is filled with ids of books
      */
     public function fillCartWithBooks(){
-        $cart = array();
+        $_SESSION['cartWithBooks'] = array();
         foreach($_SESSION['cart'] as $item ){
             $book = Book::find($item);
-            array_push($cart, $book);
+            array_push($_SESSION['cartWithBooks'], $book);
         }
     }
 }
