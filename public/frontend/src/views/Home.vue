@@ -1,8 +1,5 @@
 <template>
-    <span>
-        <home-hero></home-hero>
-        <home-details></home-details>
-    </span>
+    <h1>HomeSite</h1>
 </template>
 
 <script>
