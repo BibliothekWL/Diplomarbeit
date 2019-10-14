@@ -12,11 +12,6 @@ export default new Router({
             component: Home
         },
         {
-            path: '/about',
-            name: 'about',
-            component: () => import('./views/About.vue')
-        },
-        {
             path: '/register',
             name: 'register',
             component: () => import('./views/Register.vue')
@@ -25,6 +20,11 @@ export default new Router({
             path: '/login',
             name: 'login',
             component: () => import('./views/Login.vue')
+        },
+        {
+            path: '/liste',
+            name: 'liste',
+            component: () => import('./views/ListeBuecher.vue')
         }
     ]
 });

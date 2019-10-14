@@ -5,7 +5,7 @@
             <router-link to="/">
                 <v-toolbar-title to="/">{{appTitle}}</v-toolbar-title>
             </router-link>
-            <v-btn text class="hidden-sm-and-down" to="/menu">Menu</v-btn>
+            <v-btn text class="hidden-sm-and-down" to="/liste">Liste</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>
             <v-btn text class="hidden-sm-and-down" to="/register">Register</v-btn>
             <v-btn color="brown lighten-3" class="hidden-sm-and-down" to="/login">Login</v-btn>
@@ -20,7 +20,7 @@
                 appTitle: 'BWL',
                 drawer: false,
                 items: [
-                    {title: 'Menu'},
+                    {title: 'Liste'},
                     {title: 'Profile'},
                     {title: 'Register'},
                     {title: 'Login'}
