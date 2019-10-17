@@ -1,6 +1,6 @@
 <template>
     <span>
-        <v-app-bar app color="brown darken-4" dark>
+        <v-app-bar app color="blue darken-4" dark>
             <v-spacer class="hidden-md-and-up"></v-spacer>
             <router-link to="/">
                 <v-toolbar-title to="/">{{appTitle}}</v-toolbar-title>
@@ -8,7 +8,7 @@
             <v-btn text class="hidden-sm-and-down" to="/liste">Liste</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>
             <v-btn text class="hidden-sm-and-down" to="/register">Register</v-btn>
-            <v-btn color="brown lighten-3" class="hidden-sm-and-down" to="/login">Login</v-btn>
+            <v-btn color="blue" class="hidden-sm-and-down" to="/login">Login</v-btn>
         </v-app-bar>
     </span>
 </template>
