@@ -2,6 +2,9 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
             <v-container>
+                <v-btn class="mx-2; float-right;" fab dark small color="primary">
+                    <v-icon v-on:click="editItem('new')" dark v-on="on">mdi-plus</v-icon>
+                </v-btn>
                 <div v-for="n in liste">
                     <h1>{{n.chartName}}</h1>
                     <div v-for="n1 in n.bpi"

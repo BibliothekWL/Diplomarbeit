@@ -1,14 +1,21 @@
 <template>
     <v-container fluid>
         <v-layout>
-            <h1>Register Page</h1>
+            <input v-model="firstname" placeholder="Vorname">
+            <input v-model="lastname" placeholder="Nachname">
+            <input v-model="id" placeholder="ID">
+            <input v-model="password" placeholder="password">
         </v-layout>
     </v-container>
 </template>
 
 <script>
     export default {
-        name: "Register"
+        name: "Register",
+        firstname: "",
+        lastname: "",
+        id: "",
+        password: ""
     }
 </script>
 
