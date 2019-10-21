@@ -74,10 +74,10 @@
             };
         },
         mounted() {
-            axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
+            axios.get('http://localhost:8000/books/json')
                 .then(response =>
                     (
-                        this.liste = response
+                        console.log(response)
                     )
                 )
         },
