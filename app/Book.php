@@ -11,7 +11,7 @@ class Book extends Model
     }
 
     protected $fillable = [
-        'title', 'systematik', 'medium', 'content', 'BNR'
+        'title', 'systematik', 'medium', 'content', 'BNR', 'author_id'
     ];
 
 }
