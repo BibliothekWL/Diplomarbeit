@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart as Cart;
+use App\Http\Resources\Books as BooksResource;
+use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\CartsController as CartsController;
+
+include 'CartsController.php';
+
 use \App\Book;
 use \App\Author;
+
 use Illuminate\Routing\Redirector;
 
 class BooksController extends Controller
@@ -17,8 +25,8 @@ class BooksController extends Controller
     }
 
     public function create(){
-        return view('books.create');
-
+        $user = User::findOrFail(auth()->user()->id);
+        return view('books.create', compact('user'));
     }
     public function store(){
        Book::create(request()->all());
@@ -75,18 +83,19 @@ class BooksController extends Controller
      * adds a function to borrow the books that are in your shopping cart
      * @param $books
      */
-    public function borrowBooks($books){
-        foreach($books as $item){
-            if($this->checkAvailability($item)){
-                $book = Book::find($item);
+    public function borrowBooks(){
+        $books = User::findOrFail(auth()->user()->id)->cart->books;
+        foreach($books as $item) {
+            if ($this->checkAvailability($item)) {
+                $book = Book::findorFail($item);
                 $book->borrowed = 1;
                 $book->borrower = auth()->user()->id;
                 $book->save();
-            }
-            else{
+            } else {
                 dd('this book is not available right now');
             }
         }
+        Cart::all()->where('user_id',auth()->user()->id)->delete();
     }
 
     /**

@@ -24,6 +24,7 @@
         <form method="post" action="/books/{{$book->id}}/borrow">
             {{method_field('PATCH')}}
             {{csrf_field()}}
+            <input type="hidden" value="{{$book->id}}" name="bookId">
             <button type="submit">Place in shopping cart</button>
         </form>
     </div>
