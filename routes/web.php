@@ -16,7 +16,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::get('auth/logout', 'Auth\AuthController@logout');
 
-//Route::patch('/books/{books}/borrow', 'BooksController@addToCart');
+Route::patch('/books/{books}/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
 
 //Route::get('/books/mybooks', '');
@@ -31,16 +31,11 @@ Route::get('/books/json',function(){
 });
 
 Route::resource('books', 'BooksController');
+Route::resource('cart', 'CartsController');
 //Route::resource('user', 'UserController');
 
 Route::get('/user/edit','UserController@view');
 Route::patch('/user/edit','UserController@update');
-
-//////////////////////////////////
-//////////////////////////////////
-//JSON////////////////////////////
-//////////////////////////////////
-//////////////////////////////////
 
 
 /**
@@ -49,5 +44,13 @@ Route::patch('/user/edit','UserController@update');
 Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
+
+/*
+ * return all items of cart of current user in json
+ */
+Route::get('/books/cart/json',function(){
+    return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
+});
+
 
 

@@ -16,6 +16,5 @@ $factory->define(Book::class, function (Faker $faker) {
         'updated_at' => now(),
         'author_id' => 1,
         'user_id' => 0
-
     ];
 });
