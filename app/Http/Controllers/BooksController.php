@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,8 @@ class BooksController extends Controller
     }
 
     public function create(){
-        return view('books.create');
+        $user = User::findOrFail(auth()->user()->id);
+        return view('books.create', compact('user'));
 
     }
     public function store(){
