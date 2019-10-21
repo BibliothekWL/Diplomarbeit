@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+header("Access-Control-Allow-Origin: *");
 
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
