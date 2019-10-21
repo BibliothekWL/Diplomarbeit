@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Books as BooksResource;
 use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -100,5 +101,9 @@ class BooksController extends Controller
             $book = Book::find($item);
             array_push($_SESSION['cartWithBooks'], $book);
         }
+    }
+
+    public function json(){
+        return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
     }
 }

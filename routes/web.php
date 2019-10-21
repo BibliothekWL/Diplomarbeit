@@ -4,7 +4,7 @@ use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Books as BooksResource;
 
 use \App\User as User;
-use \App\Book;
+use \App\Book as Book;
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
@@ -21,22 +21,33 @@ Route::get('/books/mybooks', 'UserController@show');
 
 //Route::get('/books/mybooks', '');
 
+
+/**
+ * returns all books with json
+ */
+Route::get('/books/json',function(){
+
+    return BooksResource::collection(Book::all());
+});
+
 Route::resource('books', 'BooksController');
 //Route::resource('user', 'UserController');
 
 Route::get('/user/edit','UserController@view');
 Route::patch('/user/edit','UserController@update');
 
-//JSON
+//////////////////////////////////
+//////////////////////////////////
+//JSON////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
 
-//all books with json
-Route::get('/books/json',function(){
-    return BooksResource::collection(Book::all());
-});
 
-//all books for one user
-
+/**
+ * all books for one user with json
+*/
 Route::get('/books/mybooks/json',function(){
-    $user = User::findOrFail(auth()->user()->id);
-    return BooksResource::collection($user->books);
+    return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
+
+
