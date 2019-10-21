@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use \App\Book;
 use \App\Author;
+use App\Http\Resources\User as UserResource;
 use \App\User;
 
 
@@ -37,5 +38,6 @@ class UserController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         return view('user.edit', compact('user'));
     }
+
 
 }

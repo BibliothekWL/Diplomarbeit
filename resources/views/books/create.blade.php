@@ -10,11 +10,7 @@
     </div>
 
     <div>
-        <input type="text" name="firstname" placeholder="firstname">
-    </div>
-
-    <div>
-        <input type="text" name="surname" placeholder="surname">
+        <input type="number" name="author_id" placeholder="author_id">
     </div>
 
     <div>
