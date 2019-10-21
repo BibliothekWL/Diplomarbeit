@@ -30,7 +30,7 @@ Route::patch('/user/edit','UserController@update');
 //JSON
 
 //all books with json
-Route::get('/books/books/json',function(){
+Route::get('/books/json',function(){
     return BooksResource::collection(Book::all());
 });
 
