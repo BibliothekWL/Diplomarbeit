@@ -21,7 +21,7 @@ Route::get('/books/mybooks', 'UserController@show');
 
 //Route::get('/books/mybooks', '');
 
-
+Route::patch('/cart/checkout','BooksController@borrowBooks');
 /**
  * returns all books with json
  */
@@ -30,6 +30,7 @@ Route::get('/books/json',function(){
     return BooksResource::collection(Book::all());
 });
 
+Route::resource('borrowing', 'BorrowingsController');
 Route::resource('books', 'BooksController');
 Route::resource('cart', 'CartsController');
 //Route::resource('user', 'UserController');

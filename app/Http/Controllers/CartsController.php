@@ -4,19 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Cart as Cart;
 use App\Book as Book;
-use Request;
 
 class CartsController extends Controller
 {
     public function create()
     {
-        $cart = new Cart;
-        $cart->user_id = auth()->user()->id;
-        $cart->book_id = request()->bookId;
-        $cart->save();
+        if(Book::all()->where('id',request()->bookId)->first()->borrowed == 1){
+            dd('this book is not available');
+        }
+        elseif(Cart::all()->where('book_id',request()->bookId)->isEmpty()==false) {
+            dd('this book is reserved for a user');
+        }
+        else{
+            $cart = new Cart;
+            $cart->user_id = auth()->user()->id;
+            $cart->book_id = request()->bookId;
+            $cart->save();
 
-        $this->index();
-
+            $this->index();
+        }
         return(redirect('/cart'));
     }
 

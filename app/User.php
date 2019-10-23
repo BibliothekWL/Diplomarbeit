@@ -43,7 +43,11 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasMany(Book::class);
     }
 
-    public function cart(){
-        return $this->hasOne(Cart::class);
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+    public function borrowings(){
+        return $this->hasMany(Borrowing::class);
     }
 }
