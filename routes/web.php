@@ -9,6 +9,7 @@ use \App\Book as Book;
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
 
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Auth::routes(['verify' => true]);
 
