@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+header("Access-Control-Allow-Origin: *");
 
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
@@ -19,7 +20,6 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
 
     /**
      * The attributes that should be hidden for arrays.
@@ -43,7 +43,11 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasMany(Book::class);
     }
 
-    public function cart(){
-        return $this->hasOne(Cart::class);
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+    public function borrowings(){
+        return $this->hasMany(Borrowing::class);
     }
 }

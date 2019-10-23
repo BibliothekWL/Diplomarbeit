@@ -1,13 +1,19 @@
 <?php
 
 namespace App;
+header("Access-Control-Allow-Origin: *");
 
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    public function user(){
-        return $this->belongsTo(User::class);
+
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+    public function borrowings(){
+        return $this->hasMany(Borrowing::class);
     }
 
     protected $fillable = [

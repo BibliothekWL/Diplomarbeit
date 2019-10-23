@@ -3,7 +3,7 @@
         <v-app-bar app color="blue darken-4" dark>
             <v-spacer class="hidden-md-and-up"></v-spacer>
             <router-link to="/">
-                <v-toolbar-title to="/">{{appTitle}}</v-toolbar-title>
+                <v-toolbar-title to="/"><img src="../../../frontend/bwlbuch.svg" width="50" height="50"></v-toolbar-title>
             </router-link>
             <v-btn text class="hidden-sm-and-down" to="/liste">Liste</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>

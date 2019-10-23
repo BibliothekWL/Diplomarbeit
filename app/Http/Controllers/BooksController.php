@@ -2,37 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Borrowing;
+use App\Cart as Cart;
 use App\Http\Resources\Books as BooksResource;
 use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\CartsController as CartsController;
+
+include 'CartsController.php';
+
 use \App\Book;
 use \App\Author;
+
 use Illuminate\Routing\Redirector;
+use PhpParser\Builder\Class_;
 
 class BooksController extends Controller
 {
-    public function index(){
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
         $books = Book::all();
         return view('books.index', compact('books'));
     }
 
-    public function create(){
+    public function create()
+    {
         $user = User::findOrFail(auth()->user()->id);
         return view('books.create', compact('user'));
-
-    }
-    public function store(){
-       Book::create(request()->all());
     }
 
-    public function show(){
+    public function store()
+    {
+        Book::create(request()->all());
+    }
+
+    public function show()
+    {
 
     }
 
-    public function edit(Book $book){
-        return view('books.edit',compact('book'));
+    public function edit(Book $book)
+    {
+        return view('books.edit', compact('book'));
     }
 
     /**
@@ -41,9 +59,10 @@ class BooksController extends Controller
      * @return RedirectResponse|Redirector
      */
 
-    public function update(Book $book){
+    public function update(Book $book)
+    {
         $book->update(request()->all());
-        return(redirect('/books'));
+        return (redirect('/books'));
     }
 
     /**
@@ -52,58 +71,38 @@ class BooksController extends Controller
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */
-    public function destroy(Book $book){
+    public function destroy(Book $book)
+    {
         $book->delete();
-        return(redirect('/books/'));
-    }
-
-    /**
-     * checks if a book is already borrowed
-     * @param $id
-     * @return bool
-     */
-    public function checkAvailability($id){
-        $book = Book::find($id);
-        if($book->borrowed == 1){
-            dd('this book is already borrowed by someone');
-            return false;
-        }
-        else{
-            dd('this book is not borrowed out right now');
-            return true;
-        }
+        return (redirect('/books/'));
     }
 
     /**
      * adds a function to borrow the books that are in your shopping cart
      * @param $books
+     * @return RedirectResponse|Redirector
      */
-    public function borrowBooks($books){
-        foreach($books as $item){
-            if($this->checkAvailability($item)){
-                $book = Book::find($item);
-                $book->borrowed = 1;
-                $book->borrower = auth()->user()->id;
-                $book->save();
-            }
-            else{
-                dd('this book is not available right now');
-            }
+    public function borrowBooks()
+    {
+        $carts = User::findOrFail(auth()->user()->id)->carts;
+        $books = array();
+        foreach($carts as $cart){
+            $book = $cart->book;
+            array_push($books,$book);
         }
+        foreach ($books as $item) {
+            $book = Book::findorFail($item->id);
+            $book->borrowed = 1;
+            $book->save();
+
+            $borrowing = new Borrowing();
+            $borrowing->user_id = auth()->user()->id;
+            $borrowing->book_id = $item->id;
+            $borrowing->save();
+        }
+
+        Cart::where('user_id', auth()->user()->id)->delete();
+        return(redirect('borrowing'));
     }
 
-    /**
-     * creates an array filled with book objects from the session variable "cart", which is filled with ids of books
-     */
-    public function fillCartWithBooks(){
-        $_SESSION['cartWithBooks'] = array();
-        foreach($_SESSION['cart'] as $item ){
-            $book = Book::find($item);
-            array_push($_SESSION['cartWithBooks'], $book);
-        }
-    }
-
-    public function json(){
-        return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
-    }
 }
