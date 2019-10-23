@@ -13,7 +13,7 @@ class CreateBorrowingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('borrowing', function (Blueprint $table) {
+        Schema::create('borrowings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('book_id');
