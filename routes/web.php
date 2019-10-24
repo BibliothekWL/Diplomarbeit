@@ -2,9 +2,19 @@
 
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Books as BooksResource;
+use App\Http\Resources\Cart as CartResource;
 
 use \App\User as User;
 use \App\Book as Book;
+use \App\Cart as Cart;
+
+/*
+ * return all items of cart of current user in json
+ */
+Route::get('/cart/json',function(){
+    return CartResource::collection(Cart::where('user_id', auth()->user()->id)->get());
+});
+
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
@@ -19,10 +29,11 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::get('auth/logout', 'Auth\AuthController@logout');
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::patch('/books/{books}/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
+
 
 //Route::get('/books/mybooks', '');
 
@@ -43,7 +54,6 @@ Route::resource('books', 'BooksController');
 Route::get('/user/edit','UserController@view');
 Route::patch('/user/edit','UserController@update');
 
-
 /**
  * all books for one user with json
 */
@@ -51,12 +61,6 @@ Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
 
-/*
- * return all items of cart of current user in json
- */
-Route::get('/books/cart/json',function(){
-    return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
-});
 
 
 
