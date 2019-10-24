@@ -21,6 +21,10 @@ class UserController extends Controller
         return view('user.mybooks', compact('user'));
     }
 
+    /**
+     * renders the users current data
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(){
         $user = User::findOrFail(auth()->user()->id);
         return view('user.edit', compact('user'));
@@ -28,8 +32,12 @@ class UserController extends Controller
 
     public function store(){}
 
+    /**
+     * updates a user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function update(){
-        $user1 = User::findOrFail(auth()->user()->id)->update(request()->all());
+        User::findOrFail(auth()->user()->id)->update(request()->all());
         $user = User::findOrFail(auth()->user()->id);
         return view('user.edit', compact('user'));
     }
