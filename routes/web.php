@@ -61,9 +61,6 @@ Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
 
-Route::post('/login/json',function(){
-    return json
-});
 
 
 
