@@ -61,6 +61,7 @@ Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
 
+Route::get('books/create/json','BooksController@createBookValid');
 
-
+Route::get('/login/json','\App\Http\Controllers\Auth\LoginController@login');
 
