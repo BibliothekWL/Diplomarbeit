@@ -11,6 +11,10 @@ Route::get('/contact','PagesController@contact');
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+
+Route::patch('returnBooks', 'BooksController@returnBooks');
+
+
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -33,7 +37,7 @@ Route::get('/books/json',function(){
 
 Route::resource('borrowing', 'BorrowingsController');
 Route::resource('books', 'BooksController');
-Route::resource('cart', 'CartsController');
+    Route::resource('cart', 'CartsController');
 //Route::resource('user', 'UserController');
 
 Route::get('/user/edit','UserController@view');

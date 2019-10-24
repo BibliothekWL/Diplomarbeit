@@ -105,4 +105,16 @@ class BooksController extends Controller
         return(redirect('borrowing'));
     }
 
+    public function returnBooks(){
+        $books = User::findOrFail(auth()->user()->id)->books;
+        Borrowing::where('user_id', auth()->user()->id)->delete();
+
+        foreach($books as $book){
+            $book->borrowed = 0;
+            $book->save();
+        }
+        return redirect('/borrowing');
+    }
+
+
 }
