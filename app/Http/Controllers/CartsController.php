@@ -34,4 +34,9 @@ class CartsController extends Controller
         $carts = Cart::all()->where('user_id',auth()->user()->id);
         return view('cart.index', compact('carts'));
     }
+
+    public function destroy(Cart $cart){
+        $cart->delete();
+        return redirect('/cart');
+    }
 }

@@ -36,4 +36,17 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function login(\Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'email',
+            'password' => 'password',
+        ]);
+        if(!$validator->fails()){
+            return response('successful',200);
+        } else {
+            return response('invalid',422);
+        }
+    }
+
 }
