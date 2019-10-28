@@ -7,8 +7,8 @@ use App\Cart as Cart;
 use App\Http\Resources\Books as BooksResource;
 use App\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+use \Validator;
+use Request;
 
 use App\Http\Controllers\CartsController as CartsController;
 
@@ -117,8 +117,8 @@ class BooksController extends Controller
         return redirect('/borrowing');
     }
 
-    public function createBookValid(\Request $request){
-        $validator = Validator::make($request->all(), [
+    public function createBookValid(){
+        $validator = Validator::make(Request::all(), [
             'title' => 'title',
             'systematik' => 'systematik',
             'medium' => 'medium',
