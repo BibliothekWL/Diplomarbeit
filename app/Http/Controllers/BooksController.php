@@ -132,4 +132,15 @@ class BooksController extends Controller
 //        }
 //    }
 
+//    public function deleteBookValidator(){
+//        $validator = Validator::make(Request::all(), [
+//            'id' => 'id',
+//        ]);
+//        if(!$validator->fails()){
+//            return response('successful',200);
+//        } else {
+//            return response('invalid',422);
+//        }
+//    }
+
 }

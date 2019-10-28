@@ -23,3 +23,6 @@ Route::post('/books/create/json/','BooksController@BookValidator');
 
 Route::post('/books/edit/json','BooksController@BookValidator');
 
+Route::post('books/delete/json','BooksController@deleteBookValidator');
+
+
