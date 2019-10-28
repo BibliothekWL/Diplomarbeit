@@ -61,9 +61,6 @@ Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
 
-Route::get('/books/{books}/edit/json',function($books){
-    return BooksResource::make(Book::where('id',$books))->get();
-});
 
 Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
 

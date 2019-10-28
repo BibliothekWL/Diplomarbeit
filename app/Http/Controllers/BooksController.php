@@ -126,21 +126,28 @@ class BooksController extends Controller
 //            'BNR' => 'BNR',
 //        ]);
 //        if(!$validator->fails()){
+//
 //            return response('successful',200);
 //        } else {
 //            return response('invalid',422);
 //        }
 //    }
 
-//    public function deleteBookValidator(){
-//        $validator = Validator::make(Request::all(), [
-//            'id' => 'id',
-//        ]);
-//        if(!$validator->fails()){
-//            return response('successful',200);
-//        } else {
-//            return response('invalid',422);
-//        }
-//    }
+    public function deleteBookValidator(){
+        $validator = Validator::make(Request::all(), [
+            'id' => 'id',
+        ]);
+        if(!$validator->fails()){
+            $id = json_decode('id');
+            if(Book::where('id',$id)->get()->count()==0){
+                return response('Object not found',404);
+            } else {
+                Book::where('id')->delete();
+                return response('successful', 200);
+            }
+        } else {
+            return response('invalid',422);
+        }
+    }
 
 }
