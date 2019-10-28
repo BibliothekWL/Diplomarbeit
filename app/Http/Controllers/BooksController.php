@@ -117,19 +117,19 @@ class BooksController extends Controller
         return redirect('/borrowing');
     }
 
-    public function createBookValid(){
-        $validator = Validator::make(Request::all(), [
-            'title' => 'title',
-            'systematik' => 'systematik',
-            'medium' => 'medium',
-            'content' => 'content',
-            'BNR' => 'BNR',
-        ]);
-        if(!$validator->fails()){
-            return response('successful',200);
-        } else {
-            return response('invalid',422);
-        }
-    }
+//    public function BookValidator(){
+//        $validator = Validator::make(Request::all(), [
+//            'title' => 'title',
+//            'systematik' => 'systematik',
+//            'medium' => 'medium',
+//            'content' => 'content',
+//            'BNR' => 'BNR',
+//        ]);
+//        if(!$validator->fails()){
+//            return response('successful',200);
+//        } else {
+//            return response('invalid',422);
+//        }
+//    }
 
 }

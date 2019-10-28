@@ -19,5 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
 
-Route::post('/books/create/json/','BooksController@createBookValid');
+Route::post('/books/create/json/','BooksController@BookValidator');
+
+Route::post('/books/edit/json','BooksController@BookValidator');
 

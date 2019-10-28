@@ -61,7 +61,13 @@ Route::get('/books/mybooks/json',function(){
     return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
 });
 
-//Route::get('books/create/json','BooksController@createBookValid');
+Route::get('/books/{books}/edit/json',function($books){
+    return BooksResource::make(Book::where('id',$books))->get();
+});
+
+Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
+
+Route::post('books/create/json/','BooksController@BookValidator');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
 
