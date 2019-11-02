@@ -15,6 +15,8 @@ Route::get('/cart/json',function(){
     return CartResource::collection(Cart::where('user_id', auth()->user()->id)->get());
 });
 
+Route::get('/home','SinglePageController@index');
+Route::get('/list','SinglePageController@index');
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
