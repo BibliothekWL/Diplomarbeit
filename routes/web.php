@@ -62,5 +62,10 @@ Route::get('/books/mybooks/json',function(){
 });
 
 
+Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
 
+Route::post('books/create/json/','BooksController@BookValidator');
 
+Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
+
+Route::post('books/delete/json','BooksController@deleteBookValidator');
