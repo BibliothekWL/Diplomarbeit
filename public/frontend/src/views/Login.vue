@@ -23,22 +23,22 @@
                 password: ""
             }
         },
-        mounted(){
-            axios.get('/api/login', {
-                params: {
-                    id: this.id,
-                    pw: this.password
-                }
-            })
-                .then(response =>{
-                console.log(response.data)
-            }).catch(error =>{
-                console.log(error.message)
-            })
+        mounted() {
+
         },
         methods: {
             login: function () {
-                console.log(this.id, this.password);
+                axios.get('localhost:8000/login/json', {
+                    parameter: {
+                        id: this.id,
+                        pw: this.password
+                    }
+                })
+                    .then(response => {
+                        console.log(response.data)
+                    }).catch(error => {
+                    console.log(error.message)
+                })
             }
         }
     }
