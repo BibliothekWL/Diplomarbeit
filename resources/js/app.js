@@ -13,16 +13,13 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faPlus);
-library.add(faTrash);
-library.add(faPen);
+library.add(faPlus, faTrash, faPen);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
 import Routes from '@/js/routes';
-
 import App from '@/js/views/App';
 
 const app = new Vue({

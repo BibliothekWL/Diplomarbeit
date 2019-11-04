@@ -18,7 +18,7 @@ const router = new VueRouter({
            path: '/list',
            name: 'list',
            component: BookList
-       }
+       },
    ]
 });
 

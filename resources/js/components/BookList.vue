@@ -7,7 +7,7 @@
         <h2>Bücherliste</h2>
         <div v-for="n in liste.data" class="list">
             <div class="listItem">
-                <div v-on:click="buecherInformationen(n.id)">
+                <div v-on:click="buecherInformationen(n.id)" v-b-modal.BookInformation>
                     <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{content_short[n.id - 1]}}</h5>
                 </div>
                 <div>
@@ -71,7 +71,7 @@
         <div>
             <b-modal id="BookInformation" centered title="Information">
                 <div>
-                    {{ content_full }}
+                    {{ content_full[id] }}
                 </div>
             </b-modal>
         </div>
@@ -105,7 +105,7 @@
         },
         methods: {
             deleteItem: function (id) {
-                axios.get('/books/delete/json', {
+                axios.post('/books/delete/json', {
                     params: {
                         id: id
                     }
@@ -167,7 +167,7 @@
             },
             buecherInformationen: function (id) {
                 this.dialog1 = true;
-                this.id = id;
+                this.id = id - 1;
             },
             borrowBook: function (id) {
                 axios.get('/books/borrow', {
