@@ -19,14 +19,7 @@ const router = new VueRouter({
            name: 'list',
            component: BookList
        },
-       {
-           dsd:hasDocumentSupportd,
-           dd:sdf,
-           component: Login
-       },
    ]
 });
-
-
 
 export default router;

@@ -1,15 +1,31 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes React and other helpers. It's a great starting point while
- * building robust, powerful web applications using React + Laravel.
- */
+import './bootstrap';
+import Vue from 'vue';
+import BootstrapVue from 'bootstrap-vue';
 
-require('./bootstrap');
+Vue.use(BootstrapVue);
 
-/**
- * Next, we will create a fresh React component instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-require('./components/Example');
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+library.add(faPlus, faTrash, faPen);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+Vue.config.productionTip = false;
+
+import Routes from '@/js/routes';
+import App from '@/js/views/App';
+
+const app = new Vue({
+    el: '#app',
+    router: Routes,
+    render: h => h(App)
+});
+
+export default app;

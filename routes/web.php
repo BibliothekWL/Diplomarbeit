@@ -15,11 +15,15 @@ Route::get('/cart/json',function(){
     return CartResource::collection(Cart::where('user_id', auth()->user()->id)->get());
 });
 
+Route::get('/home','SinglePageController@index');
+Route::get('/list','SinglePageController@index');
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+Route::post('/books/delete/json','BooksController@deleteBookValidator');
 
 
 Route::patch('returnBooks', 'BooksController@returnBooks');
@@ -67,5 +71,3 @@ Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator')
 Route::post('books/create/json/','BooksController@BookValidator');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
-
-Route::post('books/delete/json','BooksController@deleteBookValidator');
