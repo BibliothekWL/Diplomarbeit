@@ -11649,14 +11649,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     deleteItem: function deleteItem(id) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json', {
-        params: {
-          id: id
-        }
+        id: id
       }).then(function (response) {
         return console.log(response);
       });
     },
     editItem: function editItem(id) {
+      this.id = id;
       this.title = this.liste.data[id - 1].title;
       this.content_full = this.liste.data[id - 1].content;
     },
@@ -11669,7 +11668,7 @@ __webpack_require__.r(__webpack_exports__);
       this.BNR = "1111";
     },
     saveAdd: function saveAdd(id, title, systematik, medium, content, BNR) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('books/create/', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('books/create/json', {
         title: title,
         systematik: systematik,
         medium: medium,
@@ -11680,12 +11679,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     saveEdit: function saveEdit(id, title, content) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('books/edit', {
-        params: {
-          id: id,
-          title: title,
-          content: content
-        }
+      console.log(id);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/' + id + '/edit/jsonvalidate/', {
+        title: title,
+        content: content
       }).then(function (response) {
         return console.log(response);
       });
@@ -92150,9 +92147,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
 
 
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_5__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faPlus"]);
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_5__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faTrash"]);
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_5__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faPen"]);
+_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_5__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faPlus"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faTrash"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__["faPen"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('font-awesome-icon', _fortawesome_vue_fontawesome__WEBPACK_IMPORTED_MODULE_7__["FontAwesomeIcon"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.config.productionTip = false;
 

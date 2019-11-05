@@ -41,7 +41,7 @@
 
         <div>
             <b-modal id="EditItem" centered title="Edit Book"
-                @ok="saveEdit(id, title, content_full)">
+                     @ok="saveEdit(id, title, content_full)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -105,16 +105,16 @@
         },
         methods: {
             deleteItem: function (id) {
+
                 axios.post('/books/delete/json', {
-                    params: {
-                        id: id
-                    }
+                    id: id
                 }).then(response => (
                         console.log(response)
                     )
                 )
             },
             editItem: function (id) {
+                this.id = id;
                 this.title = this.liste.data[id - 1].title;
                 this.content_full = this.liste.data[id - 1].content;
             },
@@ -127,7 +127,7 @@
                 this.BNR = "1111";
             },
             saveAdd: function (id, title, systematik, medium, content, BNR) {
-                axios.post('books/create/', {
+                axios.post('books/create/json', {
                     title: title,
                     systematik: systematik,
                     medium: medium,
@@ -139,12 +139,10 @@
                 )
             },
             saveEdit: function (id, title, content) {
-                axios.post('books/edit', {
-                    params: {
-                        id: id,
-                        title: title,
-                        content: content
-                    }
+                console.log(id);
+                axios.post('/books/' + id + '/edit/jsonvalidate/', {
+                    title: title,
+                    content: content
                 }).then(response => (
                         console.log(response)
                     )
