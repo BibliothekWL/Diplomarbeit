@@ -11626,6 +11626,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -11643,21 +11644,26 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json').then(function (response) {
-      return _this.liste = response.data, _this.saveContent(response.data.data);
+      return _this.saveListe(response.data), _this.saveContent(response.data.data);
     });
   },
   methods: {
     deleteItem: function deleteItem(id) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json', {
-        id: id
-      }).then(function (response) {
-        return console.log(response);
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json/' + id).then(function (response) {
+        return _this2.reloadSite(response.status);
       });
     },
     editItem: function editItem(id) {
       this.id = id;
-      this.title = this.liste.data[id - 1].title;
-      this.content_full = this.liste.data[id - 1].content;
+      console.log(this.liste.data);
+      this.title = this.liste.data[id].title;
+      console.log(this.title);
+      this.content_full = this.liste.data[id].content;
+      this.systematik = this.liste.data[id].systematik;
+      this.medium = this.liste.data[id].medium;
+      this.BNR = this.liste.data[id].BNR;
     },
     addItem: function addItem(maxId) {
       this.id = maxId + 1;
@@ -11678,11 +11684,17 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(response.data);
       });
     },
-    saveEdit: function saveEdit(id, title, content) {
+    saveEdit: function saveEdit(id, title, systematik, medium, content, BNR) {
       console.log(id);
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/' + id + '/edit/jsonvalidate/', {
-        title: title,
-        content: content
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/edit/json/', {
+        params: {
+          id: id,
+          title: title,
+          systematik: systematik,
+          medium: medium,
+          content: content,
+          BNR: BNR
+        }
       }).then(function (response) {
         return console.log(response);
       });
@@ -11707,7 +11719,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     buecherInformationen: function buecherInformationen(id) {
       this.dialog1 = true;
-      this.id = id - 1;
+      this.id = id;
     },
     borrowBook: function borrowBook(id) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/borrow', {
@@ -11717,6 +11729,18 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         return console.log(response);
       });
+    },
+    reloadSite: function reloadSite(status) {
+      if (status == 200) {
+        window.location.reload();
+      }
+    },
+    saveListe: function saveListe(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        this.liste[response.data[i].id] = response.data[i];
+      }
+
+      console.log(this.liste);
     }
   }
 });
@@ -76708,74 +76732,9 @@ var render = function() {
       _vm._v(" "),
       _c("h2", [_vm._v("Bücherliste")]),
       _vm._v(" "),
-      _vm._l(_vm.liste.data, function(n) {
+      _vm._l(_vm.liste, function(n) {
         return _c("div", { staticClass: "list" }, [
-          _c("div", { staticClass: "listItem" }, [
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "b-modal",
-                    rawName: "v-b-modal.BookInformation",
-                    modifiers: { BookInformation: true }
-                  }
-                ],
-                on: {
-                  click: function($event) {
-                    return _vm.buecherInformationen(n.id)
-                  }
-                }
-              },
-              [
-                _c("h2", [_vm._v(_vm._s(n.id) + " " + _vm._s(n.title))]),
-                _c("br"),
-                _vm._v(" "),
-                _c("h5", [_vm._v(_vm._s(_vm.content_short[n.id - 1]))])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              [
-                _c(
-                  "b-button",
-                  {
-                    attrs: { pill: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteItem(n.id)
-                      }
-                    }
-                  },
-                  [_c("font-awesome-icon", { attrs: { icon: "trash" } })],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "b-button",
-                  {
-                    directives: [
-                      {
-                        name: "b-modal",
-                        rawName: "v-b-modal.EditItem",
-                        modifiers: { EditItem: true }
-                      }
-                    ],
-                    attrs: { pill: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.editItem(n.id)
-                      }
-                    }
-                  },
-                  [_c("font-awesome-icon", { attrs: { icon: "pen" } })],
-                  1
-                )
-              ],
-              1
-            )
-          ])
+          _vm._v("\n        " + _vm._s(n) + "\n        ")
         ])
       }),
       _vm._v(" "),
@@ -76844,7 +76803,14 @@ var render = function() {
               attrs: { id: "EditItem", centered: "", title: "Edit Book" },
               on: {
                 ok: function($event) {
-                  return _vm.saveEdit(_vm.id, _vm.title, _vm.content_full)
+                  return _vm.saveEdit(
+                    _vm.id,
+                    _vm.title,
+                    _vm.systematik,
+                    _vm.medium,
+                    _vm.content_full,
+                    _vm.BNR
+                  )
                 }
               }
             },
@@ -92499,8 +92465,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Schule\Schule\5aI\Diplomarbeit\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Schule\Schule\5aI\Diplomarbeit\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

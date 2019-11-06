@@ -117,39 +117,23 @@ class BooksController extends Controller
         return redirect('/borrowing');
     }
 
-//    public function BookValidator(){
-//        $validator = Validator::make(Request::all(), [
-//            'title' => 'title',
-//            'systematik' => 'systematik',
-//            'medium' => 'medium',
-//            'content' => 'content',
-//            'BNR' => 'BNR',
-//        ]);
-//        if(!$validator->fails()){
-//
-//            return response('successful',200);
-//        } else {
-//            return response('invalid',422);
-//        }
-//    }
+    public function BookValidator(Request $request,$id,$title,$systematik,$medium,$content,$BNR){
+        if(Book::where('id',$id)->get()->count()==0){
+            return response('failed',200);
+        } else {
+            //UpdateBOokINfo
+            return response($id, 200);
+        }
+        }
 
-    public function deleteBookValidator(){
-//        $validator = Validator::make(Request::all(), [
-//
-//            'id' => 'id',
-//            dd(Request::all())
-//        ]);
-//        if(!$validator->fails()){
-            $id = json_decode('id');
+
+    public function deleteBookValidator(Request $request,$id){
             if(Book::where('id',$id)->get()->count()==0){
-                return response('Object not found',404);
+                return response('failed',200);
             } else {
-                Book::where('id')->delete();
-                return response('successful', 200);
+                Book::where('id',$id)->delete();
+                return response('sucessful', 200);
             }
-//        } else {
-//            return response('invalid',422);
-//        }
     }
 
 }

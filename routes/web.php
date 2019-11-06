@@ -23,11 +23,11 @@ Route::get('/contact','PagesController@contact');
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::post('/books/delete/json','BooksController@deleteBookValidator');
+Route::post('/books/delete/json/{id}','BooksController@deleteBookValidator');
 
+Route::post('/books/edit/json/{id}/{title}/{systematik}/{medium}/{content}/{BNR}','BooksController@BookValidator');
 
 Route::patch('returnBooks', 'BooksController@returnBooks');
-
 
 Auth::routes(['verify' => true]);
 
