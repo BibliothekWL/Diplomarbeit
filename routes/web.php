@@ -23,11 +23,16 @@ Route::get('/contact','PagesController@contact');
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::post('/books/delete/json','BooksController@deleteBookValidator');
+Route::post('/books/create/json/','BooksController@addBookValidator');
 
+Route::post('/books/create/json/new','BooksController@addBookValidator');
+
+
+Route::post('/books/delete/json/','BooksController@deleteBookValidator');
+
+Route::post('/books/edit/json/','BooksController@BookValidator');
 
 Route::patch('returnBooks', 'BooksController@returnBooks');
-
 
 Auth::routes(['verify' => true]);
 
@@ -68,6 +73,5 @@ Route::get('/books/mybooks/json',function(){
 
 Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
 
-Route::post('books/create/json/','BooksController@BookValidator');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');

@@ -5,17 +5,19 @@
         </b-button>
 
         <h2>Bücherliste</h2>
+
         <div v-for="n in liste.data" class="list">
             <div class="listItem">
-                <div v-on:click="buecherInformationen(n.id)" v-b-modal.BookInformation>
-                    <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{content_short[n.id - 1]}}</h5>
+                <div v-on:click="buecherInformationen(n.content)" v-b-modal.BookInformation>
+                    <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{n.content}}</h5>
                 </div>
                 <div>
                     <b-button pill v-on:click="deleteItem(n.id)">
                         <font-awesome-icon icon="trash"></font-awesome-icon>
                     </b-button>
 
-                    <b-button v-b-modal.EditItem pill v-on:click="editItem(n.id)">
+                    <b-button v-b-modal.EditItem pill
+                              v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">
                         <font-awesome-icon icon="pen"></font-awesome-icon>
                     </b-button>
                 </div>
@@ -24,24 +26,7 @@
 
         <div>
             <b-modal id="AddItem" size="lg" centered title="Create Book"
-                     @ok="saveAdd(id, title, systematik, medium, content_full, BNR)">
-                <b-form-group
-                        label="Title"
-                        label-for="name-input"
-                        invalid-feedback="Title is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="title"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-            </b-modal>
-        </div>
-
-        <div>
-            <b-modal id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title, content_full)">
+                     @ok="saveAdd(title, systematik, medium, content_full, BNR)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -55,13 +40,114 @@
                 </b-form-group>
 
                 <b-form-group
+                        label="Systematik"
+                        label-for="title"
+                        invalid-feedback="Systematik is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="systematik"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="Medium"
+                        label-for="title"
+                        invalid-feedback="Medium is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="medium"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
                         label="Content"
-                        label-for="content_full"
+                        label-for="title"
                         invalid-feedback="Content is required"
                 >
                     <b-form-input
                             id="name-input"
                             v-model="content_full"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="BNR"
+                        label-for="title"
+                        invalid-feedback="BNR is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="BNR"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+            </b-modal>
+        </div>
+
+        <div>
+            <b-modal id="EditItem" centered title="Edit Book"
+                     @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
+                <b-form-group
+                        label="Title"
+                        label-for="title"
+                        invalid-feedback="Title is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="title"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="Systematik"
+                        label-for="title"
+                        invalid-feedback="Systematik is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="systematik"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="Medium"
+                        label-for="title"
+                        invalid-feedback="Medium is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="medium"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="Content"
+                        label-for="title"
+                        invalid-feedback="Content is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="content_full"
+                            required
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        label="BNR"
+                        label-for="title"
+                        invalid-feedback="BNR is required"
+                >
+                    <b-form-input
+                            id="name-input"
+                            v-model="BNR"
                             required
                     ></b-form-input>
                 </b-form-group>
@@ -71,7 +157,7 @@
         <div>
             <b-modal id="BookInformation" centered title="Information">
                 <div>
-                    {{ content_full[id] }}
+                    {{ content_full }}
                 </div>
             </b-modal>
         </div>
@@ -89,6 +175,9 @@
                 liste: [],
                 id: "",
                 title: "",
+                systematik: "",
+                medium: "",
+                BNR: "",
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
@@ -99,54 +188,63 @@
                 .then(response =>
                     (
                         this.liste = response.data,
-                            this.saveContent(response.data.data)
+                            console.log(this.liste)
                     )
-                )
+                );
         },
         methods: {
             deleteItem: function (id) {
 
-                axios.post('/books/delete/json', {
+                axios.post('/books/delete/json/', {
                     id: id
+                }).then(response => (
+                        this.reloadSite(response.status)
+                    )
+                )
+            },
+            editItem: function (id, title, systematik, medium, content, BNR) {
+                this.id = id;
+                this.title = title;
+                this.content_full = content;
+                this.systematik = systematik;
+                this.medium = medium;
+                this.BNR = BNR;
+            },
+            addItem: function () {
+                this.title = "";
+                this.content_full = "";
+                this.systematik = "";
+                this.medium = "";
+                this.BNR = "";
+            },
+            saveAdd: function (title, systematik, medium, content, BNR) {
+                axios.post('/books/create/json/new/', {
+                    title: title,
+                    systematik: systematik,
+                    medium: medium,
+                    content: content,
+                    BNR: BNR,
+                    authorname: 'Kevin'
                 }).then(response => (
                         console.log(response)
                     )
                 )
             },
-            editItem: function (id) {
-                this.id = id;
-                this.title = this.liste.data[id - 1].title;
-                this.content_full = this.liste.data[id - 1].content;
-            },
-            addItem: function (maxId) {
-                this.id = maxId + 1;
-                this.title = "sadsad";
-                this.content_full.push("");
-                this.systematik = "dsa";
-                this.medium = "sa";
-                this.BNR = "1111";
-            },
-            saveAdd: function (id, title, systematik, medium, content, BNR) {
-                axios.post('books/create/json', {
+            saveEdit: function (id, title, systematik, medium, content, BNR) {
+                console.log(id);
+                axios.post('/books/edit/json/', {
+                    id: id,
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
                     BNR: BNR
-                }).then(response => (
-                        console.log(response.data)
+                })
+                    .then(response => (
+                            console.log(response),
+                                this.reloadSite(response.status)
+                        )
                     )
-                )
-            },
-            saveEdit: function (id, title, content) {
-                console.log(id);
-                axios.post('/books/' + id + '/edit/jsonvalidate/', {
-                    title: title,
-                    content: content
-                }).then(response => (
-                        console.log(response)
-                    )
-                )
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
@@ -163,9 +261,8 @@
                     }
                 }
             },
-            buecherInformationen: function (id) {
-                this.dialog1 = true;
-                this.id = id - 1;
+            buecherInformationen: function (content) {
+                this.content_full = content;
             },
             borrowBook: function (id) {
                 axios.get('/books/borrow', {
@@ -176,6 +273,14 @@
                         console.log(response)
                     )
                 )
+            },
+            reloadSite: function (status) {
+                if (status === 200) {
+                    window.location.reload();
+                }
+            },
+            getBooks: function () {
+
             }
         }
     }

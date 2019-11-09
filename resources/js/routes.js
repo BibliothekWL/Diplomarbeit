@@ -19,6 +19,11 @@ const router = new VueRouter({
            name: 'list',
            component: BookList
        },
+       // {
+       //     path: '/logi',
+       //     name: 'list',
+       //     component: 'Login'
+       // },
    ]
 });
 
