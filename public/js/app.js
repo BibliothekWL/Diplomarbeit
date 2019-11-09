@@ -11900,6 +11900,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
@@ -11920,6 +11921,9 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error.message);
       });
+    },
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/logout');
     }
   }
 });
@@ -77633,6 +77637,18 @@ var render = function() {
           }
         },
         [_vm._v("Login")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.logout()
+            }
+          }
+        },
+        [_vm._v("Logout")]
       )
     ],
     1

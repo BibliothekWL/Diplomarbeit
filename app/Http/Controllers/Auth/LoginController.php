@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User;
+use App\Http\Resources\User as UserRessource;
+use App\User as User;
 use Auth;
 use DB;
 use Hash;
@@ -45,24 +46,19 @@ class LoginController extends Controller
 
     public function authenticate(){
         $json = file_get_contents('php://input');
-        $jsonarray = json_decode($json,true);
-        $emailAdmin=DB::table('users')->where('id',21)->get()->pluck('email');
-        $pwAdmin=DB::table('users')->where('id',21)->get()->pluck('password');
-        $isAdmin = true;
-if($jsonarray['email'] = $emailAdmin && Hash::make($jsonarray['password']) == $pwAdmin) {
-if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
-return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin]);
-} else {
-    return json_encode(['status' => '403', 'statusMsg' => 'User does not exist']);
-}
-} else {
-    $isAdmin = false;
-    if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
-        return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin]);
-    } else {
-        return json_encode(['status' => '403', 'statusMsg' => 'User does not exist1']);
-    }
-}
+        $jsonarray = json_decode($json, true);
+        $userID_raw = DB::table('users')->where('email', $jsonarray['email'])->pluck('id');
+        $userID = explode("]", explode("[",$userID_raw)[1])[0];
+        if (User::findOrFail($userID)->admin == 1) {
+            $isAdmin = true;
+        } else {
+            $isAdmin = false;
+        }
+        if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
+            return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => true]);
+        } else {
+            return json_encode(['status' => '403', 'statusMsg' => 'User does not exist', 'isLoggedIn' => true]);
+        }
 }
 
 }

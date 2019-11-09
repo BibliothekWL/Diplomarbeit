@@ -3,6 +3,7 @@
         <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter your Email"></b-form-input>
         <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter your Password"></b-form-input>
         <b-button v-on:click="login()">Login</b-button>
+        <b-button v-on:click="logout()">Logout</b-button>
     </div>
 </template>
 
@@ -31,6 +32,9 @@
                     }).catch(error => {
                     console.log(error.message)
                 })
+            },
+            logout() {
+                axios.post('/logout');
             }
         }
     }
