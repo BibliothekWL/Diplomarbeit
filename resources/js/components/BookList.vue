@@ -167,6 +167,7 @@
 
 <script>
     import axios from 'axios';
+
     export default {
         name: "BookList",
         data() {
@@ -193,7 +194,8 @@
         },
         methods: {
             deleteItem: function (id) {
-                axios.post('/books/delete/json', {
+
+                axios.post('/books/delete/json/', {
                     id: id
                 }).then(response => (
                         this.reloadSite(response.status)
@@ -282,18 +284,21 @@
             }
         }
     }
+
 </script>
 
 <style scoped>
     .list {
         padding: 2em;
     }
+
     .listItem {
         display: flex;
         justify-content: space-between;
         align-items: center;
         border: 1px solid black;
     }
+
     .listItem:hover {
         cursor: pointer;
     }
