@@ -25,9 +25,6 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::post('/books/create/json/','BooksController@addBookValidator');
 
-Route::post('/books/create/json/new','BooksController@addBookValidator');
-
-
 Route::post('/books/delete/json/','BooksController@deleteBookValidator');
 
 Route::post('/books/edit/json/','BooksController@BookValidator');

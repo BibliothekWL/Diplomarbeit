@@ -218,7 +218,7 @@
                 this.BNR = "";
             },
             saveAdd: function (title, systematik, medium, content, BNR) {
-                axios.post('/books/create/json/new/', {
+                axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
                     medium: medium,
