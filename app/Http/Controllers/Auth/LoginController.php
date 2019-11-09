@@ -39,17 +39,17 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-//    public function login(){
-//        $validator = Validator::make(Request::all(), [
-//            'email' => 'email',
-//            'password' => 'password',
-//        ]);
-//        if(!$validator->fails()){
-//            return response('successful',200);
-//        } else {
-//            return response('invalid',422);
-//        }
-//    }
+    public function login(){
+        $validator = Validator::make(Request::all(), [
+            'email' => 'email',
+            'password' => 'password',
+        ]);
+        if(!$validator->fails()){
+            return response('successful',200);
+        } else {
+            return response('invalid',422);
+        }
+    }
 
 }
 
