@@ -11900,29 +11900,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   data: function data() {
     return {
-      id: "",
+      email: "",
       password: ""
     };
   },
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      console.log("WORKS");
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/login/json', {
-        parameter: {
-          id: this.id,
-          pw: this.password
-        }
+        email: this.email,
+        password: this.password
       }).then(function (response) {
-        console.log(response.data);
+        console.log(response);
       })["catch"](function (error) {
         console.log(error.message);
       });
+    },
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/logout');
     }
   }
 });
@@ -77606,11 +77607,11 @@ var render = function() {
         staticClass: "inputs",
         attrs: { type: "email", placeholder: "Enter your Email" },
         model: {
-          value: _vm.id,
+          value: _vm.email,
           callback: function($$v) {
-            _vm.id = $$v
+            _vm.email = $$v
           },
-          expression: "id"
+          expression: "email"
         }
       }),
       _vm._v(" "),
@@ -77636,6 +77637,18 @@ var render = function() {
           }
         },
         [_vm._v("Login")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.logout()
+            }
+          }
+        },
+        [_vm._v("Logout")]
       )
     ],
     1
@@ -93468,8 +93481,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Schule\Schule\5aI\Diplomarbeit\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Schule\Schule\5aI\Diplomarbeit\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

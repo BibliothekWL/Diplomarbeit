@@ -1,167 +1,168 @@
 <template>
     <div class="container">
-        <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.data.length)">
-            <font-awesome-icon icon="plus"/>
-        </b-button>
+        <div v-if="isAdmin">
+            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.data.length)">
+                <font-awesome-icon icon="plus"/>
+            </b-button>
 
-        <h2>Bücherliste</h2>
+            <h2>Bücherliste</h2>
 
-        <div v-for="n in liste.data" class="list">
-            <div class="listItem">
-                <div v-on:click="buecherInformationen(n.content)" v-b-modal.BookInformation>
-                    <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{n.content}}</h5>
-                </div>
-                <div>
-                    <b-button pill v-on:click="deleteItem(n.id)">
-                        <font-awesome-icon icon="trash"></font-awesome-icon>
-                    </b-button>
+            <div v-for="n in liste.data" class="list">
+                <div class="listItem">
+                    <div v-on:click="buecherInformationen(n.content)" v-b-modal.BookInformation>
+                        <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{n.content}}</h5>
+                    </div>
+                    <div>
+                        <b-button pill v-on:click="deleteItem(n.id)">
+                            <font-awesome-icon icon="trash"></font-awesome-icon>
+                        </b-button>
 
-                    <b-button v-b-modal.EditItem pill
-                              v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">
-                        <font-awesome-icon icon="pen"></font-awesome-icon>
-                    </b-button>
+                        <b-button v-b-modal.EditItem pill
+                                  v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">
+                            <font-awesome-icon icon="pen"></font-awesome-icon>
+                        </b-button>
+                    </div>
                 </div>
             </div>
+
+            <div>
+                <b-modal id="AddItem" size="lg" centered title="Create Book"
+                         @ok="saveAdd(title, systematik, medium, content_full, BNR)">
+                    <b-form-group
+                            label="Title"
+                            label-for="title"
+                            invalid-feedback="Title is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="title"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Systematik"
+                            label-for="title"
+                            invalid-feedback="Systematik is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="systematik"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Medium"
+                            label-for="title"
+                            invalid-feedback="Medium is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="medium"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Content"
+                            label-for="title"
+                            invalid-feedback="Content is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="content_full"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="BNR"
+                            label-for="title"
+                            invalid-feedback="BNR is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="BNR"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </b-modal>
+            </div>
+
+            <div>
+                <b-modal id="EditItem" centered title="Edit Book"
+                         @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
+                    <b-form-group
+                            label="Title"
+                            label-for="title"
+                            invalid-feedback="Title is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="title"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Systematik"
+                            label-for="title"
+                            invalid-feedback="Systematik is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="systematik"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Medium"
+                            label-for="title"
+                            invalid-feedback="Medium is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="medium"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Content"
+                            label-for="title"
+                            invalid-feedback="Content is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="content_full"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="BNR"
+                            label-for="title"
+                            invalid-feedback="BNR is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="BNR"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </b-modal>
+            </div>
+
+            <div>
+                <b-modal id="BookInformation" centered title="Information">
+                    <div>
+                        {{ content_full }}
+                    </div>
+                </b-modal>
+            </div>
         </div>
-
-        <div>
-            <b-modal id="AddItem" size="lg" centered title="Create Book"
-                     @ok="saveAdd(title, systematik, medium, content_full, BNR)">
-                <b-form-group
-                        label="Title"
-                        label-for="title"
-                        invalid-feedback="Title is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="title"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Systematik"
-                        label-for="title"
-                        invalid-feedback="Systematik is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Medium"
-                        label-for="title"
-                        invalid-feedback="Medium is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Content"
-                        label-for="title"
-                        invalid-feedback="Content is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="content_full"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="BNR"
-                        label-for="title"
-                        invalid-feedback="BNR is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="BNR"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-            </b-modal>
-        </div>
-
-        <div>
-            <b-modal id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
-                <b-form-group
-                        label="Title"
-                        label-for="title"
-                        invalid-feedback="Title is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="title"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Systematik"
-                        label-for="title"
-                        invalid-feedback="Systematik is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Medium"
-                        label-for="title"
-                        invalid-feedback="Medium is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="Content"
-                        label-for="title"
-                        invalid-feedback="Content is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="content_full"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                        label="BNR"
-                        label-for="title"
-                        invalid-feedback="BNR is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="BNR"
-                            required
-                    ></b-form-input>
-                </b-form-group>
-            </b-modal>
-        </div>
-
-        <div>
-            <b-modal id="BookInformation" centered title="Information">
-                <div>
-                    {{ content_full }}
-                </div>
-            </b-modal>
-        </div>
-
     </div>
 </template>
 

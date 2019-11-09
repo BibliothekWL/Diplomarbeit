@@ -125,7 +125,6 @@ class BooksController extends Controller
         if(Book::where('id',$jsonarray['id'])->get()->count()==0){
             return response($jsonarray['id'],201);
         } else {
-            //Book::where('id',$id)->
             DB::table('books')
                 ->where('id', $jsonarray['id'])
                 ->update(['title' => $jsonarray['title'],
@@ -137,15 +136,6 @@ class BooksController extends Controller
         }
         }
 
-
-//    public function deleteBookValidator(Request $request,$id){
-//            if(Book::where('id',$id)->get()->count()==0){
-//                return response('failed',200);
-//            } else {
-//                Book::where('id',$id)->delete();
-//                return response('sucessful', 200);
-//            }
-//    }
 
     public function deleteBookValidator(){
         $json = file_get_contents('php://input');

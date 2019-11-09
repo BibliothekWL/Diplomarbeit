@@ -25,7 +25,13 @@ import App from '@/js/views/App';
 const app = new Vue({
     el: '#app',
     router: Routes,
-    render: h => h(App)
+    render: h => h(App),
+    data() {
+        return {
+            isAdmin: true,
+            isLoggedIn: ""
+        }
+    }
 });
 
 export default app;

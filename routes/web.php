@@ -23,6 +23,8 @@ Route::get('/contact','PagesController@contact');
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@authenticate');
+
 Route::post('/books/create/json/','BooksController@addBookValidator');
 
 Route::post('/books/delete/json/','BooksController@deleteBookValidator');
@@ -71,4 +73,3 @@ Route::get('/books/mybooks/json',function(){
 Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
 
 
-Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
