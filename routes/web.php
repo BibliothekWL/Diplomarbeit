@@ -17,6 +17,9 @@ Route::get('/cart/json',function(){
 
 Route::get('/home','SinglePageController@index');
 Route::get('/list','SinglePageController@index');
+Route::get('/login','SinglePageController@index');
+Route::get('/landing','SinglePageController@index');
+Route::get('/register', 'SinglePageController@index');
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
@@ -71,3 +74,5 @@ Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator')
 Route::post('books/create/json/','BooksController@BookValidator');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
+
+Route::any('/', 'SinglePageController@Index');
