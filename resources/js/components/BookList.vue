@@ -1,29 +1,55 @@
 <template>
-    <div class="container">
-        <div v-if="isAdmin">
-            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.data.length)">
-                <font-awesome-icon icon="plus"/>
-            </b-button>
+    <div>
+        <div v-if="true">
 
-            <h2>Bücherliste</h2>
+            <h1 class="suche_title">Suche</h1>
 
-            <div v-for="n in liste.data" class="list">
-                <div class="listItem">
-                    <div v-on:click="buecherInformationen(n.content)" v-b-modal.BookInformation>
-                        <h2>{{n.id}} {{n.title}}</h2><br> <h5>{{n.content}}</h5>
-                    </div>
-                    <div>
-                        <b-button pill v-on:click="deleteItem(n.id)">
-                            <font-awesome-icon icon="trash"></font-awesome-icon>
-                        </b-button>
+            <b-input-group>
+                <b-input-group-append>
+                    <b-button variant="outline-dark" disabled>
+                        <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+                </b-input-group-append>
+                <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
+                         v-model="search"></b-input>
+            </b-input-group>
 
-                        <b-button v-b-modal.EditItem pill
-                                  v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">
-                            <font-awesome-icon icon="pen"></font-awesome-icon>
-                        </b-button>
-                    </div>
+            <div v-for="book in liste" class="list">
+                <div>
+                    <b-card img-left
+                            img-alt="Image"
+                            style="width: 15em;">
+                        <b-card-title>
+                            {{book.title}}
+                        </b-card-title>
+                        <b-card-text class="beschreibung">
+                            {{content_short[book.id]}}
+                        </b-card-text>
+                    </b-card>
                 </div>
             </div>
+
+            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.data.length)">
+            <font-awesome-icon icon="plus"/>
+            </b-button>
+
+            <!--<div v-for="n in liste.data" class="list">-->
+            <!--<div class="listItem">-->
+            <!--<div v-on:click="buecherInformationen(n.content)" v-b-modal.BookInformation>-->
+            <!--<h2>{{n.id}} {{n.title}}</h2><br> <h5>{{n.content}}</h5>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<b-button pill v-on:click="deleteItem(n.id)">-->
+            <!--<font-awesome-icon icon="trash"></font-awesome-icon>-->
+            <!--</b-button>-->
+
+            <!--<b-button v-b-modal.EditItem pill-->
+            <!--v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">-->
+            <!--<font-awesome-icon icon="pen"></font-awesome-icon>-->
+            <!--</b-button>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
 
             <div>
                 <b-modal id="AddItem" size="lg" centered title="Create Book"
@@ -173,6 +199,7 @@
         name: "BookList",
         data() {
             return {
+                page: 2,
                 liste: [],
                 id: "",
                 title: "",
@@ -182,13 +209,16 @@
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
+                search: ""
             };
         },
         mounted() {
-            axios.get('/books/json')
+            console.log(this.page);
+            axios.get('/books/json/' + this.page)
                 .then(response =>
                     (
                         this.liste = response.data,
+                            this.saveContent(response.data),
                             console.log(this.liste)
                     )
                 );
@@ -249,16 +279,16 @@
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
-                    this.content_full[i] = content[i].content;
+                    this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 12) {
-                        this.content_short[i] = "";
+                        this.content_short[content[i].id] = "";
                         for (let j = 0; j < 12; j++) {
-                            this.content_short[i] += content_words[j] + " ";
+                            this.content_short[content[i].id] += content_words[j] + " ";
                         }
-                        this.content_short[i] += "...";
+                        this.content_short[content[i].id] += "...";
                     } else {
-                        this.content_short[i] = content[i].content;
+                        this.content_short[content[i].id] = content[i].content;
                     }
                 }
             },
@@ -280,8 +310,10 @@
                     window.location.reload();
                 }
             },
-            getBooks: function () {
-
+            ausgabe: function () {
+                if (!(this.search === "")) {
+                    console.log(this.search);
+                }
             }
         }
     }
@@ -289,18 +321,18 @@
 </script>
 
 <style scoped>
+    .suche_title {
+        text-align: center;
+    }
+
     .list {
+        display: flex;
+        flex-direction: column;
         padding: 2em;
     }
 
-    .listItem {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 1px solid black;
+    .beschreibung {
+        font-size: 12px;
     }
 
-    .listItem:hover {
-        cursor: pointer;
-    }
 </style>

@@ -89,9 +89,9 @@ class BooksController extends Controller
     {
         $carts = User::findOrFail(auth()->user()->id)->carts;
         $books = array();
-        foreach($carts as $cart){
+        foreach ($carts as $cart) {
             $book = $cart->book;
-            array_push($books,$book);
+            array_push($books, $book);
         }
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
@@ -105,55 +105,59 @@ class BooksController extends Controller
         }
 
         Cart::where('user_id', auth()->user()->id)->delete();
-        return(redirect('borrowing'));
+        return (redirect('borrowing'));
     }
 
-    public function returnBooks(){
+    public function returnBooks()
+    {
         $books = User::findOrFail(auth()->user()->id)->books;
         Borrowing::where('user_id', auth()->user()->id)->delete();
 
-        foreach($books as $book){
+        foreach ($books as $book) {
             $book->borrowed = 0;
             $book->save();
         }
         return redirect('/borrowing');
     }
 
-    public function BookValidator(){
+    public function BookValidator()
+    {
         $json = file_get_contents('php://input');
-        $jsonarray = json_decode($json,true);
-        if(Book::where('id',$jsonarray['id'])->get()->count()==0){
-            return response($jsonarray['id'],201);
+        $jsonarray = json_decode($json, true);
+        if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
+            return response($jsonarray['id'], 201);
         } else {
             DB::table('books')
                 ->where('id', $jsonarray['id'])
                 ->update(['title' => $jsonarray['title'],
-                          'systematik' => $jsonarray['systematik'],
-                          'medium' => $jsonarray['medium'],
-                          'content' => $jsonarray['content'],
-                          'BNR' => $jsonarray['BNR']]);
+                    'systematik' => $jsonarray['systematik'],
+                    'medium' => $jsonarray['medium'],
+                    'content' => $jsonarray['content'],
+                    'BNR' => $jsonarray['BNR']]);
             return response($jsonarray['id'], 201);
         }
-        }
+    }
 
 
-    public function deleteBookValidator(){
+    public function deleteBookValidator()
+    {
         $json = file_get_contents('php://input');
-        $id = json_decode($json,true);
-        if(Book::where('id',$id)->get()->count()==0){
-            return response('failed',200);
+        $id = json_decode($json, true);
+        if (Book::where('id', $id)->get()->count() == 0) {
+            return response('failed', 200);
         } else {
-            Book::where('id',$id)->delete();
+            Book::where('id', $id)->delete();
             return response('sucessful', 200);
         }
     }
 
-    public function addBookValidator(){
+    public function addBookValidator()
+    {
         $json = file_get_contents('php://input');
-        $jsonarray = json_decode($json,true);
-        $author_id_raw = DB::table('authors')->where('firstname',$jsonarray['authorname'])->pluck('id');
-        $author_id = explode("]", explode("[",$author_id_raw)[1])[0];
-        if(sizeof($jsonarray) != 0){
+        $jsonarray = json_decode($json, true);
+        $author_id_raw = DB::table('authors')->where('firstname', $jsonarray['authorname'])->pluck('id');
+        $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
+        if (sizeof($jsonarray) != 0) {
             $book = new Book();
             $book->user_id = auth()->user()->id;
             $book->author_id = $author_id;
@@ -166,9 +170,10 @@ class BooksController extends Controller
             $book->created_at = Null;
             $book->updated_at = Null;
             $book->save();
-            return response('added sucessfully',200);
+            return response('added sucessfully', 200);
         } else {
             return response('failed', 200);
         }
     }
+
 }
