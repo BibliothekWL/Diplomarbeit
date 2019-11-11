@@ -21,7 +21,9 @@ Route::get('/list','SinglePageController@index');
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
 
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/logout/json', '\App\Http\Controllers\Auth\LoginController@logout');
+
+Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@authenticate');
 
 Route::post('/books/create/json/','BooksController@addBookValidator');
 
@@ -71,4 +73,3 @@ Route::get('/books/mybooks/json',function(){
 Route::post('/books/{books}/edit/jsonvalidate/','BooksController@BookValidator');
 
 
-Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');

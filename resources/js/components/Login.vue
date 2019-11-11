@@ -1,8 +1,9 @@
 <template>
     <div class="login_form">
-        <b-form-input class="inputs" v-model="id" type="email" placeholder="Enter your Email"></b-form-input>
+        <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter your Email"></b-form-input>
         <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter your Password"></b-form-input>
         <b-button v-on:click="login()">Login</b-button>
+        <b-button v-on:click="logout()">Logout</b-button>
     </div>
 </template>
 
@@ -13,7 +14,7 @@
         name: "Login",
         data() {
             return {
-                id: "",
+                email: "",
                 password: ""
             }
         },
@@ -22,18 +23,25 @@
         },
         methods: {
             login: function () {
-                console.log("WORKS");
                 axios.post('http://localhost:8000/login/json', {
-                    parameter: {
-                        id: this.id,
-                        pw: this.password
-                    }
+                        email: this.email,
+                        password: this.password
                 })
                     .then(response => {
-                        console.log(response.data)
+                        console.log(response)
                     }).catch(error => {
                     console.log(error.message)
                 })
+            },
+            logout() {
+                axios.get('/logout/json', {
+
+                })
+                    .then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                        console.log(error.message)
+                });
             }
         }
     }
