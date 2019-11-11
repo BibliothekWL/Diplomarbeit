@@ -55,11 +55,17 @@ class LoginController extends Controller
             $isAdmin = false;
         }
         if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
+            $this->isLoggedIn = true;
             return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => true]);
         } else {
-            return json_encode(['status' => '403', 'statusMsg' => 'User does not exist', 'isLoggedIn' => true]);
+            $this->isLoggedIn = false;
+            return json_encode(['status' => '403', 'statusMsg' => 'User does not exist', 'isLoggedIn' => false]);
         }
 }
 
+    public function logout(){
+            Auth::logout();
+            return response()->json(['status' => '200', 'isLogedIn' => false]);
+    }
 }
 

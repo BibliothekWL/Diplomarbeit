@@ -34,7 +34,14 @@
                 })
             },
             logout() {
-                axios.post('/logout');
+                axios.get('/logout/json', {
+
+                })
+                    .then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                        console.log(error.message)
+                });
             }
         }
     }
