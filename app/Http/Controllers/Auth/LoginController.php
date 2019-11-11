@@ -47,19 +47,25 @@ class LoginController extends Controller
     public function authenticate(){
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-        $userID_raw = DB::table('users')->where('email', $jsonarray['email'])->pluck('id');
-        $userID = explode("]", explode("[",$userID_raw)[1])[0];
-        if (User::findOrFail($userID)->admin == 1) {
-            $isAdmin = true;
-        } else {
-            $isAdmin = false;
+        if (User::where('email', $jsonarray['email'])->count() == 1) {
+            $userID_raw = User::where('email', $jsonarray['email'])->pluck('id');
+            $userID = explode("]", explode("[", $userID_raw)[1])[0];
+            if (User::findOrFail($userID)->admin == 1) {
+                $isAdmin = true;
+            } else {
+                $isAdmin = false;
+            }
+            if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
+                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin]);
+            }
         }
-        if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
-            return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => true]);
-        } else {
-            return json_encode(['status' => '403', 'statusMsg' => 'User does not exist', 'isLoggedIn' => true]);
-        }
-}
+        return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong']);
+    }
 
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json(['status' => '200', 'isLoggedIn' => false]);
+    }
 }
 

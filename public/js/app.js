@@ -11923,7 +11923,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     logout: function logout() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/logout');
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
     }
   }
 });
