@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User as UserRessource;
+use App\User as User;
+use Auth;
+use DB;
+use Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Validator;
 use Request;
@@ -39,16 +44,28 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(){
-        $validator = Validator::make(Request::all(), [
-            'email' => 'email',
-            'password' => 'password',
-        ]);
-        if(!$validator->fails()){
-            return response('successful',200);
+    public function authenticate(){
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        $userID_raw = DB::table('users')->where('email', $jsonarray['email'])->pluck('id');
+        $userID = explode("]", explode("[",$userID_raw)[1])[0];
+        if (User::findOrFail($userID)->admin == 1) {
+            $isAdmin = true;
         } else {
-            return response('invalid',422);
+            $isAdmin = false;
         }
-    }
-
+        if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
+            $this->isLoggedIn = true;
+            return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => true]);
+        } else {
+            $this->isLoggedIn = false;
+            return json_encode(['status' => '403', 'statusMsg' => 'User does not exist', 'isLoggedIn' => false]);
+        }
 }
+
+    public function logout(){
+            Auth::logout();
+            return response()->json(['status' => '200', 'isLogedIn' => false]);
+    }
+}
+

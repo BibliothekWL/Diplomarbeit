@@ -11626,6 +11626,92 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -11634,6 +11720,9 @@ __webpack_require__.r(__webpack_exports__);
       liste: [],
       id: "",
       title: "",
+      systematik: "",
+      medium: "",
+      BNR: "",
       content_full: [],
       content_short: [],
       dialog_title: ""
@@ -11643,48 +11732,59 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json').then(function (response) {
-      return _this.liste = response.data, _this.saveContent(response.data.data);
+      return _this.liste = response.data, console.log(_this.liste);
     });
   },
   methods: {
     deleteItem: function deleteItem(id) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json', {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json/', {
         id: id
+      }).then(function (response) {
+        return _this2.reloadSite(response.status);
+      });
+    },
+    editItem: function editItem(id, title, systematik, medium, content, BNR) {
+      this.id = id;
+      this.title = title;
+      this.content_full = content;
+      this.systematik = systematik;
+      this.medium = medium;
+      this.BNR = BNR;
+    },
+    addItem: function addItem() {
+      this.title = "";
+      this.content_full = "";
+      this.systematik = "";
+      this.medium = "";
+      this.BNR = "";
+    },
+    saveAdd: function saveAdd(title, systematik, medium, content, BNR) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/create/json/', {
+        title: title,
+        systematik: systematik,
+        medium: medium,
+        content: content,
+        BNR: BNR,
+        authorname: 'Kevin'
       }).then(function (response) {
         return console.log(response);
       });
     },
-    editItem: function editItem(id) {
-      this.id = id;
-      this.title = this.liste.data[id - 1].title;
-      this.content_full = this.liste.data[id - 1].content;
-    },
-    addItem: function addItem(maxId) {
-      this.id = maxId + 1;
-      this.title = "sadsad";
-      this.content_full.push("");
-      this.systematik = "dsa";
-      this.medium = "sa";
-      this.BNR = "1111";
-    },
-    saveAdd: function saveAdd(id, title, systematik, medium, content, BNR) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('books/create/json', {
+    saveEdit: function saveEdit(id, title, systematik, medium, content, BNR) {
+      var _this3 = this;
+
+      console.log(id);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/edit/json/', {
+        id: id,
         title: title,
         systematik: systematik,
         medium: medium,
         content: content,
         BNR: BNR
       }).then(function (response) {
-        return console.log(response.data);
-      });
-    },
-    saveEdit: function saveEdit(id, title, content) {
-      console.log(id);
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/' + id + '/edit/jsonvalidate/', {
-        title: title,
-        content: content
-      }).then(function (response) {
-        return console.log(response);
+        return console.log(response), _this3.reloadSite(response.status);
       });
     },
     saveContent: function saveContent(content) {
@@ -11705,9 +11805,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    buecherInformationen: function buecherInformationen(id) {
-      this.dialog1 = true;
-      this.id = id - 1;
+    buecherInformationen: function buecherInformationen(content) {
+      this.content_full = content;
     },
     borrowBook: function borrowBook(id) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/borrow', {
@@ -11717,7 +11816,13 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         return console.log(response);
       });
-    }
+    },
+    reloadSite: function reloadSite(status) {
+      if (status === 200) {
+        window.location.reload();
+      }
+    },
+    getBooks: function getBooks() {}
   }
 });
 
@@ -11798,26 +11903,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   data: function data() {
     return {
-      id: "",
+      email: "",
       password: ""
     };
   },
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      console.log("WORKS");
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/login/json', {
-        parameter: {
-          id: this.id,
-          pw: this.password
-        }
+        email: this.email,
+        password: this.password
       }).then(function (response) {
-        console.log(response.data);
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    },
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
+        console.log(response);
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -77106,7 +77216,7 @@ var render = function() {
                 ],
                 on: {
                   click: function($event) {
-                    return _vm.buecherInformationen(n.id)
+                    return _vm.buecherInformationen(n.content)
                   }
                 }
               },
@@ -77114,7 +77224,7 @@ var render = function() {
                 _c("h2", [_vm._v(_vm._s(n.id) + " " + _vm._s(n.title))]),
                 _c("br"),
                 _vm._v(" "),
-                _c("h5", [_vm._v(_vm._s(_vm.content_short[n.id - 1]))])
+                _c("h5", [_vm._v(_vm._s(n.content))])
               ]
             ),
             _vm._v(" "),
@@ -77148,7 +77258,14 @@ var render = function() {
                     attrs: { pill: "" },
                     on: {
                       click: function($event) {
-                        return _vm.editItem(n.id)
+                        return _vm.editItem(
+                          n.id,
+                          n.title,
+                          n.systematik,
+                          n.medium,
+                          n.content,
+                          n.BNR
+                        )
                       }
                     }
                   },
@@ -77177,57 +77294,12 @@ var render = function() {
               on: {
                 ok: function($event) {
                   return _vm.saveAdd(
-                    _vm.id,
                     _vm.title,
                     _vm.systematik,
                     _vm.medium,
                     _vm.content_full,
                     _vm.BNR
                   )
-                }
-              }
-            },
-            [
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Title",
-                    "label-for": "name-input",
-                    "invalid-feedback": "Title is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.title,
-                      callback: function($$v) {
-                        _vm.title = $$v
-                      },
-                      expression: "title"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
-            "b-modal",
-            {
-              attrs: { id: "EditItem", centered: "", title: "Edit Book" },
-              on: {
-                ok: function($event) {
-                  return _vm.saveEdit(_vm.id, _vm.title, _vm.content_full)
                 }
               }
             },
@@ -77260,8 +77332,56 @@ var render = function() {
                 "b-form-group",
                 {
                   attrs: {
+                    label: "Systematik",
+                    "label-for": "title",
+                    "invalid-feedback": "Systematik is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.systematik,
+                      callback: function($$v) {
+                        _vm.systematik = $$v
+                      },
+                      expression: "systematik"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Medium",
+                    "label-for": "title",
+                    "invalid-feedback": "Medium is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.medium,
+                      callback: function($$v) {
+                        _vm.medium = $$v
+                      },
+                      expression: "medium"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
                     label: "Content",
-                    "label-for": "content_full",
+                    "label-for": "title",
                     "invalid-feedback": "Content is required"
                   }
                 },
@@ -77274,6 +77394,177 @@ var render = function() {
                         _vm.content_full = $$v
                       },
                       expression: "content_full"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "BNR",
+                    "label-for": "title",
+                    "invalid-feedback": "BNR is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.BNR,
+                      callback: function($$v) {
+                        _vm.BNR = $$v
+                      },
+                      expression: "BNR"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c(
+            "b-modal",
+            {
+              attrs: { id: "EditItem", centered: "", title: "Edit Book" },
+              on: {
+                ok: function($event) {
+                  return _vm.saveEdit(
+                    _vm.id,
+                    _vm.title,
+                    _vm.systematik,
+                    _vm.medium,
+                    _vm.content_full,
+                    _vm.BNR
+                  )
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Title",
+                    "label-for": "title",
+                    "invalid-feedback": "Title is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.title,
+                      callback: function($$v) {
+                        _vm.title = $$v
+                      },
+                      expression: "title"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Systematik",
+                    "label-for": "title",
+                    "invalid-feedback": "Systematik is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.systematik,
+                      callback: function($$v) {
+                        _vm.systematik = $$v
+                      },
+                      expression: "systematik"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Medium",
+                    "label-for": "title",
+                    "invalid-feedback": "Medium is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.medium,
+                      callback: function($$v) {
+                        _vm.medium = $$v
+                      },
+                      expression: "medium"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Content",
+                    "label-for": "title",
+                    "invalid-feedback": "Content is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.content_full,
+                      callback: function($$v) {
+                        _vm.content_full = $$v
+                      },
+                      expression: "content_full"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "BNR",
+                    "label-for": "title",
+                    "invalid-feedback": "BNR is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.BNR,
+                      callback: function($$v) {
+                        _vm.BNR = $$v
+                      },
+                      expression: "BNR"
                     }
                   })
                 ],
@@ -77302,7 +77593,7 @@ var render = function() {
               _c("div", [
                 _vm._v(
                   "\n                " +
-                    _vm._s(_vm.content_full[_vm.id]) +
+                    _vm._s(_vm.content_full) +
                     "\n            "
                 )
               ])
@@ -77457,11 +77748,11 @@ var render = function() {
         staticClass: "inputs",
         attrs: { type: "email", placeholder: "Enter your Email" },
         model: {
-          value: _vm.id,
+          value: _vm.email,
           callback: function($$v) {
-            _vm.id = $$v
+            _vm.email = $$v
           },
-          expression: "id"
+          expression: "email"
         }
       }),
       _vm._v(" "),
@@ -77487,6 +77778,18 @@ var render = function() {
           }
         },
         [_vm._v("Login")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.logout()
+            }
+          }
+        },
+        [_vm._v("Logout")]
       )
     ],
     1
@@ -93473,8 +93776,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

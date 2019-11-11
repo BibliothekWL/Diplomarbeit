@@ -12,34 +12,34 @@ import Register from "@/js/components/Register";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-   mode: 'history',
-   routes: [
-       {
-           path: '/',
-           name: 'home',
-           component: Home
-       },
-       {
-           path: '/list',
-           name: 'list',
-           component: BookList
-       },
-       {
-           path: '/login',
-           name: 'login',
-           component: Login
-       },
-       {
-           path: '/landing',
-           name: 'landing',
-           component: Landing
-       },
-       {
-           path: '/register',
-           name: 'register',
-           component: Register
-       }
-   ]
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/list',
+            name: 'list',
+            component: BookList
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
+        },
+        {
+            path: '/landing',
+            name: 'landing',
+            component: Landing
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: Register
+        }
+    ]
 });
 
 export default router;
