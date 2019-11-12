@@ -29,7 +29,8 @@
                 })
                     .then(response => {
                         console.log(response);
-                        this.$store.state.isAdmin = response.isAdmin;
+                        this.$store.state.isAdmin = response.data.isAdmin;
+                        window.location.href = "/list";
                     }).catch(error => {
                     console.log(error.message)
                 })

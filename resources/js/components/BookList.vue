@@ -1,7 +1,6 @@
 <template>
     <div>
-        <div v-if="show">
-
+        <div v-if="isAdmin">
             <h1 class="suche_title">Suche</h1>
 
             <b-input-group>
@@ -37,7 +36,7 @@
                 <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
             </div>
             <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
-            <font-awesome-icon icon="plus"/>
+                <font-awesome-icon icon="plus"/>
             </b-button>
 
             <!--<div v-for="n in liste.data" class="list">-->
@@ -58,6 +57,46 @@
             <!--</div>-->
             <!--</div>-->
 
+        </div>
+
+        <div v-else>
+            <h1 class="suche_title">Suche</h1>
+
+            <b-input-group>
+                <b-input-group-append>
+                    <b-button variant="outline-dark" disabled>
+                        <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+                </b-input-group-append>
+                <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
+                         v-model="search"></b-input>
+            </b-input-group>
+
+            <div v-for="book in liste" class="list">
+                <div>
+                    <b-card img-left
+                            img-alt="Image"
+                            style="width: 15em;">
+                        <b-card-title>
+                            {{book.title}}
+                        </b-card-title>
+                        <b-card-text class="beschreibung">
+                            {{content_short[book.id]}}
+                        </b-card-text>
+                    </b-card>
+                </div>
+            </div>
+
+            <div class="page_buttons">
+                <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
+
+                <b-button disabled>{{page}}</b-button>
+
+                <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
+            </div>
+        </div>
+
+        <div>
             <div>
                 <b-modal id="AddItem" size="lg" centered title="Create Book"
                          @ok="saveAdd(title, systematik, medium, content_full, BNR)">
@@ -207,6 +246,7 @@
         data() {
             return {
                 page: this.$store.state.count,
+                isAdmin: this.$store.state.isAdmin,
                 liste: [],
                 id: "",
                 title: "",
@@ -224,13 +264,13 @@
         },
         mounted() {
             axios.get('/books/json/' + this.page)
-                .then(response =>
-                    (
-                        this.liste = response.data,
-                            this.saveContent(response.data),
-                            this.isAnfangfind(),
-                            this.isEndefind()
-                    )
+                .then(response => {
+                        this.liste = response.data;
+                        this.saveContent(response.data);
+                        this.isAnfangfind();
+                        this.isEndefind();
+                        console.log(this.isAdmin);
+                    }
                 );
         },
         methods: {

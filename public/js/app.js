@@ -11746,12 +11746,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
   data: function data() {
     return {
       page: this.$store.state.count,
+      isAdmin: this.$store.state.isAdmin,
       liste: [],
       id: "",
       title: "",
@@ -11771,7 +11811,15 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json/' + this.page).then(function (response) {
-      return _this.liste = response.data, _this.saveContent(response.data), _this.isAnfangfind(), _this.isEndefind();
+      _this.liste = response.data;
+
+      _this.saveContent(response.data);
+
+      _this.isAnfangfind();
+
+      _this.isEndefind();
+
+      console.log(_this.isAdmin);
     });
   },
   methods: {
@@ -11986,7 +12034,8 @@ __webpack_require__.r(__webpack_exports__);
         password: this.password
       }).then(function (response) {
         console.log(response);
-        _this.$store.state.isAdmin = response.isAdmin;
+        _this.$store.state.isAdmin = response.data.isAdmin;
+        window.location.href = "/list";
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -77245,7 +77294,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.show
+    _vm.isAdmin
       ? _c(
           "div",
           [
@@ -77383,335 +77432,456 @@ var render = function() {
               },
               [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
               1
-            ),
+            )
+          ],
+          2
+        )
+      : _c(
+          "div",
+          [
+            _c("h1", { staticClass: "suche_title" }, [_vm._v("Suche")]),
             _vm._v(" "),
             _c(
-              "div",
+              "b-input-group",
               [
                 _c(
-                  "b-modal",
-                  {
-                    attrs: {
-                      id: "AddItem",
-                      size: "lg",
-                      centered: "",
-                      title: "Create Book"
+                  "b-input-group-append",
+                  [
+                    _c(
+                      "b-button",
+                      { attrs: { variant: "outline-dark", disabled: "" } },
+                      [_c("font-awesome-icon", { attrs: { icon: "search" } })],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-input",
+                  _vm._g(
+                    {
+                      staticClass: "search",
+                      attrs: {
+                        placeholder: "Nach Büchern stöbern",
+                        type: "text"
+                      },
+                      model: {
+                        value: _vm.search,
+                        callback: function($$v) {
+                          _vm.search = $$v
+                        },
+                        expression: "search"
+                      }
                     },
-                    on: {
-                      ok: function($event) {
-                        return _vm.saveAdd(
-                          _vm.title,
-                          _vm.systematik,
-                          _vm.medium,
-                          _vm.content_full,
-                          _vm.BNR
-                        )
-                      }
-                    }
-                  },
+                    _vm.ausgabe()
+                  )
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm._l(_vm.liste, function(book) {
+              return _c("div", { staticClass: "list" }, [
+                _c(
+                  "div",
                   [
                     _c(
-                      "b-form-group",
+                      "b-card",
                       {
-                        attrs: {
-                          label: "Title",
-                          "label-for": "title",
-                          "invalid-feedback": "Title is required"
-                        }
+                        staticStyle: { width: "15em" },
+                        attrs: { "img-left": "", "img-alt": "Image" }
                       },
                       [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.title,
-                            callback: function($$v) {
-                              _vm.title = $$v
-                            },
-                            expression: "title"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Systematik",
-                          "label-for": "title",
-                          "invalid-feedback": "Systematik is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.systematik,
-                            callback: function($$v) {
-                              _vm.systematik = $$v
-                            },
-                            expression: "systematik"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Medium",
-                          "label-for": "title",
-                          "invalid-feedback": "Medium is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.medium,
-                            callback: function($$v) {
-                              _vm.medium = $$v
-                            },
-                            expression: "medium"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Content",
-                          "label-for": "title",
-                          "invalid-feedback": "Content is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.content_full,
-                            callback: function($$v) {
-                              _vm.content_full = $$v
-                            },
-                            expression: "content_full"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "BNR",
-                          "label-for": "title",
-                          "invalid-feedback": "BNR is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.BNR,
-                            callback: function($$v) {
-                              _vm.BNR = $$v
-                            },
-                            expression: "BNR"
-                          }
-                        })
+                        _c("b-card-title", [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(book.title) +
+                              "\n                    "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("b-card-text", { staticClass: "beschreibung" }, [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.content_short[book.id]) +
+                              "\n                    "
+                          )
+                        ])
                       ],
                       1
                     )
                   ],
                   1
                 )
-              ],
-              1
-            ),
+              ])
+            }),
             _vm._v(" "),
             _c(
               "div",
+              { staticClass: "page_buttons" },
               [
                 _c(
-                  "b-modal",
+                  "b-button",
                   {
-                    attrs: { id: "EditItem", centered: "", title: "Edit Book" },
+                    attrs: { disabled: _vm.isAnfang },
                     on: {
-                      ok: function($event) {
-                        return _vm.saveEdit(
-                          _vm.id,
-                          _vm.title,
-                          _vm.systematik,
-                          _vm.medium,
-                          _vm.content_full,
-                          _vm.BNR
-                        )
+                      click: function($event) {
+                        return _vm.decrement()
                       }
                     }
                   },
-                  [
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Title",
-                          "label-for": "title",
-                          "invalid-feedback": "Title is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.title,
-                            callback: function($$v) {
-                              _vm.title = $$v
-                            },
-                            expression: "title"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Systematik",
-                          "label-for": "title",
-                          "invalid-feedback": "Systematik is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.systematik,
-                            callback: function($$v) {
-                              _vm.systematik = $$v
-                            },
-                            expression: "systematik"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Medium",
-                          "label-for": "title",
-                          "invalid-feedback": "Medium is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.medium,
-                            callback: function($$v) {
-                              _vm.medium = $$v
-                            },
-                            expression: "medium"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "Content",
-                          "label-for": "title",
-                          "invalid-feedback": "Content is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.content_full,
-                            callback: function($$v) {
-                              _vm.content_full = $$v
-                            },
-                            expression: "content_full"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-form-group",
-                      {
-                        attrs: {
-                          label: "BNR",
-                          "label-for": "title",
-                          "invalid-feedback": "BNR is required"
-                        }
-                      },
-                      [
-                        _c("b-form-input", {
-                          attrs: { id: "name-input", required: "" },
-                          model: {
-                            value: _vm.BNR,
-                            callback: function($$v) {
-                              _vm.BNR = $$v
-                            },
-                            expression: "BNR"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              [
+                  [_vm._v("<")]
+                ),
+                _vm._v(" "),
+                _c("b-button", { attrs: { disabled: "" } }, [
+                  _vm._v(_vm._s(_vm.page))
+                ]),
+                _vm._v(" "),
                 _c(
-                  "b-modal",
+                  "b-button",
                   {
-                    attrs: {
-                      id: "BookInformation",
-                      centered: "",
-                      title: "Information"
+                    attrs: { disabled: _vm.isEnde },
+                    on: {
+                      click: function($event) {
+                        return _vm.increment()
+                      }
                     }
                   },
-                  [
-                    _c("div", [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s(_vm.content_full) +
-                          "\n                "
-                      )
-                    ])
-                  ]
+                  [_vm._v(">")]
                 )
               ],
               1
             )
           ],
           2
-        )
-      : _vm._e()
+        ),
+    _vm._v(" "),
+    _c("div", [
+      _c(
+        "div",
+        [
+          _c(
+            "b-modal",
+            {
+              attrs: {
+                id: "AddItem",
+                size: "lg",
+                centered: "",
+                title: "Create Book"
+              },
+              on: {
+                ok: function($event) {
+                  return _vm.saveAdd(
+                    _vm.title,
+                    _vm.systematik,
+                    _vm.medium,
+                    _vm.content_full,
+                    _vm.BNR
+                  )
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Title",
+                    "label-for": "title",
+                    "invalid-feedback": "Title is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.title,
+                      callback: function($$v) {
+                        _vm.title = $$v
+                      },
+                      expression: "title"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Systematik",
+                    "label-for": "title",
+                    "invalid-feedback": "Systematik is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.systematik,
+                      callback: function($$v) {
+                        _vm.systematik = $$v
+                      },
+                      expression: "systematik"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Medium",
+                    "label-for": "title",
+                    "invalid-feedback": "Medium is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.medium,
+                      callback: function($$v) {
+                        _vm.medium = $$v
+                      },
+                      expression: "medium"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Content",
+                    "label-for": "title",
+                    "invalid-feedback": "Content is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.content_full,
+                      callback: function($$v) {
+                        _vm.content_full = $$v
+                      },
+                      expression: "content_full"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "BNR",
+                    "label-for": "title",
+                    "invalid-feedback": "BNR is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.BNR,
+                      callback: function($$v) {
+                        _vm.BNR = $$v
+                      },
+                      expression: "BNR"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c(
+            "b-modal",
+            {
+              attrs: { id: "EditItem", centered: "", title: "Edit Book" },
+              on: {
+                ok: function($event) {
+                  return _vm.saveEdit(
+                    _vm.id,
+                    _vm.title,
+                    _vm.systematik,
+                    _vm.medium,
+                    _vm.content_full,
+                    _vm.BNR
+                  )
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Title",
+                    "label-for": "title",
+                    "invalid-feedback": "Title is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.title,
+                      callback: function($$v) {
+                        _vm.title = $$v
+                      },
+                      expression: "title"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Systematik",
+                    "label-for": "title",
+                    "invalid-feedback": "Systematik is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.systematik,
+                      callback: function($$v) {
+                        _vm.systematik = $$v
+                      },
+                      expression: "systematik"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Medium",
+                    "label-for": "title",
+                    "invalid-feedback": "Medium is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.medium,
+                      callback: function($$v) {
+                        _vm.medium = $$v
+                      },
+                      expression: "medium"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "Content",
+                    "label-for": "title",
+                    "invalid-feedback": "Content is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.content_full,
+                      callback: function($$v) {
+                        _vm.content_full = $$v
+                      },
+                      expression: "content_full"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    label: "BNR",
+                    "label-for": "title",
+                    "invalid-feedback": "BNR is required"
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: { id: "name-input", required: "" },
+                    model: {
+                      value: _vm.BNR,
+                      callback: function($$v) {
+                        _vm.BNR = $$v
+                      },
+                      expression: "BNR"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c(
+            "b-modal",
+            {
+              attrs: {
+                id: "BookInformation",
+                centered: "",
+                title: "Information"
+              }
+            },
+            [
+              _c("div", [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.content_full) +
+                    "\n                "
+                )
+              ])
+            ]
+          )
+        ],
+        1
+      )
+    ])
   ])
 }
 var staticRenderFns = []
