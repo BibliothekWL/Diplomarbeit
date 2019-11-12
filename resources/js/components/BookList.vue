@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="true">
+        <div v-if="show">
 
             <h1 class="suche_title">Suche</h1>
 
@@ -29,7 +29,14 @@
                 </div>
             </div>
 
-            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.data.length)">
+            <div class="page_buttons">
+                <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
+
+                <b-button disabled>{{page}}</b-button>
+
+                <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
+            </div>
+            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
             <font-awesome-icon icon="plus"/>
             </b-button>
 
@@ -199,7 +206,7 @@
         name: "BookList",
         data() {
             return {
-                page: 2,
+                page: this.$store.state.count,
                 liste: [],
                 id: "",
                 title: "",
@@ -209,17 +216,20 @@
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
-                search: ""
+                search: "",
+                isAnfang: false,
+                isEnde: false,
+                show: true
             };
         },
         mounted() {
-            console.log(this.page);
             axios.get('/books/json/' + this.page)
                 .then(response =>
                     (
                         this.liste = response.data,
                             this.saveContent(response.data),
-                            console.log(this.liste)
+                            this.isAnfangfind(),
+                            this.isEndefind()
                     )
                 );
         },
@@ -271,10 +281,10 @@
                     content: content,
                     BNR: BNR
                 })
-                    .then(response => (
-                            console.log(response),
-                                this.reloadSite(response.status)
-                        )
+                    .then(response => {
+                            console.log(response);
+                            this.reloadSite(response.status);
+                        }
                     )
             },
             saveContent: function (content) {
@@ -314,6 +324,24 @@
                 if (!(this.search === "")) {
                     console.log(this.search);
                 }
+            },
+            isAnfangfind: function () {
+                if (this.$store.state.count === 1) {
+                    this.isAnfang = true;
+                }
+            },
+            isEndefind: function () {
+                if (this.$store.state.count === 2) {
+                    this.isEnde = true;
+                }
+            },
+            increment: function () {
+                this.$store.commit('increment');
+                window.location.reload();
+            },
+            decrement: function () {
+                this.$store.commit('decrement');
+                window.location.reload();
             }
         }
     }
@@ -333,6 +361,11 @@
 
     .beschreibung {
         font-size: 12px;
+    }
+
+    .page_buttons {
+        text-align: center;
+        padding: 2em;
     }
 
 </style>

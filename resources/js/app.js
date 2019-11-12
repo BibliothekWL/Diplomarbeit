@@ -20,19 +20,16 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+import store from './store';
+
 import Routes from '@/js/routes';
 import App from '@/js/views/App';
 
 const app = new Vue({
     el: '#app',
+    store,
     router: Routes,
-    render: h => h(App),
-    data() {
-        return {
-            isAdmin: true,
-            isLoggedIn: ""
-        }
-    }
+    render: h => h(App)
 });
 
 export default app;
