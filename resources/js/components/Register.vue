@@ -2,7 +2,7 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link class="link" to="/landing">Login</router-link>
+                <router-link class="link" to="/login">Login</router-link>
                 <&nbsp;>
                 <router-link disabled to="/register">Register</router-link>
             </b-navbar>
