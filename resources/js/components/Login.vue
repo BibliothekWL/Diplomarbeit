@@ -9,7 +9,7 @@
             <div class="form_div">
                 <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
                 <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
-                <b-button v-on:click="login()">Login</b-button>
+                <b-button v-on:click="login()" href>Login</b-button>
             </div>
         </div>
     </div>
@@ -36,14 +36,20 @@
                     password: this.password
                 })
                     .then(response => {
-                        console.log(response)
+                        console.log(response);
+                        if(response.data.status === '200') {
+                          this.$store.state.isLoggedIn = response.data.isLoggedIn;
+                            console.log(response.data.isLoggedIn);
+                            console.log(this.$store.state.isLoggedIn);
+                            this.$router.push(this.$route.query.redirect || '/home');
+                        }
+
                     }).catch(error => {
                     console.log(error.message)
                 })
             },
             logout() {
                 axios.get('/logout/json', {
-
                 })
                     .then(response => {
                         console.log(response)
@@ -109,17 +115,18 @@
                         password: this.password
                 })
                     .then(response => {
-                        console.log(response)
+                        console.log(response);
+                        this.$store.state.isAdmin = response.data.isAdmin;
+                        window.location.href = "/list";
                     }).catch(error => {
                     console.log(error.message)
                 })
             },
             logout() {
-                axios.get('/logout/json', {
-
-                })
+                axios.get('/logout/json')
                     .then(response => {
-                        console.log(response)
+                        console.log(response);
+                        this.$store.commit("UserisnotAdmin");
                     }).catch(error => {
                         console.log(error.message)
                 });
