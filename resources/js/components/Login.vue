@@ -28,17 +28,18 @@
                         password: this.password
                 })
                     .then(response => {
-                        console.log(response)
+                        console.log(response);
+                        this.$store.state.isAdmin = response.data.isAdmin;
+                        window.location.href = "/list";
                     }).catch(error => {
                     console.log(error.message)
                 })
             },
             logout() {
-                axios.get('/logout/json', {
-
-                })
+                axios.get('/logout/json')
                     .then(response => {
-                        console.log(response)
+                        console.log(response);
+                        this.$store.commit("UserisnotAdmin");
                     }).catch(error => {
                         console.log(error.message)
                 });
