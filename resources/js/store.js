@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         count: 1,
-        isAdmin: false
+        isAdmin: false,
+        isLoggedIn: false
     },
     plugins: [createPersistedState()],
     mutations: {

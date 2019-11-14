@@ -20,6 +20,9 @@ Route::get('/list', 'SinglePageController@index');
 
 Route::get('/', 'PagesController@home');
 Route::get('/contact', 'PagesController@contact');
+Route::get('/session',function(){
+    return json_encode(session()->has('id'));
+});
 
 Route::get('/logout/json', '\App\Http\Controllers\Auth\LoginController@logout');
 

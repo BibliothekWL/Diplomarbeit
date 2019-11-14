@@ -21,7 +21,7 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profile</b-dropdown-item>
-                    <b-dropdown-item href="/landing">Logout</b-dropdown-item>
+                    <b-dropdown-item href="/logout">Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
@@ -47,7 +47,7 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profile</b-dropdown-item>
-                    <b-dropdown-item href="/landing">Login</b-dropdown-item>
+                    <b-dropdown-item href="/login">Login</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
@@ -60,10 +60,14 @@
     export default {
         data() {
             return {
-                loggedIn : true
+                loggedIn : this.$store.state.isLoggedIn,
             }
+        },
+        mounted(){
+            console.log(this.loggedIn);
         }
     }
+
 </script>
 
 <style>
