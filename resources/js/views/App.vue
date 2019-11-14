@@ -21,7 +21,11 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profile</b-dropdown-item>
+<<<<<<< HEAD
+                    <b-dropdown-item href="/logout">Logout</b-dropdown-item>
+=======
                     <b-dropdown-item href="/login" v-on:click="">Logout</b-dropdown-item>
+>>>>>>> 692d902d1ed1d91d2c233c8373c0f9a4add6c0bc
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
@@ -75,7 +79,9 @@
                     });
                 }
             }
+>>>>>>> 692d902d1ed1d91d2c233c8373c0f9a4add6c0bc
     }
+
 </script>
 
 <style>
