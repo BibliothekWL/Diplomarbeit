@@ -65,7 +65,7 @@ class LoginController extends Controller
 
     public function logout(){
             Auth::logout();
-            return response()->json(['status' => '200', 'isLogedIn' => false]);
+            return response()->json(['status' => '200', 'isLoggedIn' => false]);
     }
 }
 

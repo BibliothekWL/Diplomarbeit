@@ -3,14 +3,15 @@
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
                 <router-link class="link" to="/landing">Login</router-link>
-                <router-link class="link" to="/register">Register</router-link>
+                <&nbsp;>
+                <router-link disabled to="/register">Register</router-link>
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="name" type="text" placeholder="Enter Name"></b-form-input>
                 <b-form-input class="inputs" v-model="id" type="text" placeholder="Enter ID"></b-form-input>
                 <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
                 <b-form-input class="inputs" v-model="passwordRepeat" type="password" placeholder="Repeat Password"></b-form-input>
-                <b-button v-on:click="">Login</b-button>
+                <b-button v-on:click="">Register</b-button>
             </div>
         </div>
     </div>

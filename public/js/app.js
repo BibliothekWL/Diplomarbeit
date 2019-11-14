@@ -11856,6 +11856,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -11872,13 +11874,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Landing",
   data: function data() {
     return {
-      id: "",
+      email: "",
       password: ""
     };
+  },
+  mounted: function mounted() {},
+  methods: {
+    login: function login() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/landing/json', {
+        email: this.email,
+        password: this.password
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    }
   }
 });
 
@@ -11904,9 +11921,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Login",
+  name: "Landing",
   data: function data() {
     return {
       email: "",
@@ -11916,7 +11941,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/login/json', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/landing/json', {
         email: this.email,
         password: this.password
       }).then(function (response) {
@@ -11966,6 +11991,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
@@ -11991,6 +12017,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -12049,11 +12077,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      loggedIn: true
+      loggedIn: false
     };
+  },
+  methods: {
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    }
   }
 });
 
@@ -44845,12 +44883,13 @@ exports.push([module.i, "\n.test[data-v-15bf0008]{\n        background-image: ur
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+var escape = __webpack_require__(/*! ../../../node_modules/css-loader/lib/url/escape.js */ "./node_modules/css-loader/lib/url/escape.js");
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
 
 
 // module
-exports.push([module.i, "\n.login_form[data-v-6bdc8b8e]{\n    display: -webkit-box;\n    display: flex;\n    flex-wrap: nowrap;\n    -webkit-box-align: start;\n            align-items: flex-start;\n    justify-content: space-around;\n    margin-top: 3em;\n    margin-left: 1em;\n    margin-right: 1em;\n}\n.inputs[data-v-6bdc8b8e]{\n}\n", ""]);
+exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    width: 40%;\n    border-radius: 15px;\n}\n", ""]);
 
 // exports
 
@@ -44889,7 +44928,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\na{\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.link{\n    margin-right: 1em;\n}\n", ""]);
+exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.link {\n    margin-right: 1em;\n}\n", ""]);
 
 // exports
 
@@ -77666,13 +77705,13 @@ var render = function() {
           [
             _c(
               "router-link",
-              { staticClass: "link", attrs: { to: "/landing" } },
+              { attrs: { "class-active": "active", to: "/landing" } },
               [_vm._v("Login")]
             ),
-            _vm._v(" "),
+            _vm._v("\n            < >\n            "),
             _c(
               "router-link",
-              { staticClass: "link", attrs: { to: "/register" } },
+              { attrs: { "class-active": "active", to: "/register" } },
               [_vm._v("Register")]
             )
           ],
@@ -77687,11 +77726,11 @@ var render = function() {
               staticClass: "inputs",
               attrs: { type: "email", placeholder: "Enter Email" },
               model: {
-                value: _vm.id,
+                value: _vm.email,
                 callback: function($$v) {
-                  _vm.id = $$v
+                  _vm.email = $$v
                 },
-                expression: "id"
+                expression: "email"
               }
             }),
             _vm._v(" "),
@@ -77707,9 +77746,17 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("b-button", { on: { click: function($event) {} } }, [
-              _vm._v("Login")
-            ])
+            _c(
+              "b-button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.login()
+                  }
+                }
+              },
+              [_vm._v("Login")]
+            )
           ],
           1
         )
@@ -77740,60 +77787,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "login_form" },
-    [
-      _c("b-form-input", {
-        staticClass: "inputs",
-        attrs: { type: "email", placeholder: "Enter your Email" },
-        model: {
-          value: _vm.email,
-          callback: function($$v) {
-            _vm.email = $$v
+  return _c("div", { staticClass: "test" }, [
+    _c(
+      "div",
+      { staticClass: "form_div" },
+      [
+        _c(
+          "b-navbar",
+          {
+            staticClass: "short_navbar",
+            attrs: { type: "light", variant: "danger" }
           },
-          expression: "email"
-        }
-      }),
-      _vm._v(" "),
-      _c("b-form-input", {
-        staticClass: "inputs",
-        attrs: { type: "password", placeholder: "Enter your Password" },
-        model: {
-          value: _vm.password,
-          callback: function($$v) {
-            _vm.password = $$v
-          },
-          expression: "password"
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-button",
-        {
-          on: {
-            click: function($event) {
-              return _vm.login()
-            }
-          }
-        },
-        [_vm._v("Login")]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-button",
-        {
-          on: {
-            click: function($event) {
-              return _vm.logout()
-            }
-          }
-        },
-        [_vm._v("Logout")]
-      )
-    ],
-    1
-  )
+          [
+            _c("router-link", { attrs: { disabled: "", to: "/landing" } }, [
+              _vm._v("Login")
+            ]),
+            _vm._v("\n            < >\n            "),
+            _c(
+              "router-link",
+              { attrs: { "class-active": "active", to: "/register" } },
+              [_vm._v("Register")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form_div" },
+          [
+            _c("b-form-input", {
+              staticClass: "inputs",
+              attrs: { type: "email", placeholder: "Enter Email" },
+              model: {
+                value: _vm.email,
+                callback: function($$v) {
+                  _vm.email = $$v
+                },
+                expression: "email"
+              }
+            }),
+            _vm._v(" "),
+            _c("b-form-input", {
+              staticClass: "inputs",
+              attrs: { type: "password", placeholder: "Enter Password" },
+              model: {
+                value: _vm.password,
+                callback: function($$v) {
+                  _vm.password = $$v
+                },
+                expression: "password"
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "b-button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.login()
+                  }
+                }
+              },
+              [_vm._v("Login")]
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -77834,12 +77898,10 @@ var render = function() {
               { staticClass: "link", attrs: { to: "/landing" } },
               [_vm._v("Login")]
             ),
-            _vm._v(" "),
-            _c(
-              "router-link",
-              { staticClass: "link", attrs: { to: "/register" } },
-              [_vm._v("Register")]
-            )
+            _vm._v("\n            < >\n            "),
+            _c("router-link", { attrs: { disabled: "", to: "/register" } }, [
+              _vm._v("Register")
+            ])
           ],
           1
         ),
@@ -77897,7 +77959,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("b-button", { on: { click: function($event) {} } }, [
-              _vm._v("Login")
+              _vm._v("Register")
             ])
           ],
           1
@@ -77976,9 +78038,14 @@ var render = function() {
                         _vm._v("Profile")
                       ]),
                       _vm._v(" "),
-                      _c("b-dropdown-item", { attrs: { href: "/landing" } }, [
-                        _vm._v("Logout")
-                      ])
+                      _c(
+                        "b-dropdown-item",
+                        {
+                          attrs: { href: "/landing" },
+                          on: { click: function($event) {} }
+                        },
+                        [_vm._v("Logout")]
+                      )
                     ],
                     1
                   )
@@ -93665,6 +93732,9 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/register',
     name: 'register',
     component: _js_components_Register__WEBPACK_IMPORTED_MODULE_6__["default"]
+  }, {
+    path: '*',
+    redirect: '/landing'
   }]
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
@@ -93776,8 +93846,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
