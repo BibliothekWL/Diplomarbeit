@@ -11887,7 +11887,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/landing/json', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/login/json', {
         email: this.email,
         password: this.password
       }).then(function (response) {
@@ -77599,7 +77599,7 @@ var render = function() {
             attrs: { type: "light", variant: "danger" }
           },
           [
-            _c("router-link", { attrs: { disabled: "", to: "/landing" } }, [
+            _c("router-link", { attrs: { disabled: "", to: "/login" } }, [
               _vm._v("Login")
             ]),
             _vm._v("\n            < >\n            "),

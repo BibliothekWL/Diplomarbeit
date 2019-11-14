@@ -2,7 +2,7 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link disabled to="/landing">Login</router-link>
+                <router-link disabled to="/login">Login</router-link>
                 <&nbsp;>
                 <router-link class-active="active" to="/register">Register</router-link>
             </b-navbar>
@@ -31,7 +31,7 @@
         },
         methods: {
             login: function () {
-                axios.post('http://localhost:8000/landing/json', {
+                axios.post('http://localhost:8000/login/json', {
                     email: this.email,
                     password: this.password
                 })
