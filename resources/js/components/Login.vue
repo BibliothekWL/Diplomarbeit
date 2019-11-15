@@ -37,12 +37,9 @@
                 })
                     .then(response => {
                         console.log(response);
-                        if(response.data.status === '200') {
                           this.$store.state.isLoggedIn = response.data.isLoggedIn;
-                            console.log(response.data.isLoggedIn);
                             console.log(this.$store.state.isLoggedIn);
                             this.$router.push(this.$route.query.redirect || '/home');
-                        }
 
                     }).catch(error => {
                     console.log(error.message)

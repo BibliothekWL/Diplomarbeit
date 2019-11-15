@@ -11953,7 +11953,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Home"
+  data: function data() {
+    return {
+      name: "Home",
+      loggedIn: this.$store.state.isLoggedIn
+    };
+  },
+  mounted: function mounted() {
+    this.loggedIn = this.$store.state.isLoggedIn;
+  }
 });
 
 /***/ }),
@@ -12005,14 +12013,10 @@ __webpack_require__.r(__webpack_exports__);
         password: this.password
       }).then(function (response) {
         console.log(response);
+        _this.$store.state.isLoggedIn = response.data.isLoggedIn;
+        console.log(_this.$store.state.isLoggedIn);
 
-        if (response.data.status === '200') {
-          _this.$store.state.isLoggedIn = response.data.isLoggedIn;
-          console.log(response.data.isLoggedIn);
-          console.log(_this.$store.state.isLoggedIn);
-
-          _this.$router.push(_this.$route.query.redirect || '/home');
-        }
+        _this.$router.push(_this.$route.query.redirect || '/home');
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -12109,40 +12113,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -12151,9 +12121,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    console.log(this.loggedIn);
+    this.loggedIn = this.$store.state.isLoggedIn;
+    console.log('Is Logged In? ' + this.$store.state.isLoggedIn);
   },
   methods: {
+    checkOnValuechange: function checkOnValuechange() {
+      if (this.loggedIn === false) {
+        this.$router.go();
+      } else {}
+    },
     logout: function logout() {
       var _this = this;
 
@@ -78539,121 +78515,109 @@ var render = function() {
   return _c(
     "div",
     [
-      this.loggedIn
-        ? _c(
-            "b-navbar",
-            { attrs: { type: "light", variant: "danger" } },
+      _c(
+        "b-navbar",
+        { attrs: { type: "light", variant: "danger" } },
+        [
+          _c("router-link", { staticClass: "link", attrs: { to: "/" } }, [
+            _vm._v("Home")
+          ]),
+          _vm._v(" "),
+          _c("router-link", { staticClass: "link", attrs: { to: "/list" } }, [
+            _vm._v("Liste")
+          ]),
+          _vm._v(" "),
+          _c(
+            "b-navbar-nav",
+            { staticClass: "ml-auto" },
             [
-              _c("router-link", { staticClass: "link", attrs: { to: "/" } }, [
-                _vm._v("Home")
-              ]),
-              _vm._v(" "),
-              _c(
-                "router-link",
-                { staticClass: "link", attrs: { to: "/list" } },
-                [_vm._v("Liste")]
-              ),
-              _vm._v(" "),
               _c(
                 "b-button",
                 {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.loggedIn,
+                      expression: "loggedIn"
+                    }
+                  ],
                   attrs: { href: "/login", right: "" },
                   on: {
+                    change: function($event) {
+                      return _vm.checkOnValuechange()
+                    },
                     click: function($event) {
                       return _vm.logout()
                     }
+                  },
+                  model: {
+                    value: _vm.loggedIn,
+                    callback: function($$v) {
+                      _vm.loggedIn = $$v
+                    },
+                    expression: "loggedIn"
                   }
                 },
                 [_vm._v("Logout")]
               ),
               _vm._v(" "),
               _c(
-                "b-navbar-nav",
-                { staticClass: "ml-auto" },
-                [
-                  _c(
-                    "b-nav-item-dropdown",
+                "b-button",
+                {
+                  directives: [
                     {
-                      attrs: { right: "" },
-                      scopedSlots: _vm._u(
-                        [
-                          {
-                            key: "button-content",
-                            fn: function() {
-                              return [_c("em", [_vm._v("User")])]
-                            },
-                            proxy: true
-                          }
-                        ],
-                        null,
-                        false,
-                        4258386881
-                      )
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.loggedIn,
+                      expression: "!loggedIn"
+                    }
+                  ],
+                  attrs: { href: "/login", right: "" },
+                  on: {
+                    change: function($event) {
+                      return _vm.checkOnValuechange()
+                    }
+                  },
+                  model: {
+                    value: _vm.loggedIn,
+                    callback: function($$v) {
+                      _vm.loggedIn = $$v
                     },
-                    [
-                      _vm._v(" "),
-                      _c("b-dropdown-item", { attrs: { href: "#" } }, [
-                        _vm._v("Profile")
-                      ])
-                    ],
-                    1
-                  )
+                    expression: "loggedIn"
+                  }
+                },
+                [_vm._v("Login")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-nav-item-dropdown",
+                {
+                  attrs: { right: "" },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "button-content",
+                      fn: function() {
+                        return [_c("em", [_vm._v("User")])]
+                      },
+                      proxy: true
+                    }
+                  ])
+                },
+                [
+                  _vm._v(" "),
+                  _c("b-dropdown-item", { attrs: { href: "#" } }, [
+                    _vm._v("Profile")
+                  ])
                 ],
                 1
               )
             ],
             1
           )
-        : _c(
-            "b-navbar",
-            { attrs: { type: "light", variant: "danger" } },
-            [
-              _c("router-link", { staticClass: "link", attrs: { to: "/" } }, [
-                _vm._v("Home")
-              ]),
-              _vm._v(" "),
-              _c(
-                "router-link",
-                { staticClass: "link", attrs: { to: "/list" } },
-                [_vm._v("Liste")]
-              ),
-              _vm._v(" "),
-              _c("b-button", { attrs: { href: "/login", right: "" } }, [
-                _vm._v("Login")
-              ]),
-              _vm._v(" "),
-              _c(
-                "b-navbar-nav",
-                { staticClass: "ml-auto" },
-                [
-                  _c(
-                    "b-nav-item-dropdown",
-                    {
-                      attrs: { right: "" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "button-content",
-                          fn: function() {
-                            return [_c("em", [_vm._v("User")])]
-                          },
-                          proxy: true
-                        }
-                      ])
-                    },
-                    [
-                      _vm._v(" "),
-                      _c("b-dropdown-item", { attrs: { href: "#" } }, [
-                        _vm._v("Profile")
-                      ])
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("router-view")
     ],

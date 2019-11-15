@@ -4,7 +4,15 @@
 
 <script>
     export default {
-        name: "Home"
+        data() {
+            return {
+                name: "Home",
+                loggedIn: this.$store.state.isLoggedIn
+            }
+        },
+        mounted() {
+            this.loggedIn = this.$store.state.isLoggedIn;
+        }
     }
 </script>
 
