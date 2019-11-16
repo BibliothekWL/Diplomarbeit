@@ -12070,9 +12070,87 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/App.vue?vue&type=script&lang=js& ***!
   \*********************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: D:\\5Klasse(5AI)\\Diplomarbeit\\resources\\js\\views\\App.vue: Unexpected token (82:3)\n\n\u001b[0m \u001b[90m 80 | \u001b[39m                }\u001b[0m\n\u001b[0m \u001b[90m 81 | \u001b[39m            }\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 | \u001b[39m\u001b[33m>>>\u001b[39m\u001b[33m>>>\u001b[39m\u001b[33m>\u001b[39m \u001b[35m692\u001b[39md902d1ed1d91d2c233c8373c0f9a4add6c0bc\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 83 | \u001b[39m    }\u001b[0m\n\u001b[0m \u001b[90m 84 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 85 | \u001b[39m\u001b[0m\n    at Parser.raise (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:6420:17)\n    at Parser.unexpected (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:7773:16)\n    at Parser.parseExprAtom (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8996:20)\n    at Parser.parseExprSubscripts (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOpBaseRightExpr (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8496:34)\n    at Parser.parseExprOpRightExpr (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8489:21)\n    at Parser.parseExprOp (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8452:27)\n    at Parser.parseExprOps (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8412:17)\n    at Parser.parseMaybeConditional (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseObjectProperty (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9441:101)\n    at Parser.parseObjPropValue (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9466:101)\n    at Parser.parseObjectMember (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9390:10)\n    at Parser.parseObj (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9314:25)\n    at Parser.parseExprAtom (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8939:28)\n    at Parser.parseExprSubscripts (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseExportDefaultExpression (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:11187:24)\n    at Parser.parseExport (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:11088:31)\n    at Parser.parseStatementContent (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10113:27)\n    at Parser.parseStatement (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)\n    at Parser.parseTopLevel (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9940:10)\n    at Parser.parse (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:11447:17)\n    at parse (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:11483:38)\n    at parser (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\core\\lib\\transformation\\normalize-file.js:168:34)\n    at normalizeFile (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\core\\lib\\transformation\\normalize-file.js:102:11)\n    at runSync (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\core\\lib\\transformation\\index.js:44:43)\n    at runAsync (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\core\\lib\\transformation\\index.js:35:14)\n    at process.nextTick (D:\\5Klasse(5AI)\\Diplomarbeit\\node_modules\\@babel\\core\\lib\\transform.js:34:34)\n    at process._tickCallback (internal/process/next_tick.js:61:11)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      loggedIn: false
+    };
+  },
+  methods: {
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -78439,22 +78517,10 @@ var render = function() {
                       _c("b-dropdown-item", { attrs: { href: "#" } }, [
                         _vm._v("Profile")
                       ]),
-                      _vm._v("\n<<<<<<< HEAD\n                    "),
+                      _vm._v(" "),
                       _c("b-dropdown-item", { attrs: { href: "/logout" } }, [
                         _vm._v("Logout")
-                      ]),
-                      _vm._v("\n=======\n                    "),
-                      _c(
-                        "b-dropdown-item",
-                        {
-                          attrs: { href: "/login" },
-                          on: { click: function($event) {} }
-                        },
-                        [_vm._v("Logout")]
-                      ),
-                      _vm._v(
-                        "\n>>>>>>> 692d902d1ed1d91d2c233c8373c0f9a4add6c0bc\n                "
-                      )
+                      ])
                     ],
                     1
                   )
@@ -95186,14 +95252,15 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*!************************************!*\
   !*** ./resources/js/views/App.vue ***!
   \************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _App_vue_vue_type_template_id_91ac6b5c_xmlns_3Av_slot_http_3A_2F_2Fwww_w3_org_2F1999_2FXSL_2FTransform___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=91ac6b5c&xmlns%3Av-slot=http%3A%2F%2Fwww.w3.org%2F1999%2FXSL%2FTransform& */ "./resources/js/views/App.vue?vue&type=template&id=91ac6b5c&xmlns%3Av-slot=http%3A%2F%2Fwww.w3.org%2F1999%2FXSL%2FTransform&");
 /* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ "./resources/js/views/App.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&lang=css& */ "./resources/js/views/App.vue?vue&type=style&index=0&lang=css&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&lang=css& */ "./resources/js/views/App.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -95225,7 +95292,7 @@ component.options.__file = "resources/js/views/App.vue"
 /*!*************************************************************!*\
   !*** ./resources/js/views/App.vue?vue&type=script&lang=js& ***!
   \*************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
