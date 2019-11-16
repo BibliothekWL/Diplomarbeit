@@ -31,7 +31,11 @@
         },
         methods: {
             login: function () {
+<<<<<<< HEAD
                 axios.post('/login/json/', {
+=======
+                axios.post('/login/json', {
+>>>>>>> f5864d5a2a3cb22953424726d24823405c2c28a8
                     email: this.email,
                     password: this.password
                 })
