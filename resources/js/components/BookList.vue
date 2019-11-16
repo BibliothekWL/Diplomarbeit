@@ -88,11 +88,14 @@
             </div>
 
             <div class="page_buttons">
+                <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>
                 <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
 
                 <b-button disabled>{{page}}</b-button>
 
                 <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
+                <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
+
             </div>
         </div>
 
@@ -248,6 +251,8 @@
                 page: this.$store.state.count,
                 isAdmin: this.$store.state.isAdmin,
                 liste: [],
+                firstPage: 1,
+                lastPage: 0,
                 id: "",
                 title: "",
                 systematik: "",
@@ -263,13 +268,15 @@
             };
         },
         mounted() {
-            axios.get('/books/json/')
+            axios.get('/books/json?page=' + this.page)
                 .then(response => {
-                        this.liste = response;
-                        this.saveContent(response.data);
+                        this.liste = response.data.data;
+                        this.lastPage = response.data.last_page;
+                        this.$store.state.lastPage = this.lastPage;
+                        this.saveContent(response.data.data);
                         this.isAnfangfind();
                         this.isEndefind();
-                        console.log(response.data.data);
+                        console.log(this.lastPage);
                     }
                 );
         },
@@ -366,12 +373,12 @@
                 }
             },
             isAnfangfind: function () {
-                if (this.$store.state.count === 1) {
+                if (this.$store.state.count === this.firstPage) {
                     this.isAnfang = true;
                 }
             },
             isEndefind: function () {
-                if (this.$store.state.count === 2) {
+                if (this.$store.state.count === this.lastPage) {
                     this.isEnde = true;
                 }
             },
@@ -382,6 +389,30 @@
             decrement: function () {
                 this.$store.commit('decrement');
                 window.location.reload();
+            },
+            sendtoFirst: function () {
+                this.$store.commit("isFirstPage");
+                axios.get('/books/json?page=' + this.firstPage)
+                    .then(response => {
+                        this.liste = response.data.data;
+                        this.lastPage = response.data.last_page;
+                        this.$store.state.lastPage = this.lastPage;
+                        this.saveContent(response.data.data);
+                        this.isAnfangfind();
+                        this.isEndefind();                        }
+                    );
+            },
+            sendtoLast: function () {
+                    this.$store.commit("isLastPage");
+                axios.get('/books/json?page=' + this.lastPage)
+                    .then(response => {
+                        this.liste = response.data.data;
+                        this.lastPage = response.data.last_page;
+                        this.$store.state.lastPage = this.lastPage;
+                        this.saveContent(response.data.data);
+                        this.isAnfangfind();
+                        this.isEndefind();                        }
+                    );
             }
         }
     }

@@ -11785,6 +11785,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -11793,6 +11796,8 @@ __webpack_require__.r(__webpack_exports__);
       page: this.$store.state.count,
       isAdmin: this.$store.state.isAdmin,
       liste: [],
+      firstPage: 1,
+      lastPage: 0,
       id: "",
       title: "",
       systematik: "",
@@ -11810,16 +11815,18 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json/').then(function (response) {
-      _this.liste = response;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
+      _this.liste = response.data.data;
+      _this.lastPage = response.data.last_page;
+      _this.$store.state.lastPage = _this.lastPage;
 
-      _this.saveContent(response.data);
+      _this.saveContent(response.data.data);
 
       _this.isAnfangfind();
 
       _this.isEndefind();
 
-      console.log(response.data.data);
+      console.log(_this.lastPage);
     });
   },
   methods: {
@@ -11917,12 +11924,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     isAnfangfind: function isAnfangfind() {
-      if (this.$store.state.count === 1) {
+      if (this.$store.state.count === this.firstPage) {
         this.isAnfang = true;
       }
     },
     isEndefind: function isEndefind() {
-      if (this.$store.state.count === 2) {
+      if (this.$store.state.count === this.lastPage) {
         this.isEnde = true;
       }
     },
@@ -11933,6 +11940,38 @@ __webpack_require__.r(__webpack_exports__);
     decrement: function decrement() {
       this.$store.commit('decrement');
       window.location.reload();
+    },
+    sendtoFirst: function sendtoFirst() {
+      var _this4 = this;
+
+      this.$store.commit("isFirstPage");
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.firstPage).then(function (response) {
+        _this4.liste = response.data.data;
+        _this4.lastPage = response.data.last_page;
+        _this4.$store.state.lastPage = _this4.lastPage;
+
+        _this4.saveContent(response.data.data);
+
+        _this4.isAnfangfind();
+
+        _this4.isEndefind();
+      });
+    },
+    sendtoLast: function sendtoLast() {
+      var _this5 = this;
+
+      this.$store.commit("isLastPage");
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.lastPage).then(function (response) {
+        _this5.liste = response.data.data;
+        _this5.lastPage = response.data.last_page;
+        _this5.$store.state.lastPage = _this5.lastPage;
+
+        _this5.saveContent(response.data.data);
+
+        _this5.isAnfangfind();
+
+        _this5.isEndefind();
+      });
     }
   }
 });
@@ -11998,7 +12037,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/landing/json', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/login/json', {
         email: this.email,
         password: this.password
       }).then(function (response) {
@@ -77864,6 +77903,19 @@ var render = function() {
                     attrs: { disabled: _vm.isAnfang },
                     on: {
                       click: function($event) {
+                        return _vm.sendtoFirst()
+                      }
+                    }
+                  },
+                  [_vm._v("<<")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-button",
+                  {
+                    attrs: { disabled: _vm.isAnfang },
+                    on: {
+                      click: function($event) {
                         return _vm.decrement()
                       }
                     }
@@ -77886,6 +77938,19 @@ var render = function() {
                     }
                   },
                   [_vm._v(">")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-button",
+                  {
+                    attrs: { disabled: _vm.isEnde },
+                    on: {
+                      click: function($event) {
+                        return _vm.sendtoLast()
+                      }
+                    }
+                  },
+                  [_vm._v(">>")]
                 )
               ],
               1
@@ -95226,6 +95291,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
     count: 1,
+    lastPage: 0,
     isAdmin: false,
     isLoggedIn: false
   },
@@ -95236,6 +95302,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     },
     decrement: function decrement(state) {
       return state.count--;
+    },
+    isFirstPage: function isFirstPage(state) {
+      return state.count = 1;
+    },
+    isLastPage: function isLastPage(state) {
+      return state.count = 3;
     },
     UserisAdmin: function UserisAdmin(state) {
       return state.isAdmin = true;

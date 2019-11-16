@@ -31,7 +31,7 @@
         },
         methods: {
             login: function () {
-                axios.post('http://localhost:8000/landing/json', {
+                axios.post('/login/json', {
                     email: this.email,
                     password: this.password
                 })

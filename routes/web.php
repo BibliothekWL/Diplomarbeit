@@ -66,8 +66,7 @@ Route::get('/books/json/{pageID}', function ($pageID) {
 });
 
 Route::get('/books/json', function(){
-    $all = BooksResource::collection(Book::all());
-    return Book::index($all);
+    return DB::table('books')->paginate(6);
 });
 
 Route::resource('borrowing', 'BorrowingsController');
