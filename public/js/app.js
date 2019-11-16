@@ -11539,9 +11539,461 @@ module.exports = {
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/BookList.vue?vue&type=script&lang=js& ***!
   \*******************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\resources\\js\\components\\BookList.vue: Unexpected token (278:0)\n\n\u001b[0m \u001b[90m 276 | \u001b[39m                        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mliste \u001b[33m=\u001b[39m response\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mdata\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 277 | \u001b[39m                        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mlastPage \u001b[33m=\u001b[39m response\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mlast_page\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 278 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m     | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 279 | \u001b[39m                        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39msaveContent(response\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mdata)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 280 | \u001b[39m                        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39misAnfangfind()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 281 | \u001b[39m                        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39misEndefind()\u001b[33m;\u001b[39m\u001b[0m\n    at Parser.raise (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:6420:17)\n    at Parser.unexpected (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:7773:16)\n    at Parser.parseExprAtom (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8996:20)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseExpression (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8275:23)\n    at Parser.parseStatementContent (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10138:23)\n    at Parser.parseStatement (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)\n    at Parser.parseBlock (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10556:10)\n    at Parser.parseFunctionBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9584:24)\n    at Parser.parseArrowExpression (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9525:10)\n    at Parser.parseExprAtom (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8870:18)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseExprListItem (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9659:18)\n    at Parser.parseCallExpressionArguments (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8774:22)\n    at Parser.parseSubscript (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8661:29)\n    at Parser.parseSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8577:19)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8566:17)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseExpression (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8275:23)\n    at Parser.parseStatementContent (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10138:23)\n    at Parser.parseStatement (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "BookList",
+  data: function data() {
+    return {
+      page: this.$store.state.count,
+      isAdmin: this.$store.state.isAdmin,
+      liste: [],
+      firstPage: 1,
+      lastPage: 0,
+      id: "",
+      title: "",
+      systematik: "",
+      medium: "",
+      BNR: "",
+      content_full: [],
+      content_short: [],
+      dialog_title: "",
+      search: "",
+      isAnfang: false,
+      isEnde: false,
+      show: true
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
+      _this.liste = response.data.data;
+      _this.lastPage = response.data.last_page;
+
+      _this.saveContent(response.data.data);
+
+      _this.isAnfangfind();
+
+      _this.isEndefind();
+
+      console.log(response);
+      _this.$store.state.lastPage = _this.lastPage;
+
+      _this.saveContent(response.data.data);
+
+      _this.isAnfangfind();
+
+      _this.isEndefind();
+
+      console.log(_this.lastPage);
+    });
+  },
+  methods: {
+    deleteItem: function deleteItem(id) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/delete/json/', {
+        id: id
+      }).then(function (response) {
+        return _this2.reloadSite(response.status);
+      });
+    },
+    editItem: function editItem(id, title, systematik, medium, content, BNR) {
+      this.id = id;
+      this.title = title;
+      this.content_full = content;
+      this.systematik = systematik;
+      this.medium = medium;
+      this.BNR = BNR;
+    },
+    addItem: function addItem() {
+      this.title = "";
+      this.content_full = "";
+      this.systematik = "";
+      this.medium = "";
+      this.BNR = "";
+    },
+    saveAdd: function saveAdd(title, systematik, medium, content, BNR) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/create/json/', {
+        title: title,
+        systematik: systematik,
+        medium: medium,
+        content: content,
+        BNR: BNR,
+        authorname: 'Kevin'
+      }).then(function (response) {
+        return console.log(response);
+      });
+    },
+    saveEdit: function saveEdit(id, title, systematik, medium, content, BNR) {
+      var _this3 = this;
+
+      console.log(id);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/edit/json/', {
+        id: id,
+        title: title,
+        systematik: systematik,
+        medium: medium,
+        content: content,
+        BNR: BNR
+      }).then(function (response) {
+        console.log(response);
+
+        _this3.reloadSite(response.status);
+      });
+    },
+    saveContent: function saveContent(content) {
+      for (var i = 0; i < content.length; i++) {
+        this.content_full[content[i].id] = content[i].content;
+        var content_words = content[i].content.split(" ");
+
+        if (content_words.length >= 12) {
+          this.content_short[content[i].id] = "";
+
+          for (var j = 0; j < 12; j++) {
+            this.content_short[content[i].id] += content_words[j] + " ";
+          }
+
+          this.content_short[content[i].id] += "...";
+        } else {
+          this.content_short[content[i].id] = content[i].content;
+        }
+
+        console.log(content.length);
+      }
+    },
+    buecherInformationen: function buecherInformationen(content) {
+      this.content_full = content;
+    },
+    borrowBook: function borrowBook(id) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/borrow', {
+        params: {
+          id: id
+        }
+      }).then(function (response) {
+        return console.log(response);
+      });
+    },
+    reloadSite: function reloadSite(status) {
+      if (status === 200) {
+        window.location.reload();
+      }
+    },
+    ausgabe: function ausgabe() {
+      if (!(this.search === "")) {
+        console.log(this.search);
+      }
+    },
+    isAnfangfind: function isAnfangfind() {
+      if (this.$store.state.count === this.firstPage) {
+        this.isAnfang = true;
+      }
+    },
+    isEndefind: function isEndefind() {
+      console.log(this.lastPage);
+
+      if (this.$store.state.count === this.lastPage) {
+        this.isEnde = true;
+      }
+    },
+    increment: function increment() {
+      this.$store.commit('increment');
+      window.location.reload();
+    },
+    decrement: function decrement() {
+      this.$store.commit('decrement');
+      window.location.reload();
+    },
+    sendtoFirst: function sendtoFirst() {
+      var _this4 = this;
+
+      this.$store.commit("isFirstPage");
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.firstPage).then(function (response) {
+        _this4.liste = response.data.data;
+        _this4.lastPage = response.data.last_page;
+        _this4.$store.state.lastPage = _this4.lastPage;
+
+        _this4.saveContent(response.data.data);
+
+        _this4.isAnfangfind();
+
+        _this4.isEndefind();
+
+        window.location.reload();
+      });
+    },
+    sendtoLast: function sendtoLast() {
+      var _this5 = this;
+
+      this.$store.commit("isLastPage");
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.lastPage).then(function (response) {
+        _this5.liste = response.data.data;
+        _this5.lastPage = response.data.last_page;
+        _this5.$store.state.lastPage = _this5.lastPage;
+
+        _this5.saveContent(response.data.data);
+
+        _this5.isAnfangfind();
+
+        _this5.isEndefind();
+
+        window.location.reload();
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -11569,9 +12021,60 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Login.vue?vue&type=script&lang=js& ***!
   \****************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\resources\\js\\components\\Login.vue: Unexpected token (34:0)\n\n\u001b[0m \u001b[90m 32 | \u001b[39m        methods\u001b[33m:\u001b[39m {\u001b[0m\n\u001b[0m \u001b[90m 33 | \u001b[39m            login\u001b[33m:\u001b[39m \u001b[36mfunction\u001b[39m () {\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 34 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 35 | \u001b[39m                axios\u001b[33m.\u001b[39mpost(\u001b[32m'/login/json/'\u001b[39m\u001b[33m,\u001b[39m {\u001b[0m\n\u001b[0m \u001b[90m 36 | \u001b[39m\u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 37 | \u001b[39m                axios\u001b[33m.\u001b[39mpost(\u001b[32m'/login/json'\u001b[39m\u001b[33m,\u001b[39m {\u001b[0m\n    at Parser.raise (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:6420:17)\n    at Parser.unexpected (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:7773:16)\n    at Parser.parseExprAtom (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8996:20)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseExpression (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8275:23)\n    at Parser.parseStatementContent (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10138:23)\n    at Parser.parseStatement (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)\n    at Parser.parseBlock (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10556:10)\n    at Parser.parseFunctionBody (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9584:24)\n    at Parser.parseFunctionBodyAndFinish (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9554:10)\n    at withTopicForbiddingContext (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10717:12)\n    at Parser.withTopicForbiddingContext (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9884:14)\n    at Parser.parseFunction (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:10716:10)\n    at Parser.parseFunctionExpression (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9032:17)\n    at Parser.parseExprAtom (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8945:21)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseObjectProperty (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9441:101)\n    at Parser.parseObjPropValue (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9466:101)\n    at Parser.parseObjectMember (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9390:10)\n    at Parser.parseObj (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:9314:25)\n    at Parser.parseExprAtom (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8939:28)\n    at Parser.parseExprSubscripts (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (D:\\Schule\\Schule\\5aI\\Diplomarbeit\\Diplomarbeit\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Landing",
+  data: function data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+  mounted: function mounted() {},
+  methods: {
+    login: function login() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/login/json', {
+        email: this.email,
+        password: this.password
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    },
+    logout: function logout() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -44433,7 +44936,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    width: 40%;\n    border-radius: 15px;\n}\n", ""]);
+exports.push([module.i, "\n.test[data-v-6bdc8b8e] {\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e] {\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e] {\n    width: 40%;\n    border-radius: 15px;\n}\n", ""]);
 
 // exports
 

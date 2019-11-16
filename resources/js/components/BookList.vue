@@ -275,18 +275,15 @@
                 .then(response => {
                         this.liste = response.data.data;
                         this.lastPage = response.data.last_page;
-<<<<<<< HEAD
                         this.saveContent(response.data.data);
                         this.isAnfangfind();
                         this.isEndefind();
                         console.log(response);
-=======
                         this.$store.state.lastPage = this.lastPage;
                         this.saveContent(response.data.data);
                         this.isAnfangfind();
                         this.isEndefind();
                         console.log(this.lastPage);
->>>>>>> f5864d5a2a3cb22953424726d24823405c2c28a8
                     }
                 );
         },
@@ -389,10 +386,7 @@
                 }
             },
             isEndefind: function () {
-<<<<<<< HEAD
                 console.log(this.lastPage);
-=======
->>>>>>> f5864d5a2a3cb22953424726d24823405c2c28a8
                 if (this.$store.state.count === this.lastPage) {
                     this.isEnde = true;
                 }
@@ -406,50 +400,32 @@
                 window.location.reload();
             },
             sendtoFirst: function () {
-<<<<<<< HEAD
-                axios.get('/books/json?page=' + this.firstPage)
-                    .then(response => {
-                            this.liste = response.data.data;
-                            this.lastPage = response.data.last_page;
-                            this.saveContent(response.data.data);
-                            this.isAnfangfind();
-                            this.isEndefind();
-                        }
-                    );
-            },
-            sendtoLast: function () {
-                axios.get('/books/json?page=' + this.lastPage)
-                    .then(response => {
-                            this.liste = response.data.data;
-                            this.lastPage = response.data.last_page;
-                            this.saveContent(response.data.data);
-                            this.isAnfangfind();
-                            this.isEndefind();
-                        }
-=======
                 this.$store.commit("isFirstPage");
                 axios.get('/books/json?page=' + this.firstPage)
                     .then(response => {
-                        this.liste = response.data.data;
-                        this.lastPage = response.data.last_page;
-                        this.$store.state.lastPage = this.lastPage;
-                        this.saveContent(response.data.data);
-                        this.isAnfangfind();
-                        this.isEndefind();                        }
+                            this.liste = response.data.data;
+                            this.lastPage = response.data.last_page;
+                            this.$store.state.lastPage = this.lastPage;
+                            this.saveContent(response.data.data);
+                            this.isAnfangfind();
+                            this.isEndefind();
+                            window.location.reload();
+                        }
                     );
             },
             sendtoLast: function () {
-                    this.$store.commit("isLastPage");
+                this.$store.commit("isLastPage");
                 axios.get('/books/json?page=' + this.lastPage)
                     .then(response => {
-                        this.liste = response.data.data;
-                        this.lastPage = response.data.last_page;
-                        this.$store.state.lastPage = this.lastPage;
-                        this.saveContent(response.data.data);
-                        this.isAnfangfind();
-                        this.isEndefind();                        }
->>>>>>> f5864d5a2a3cb22953424726d24823405c2c28a8
-                    );
+                            this.liste = response.data.data;
+                            this.lastPage = response.data.last_page;
+                            this.$store.state.lastPage = this.lastPage;
+                            this.saveContent(response.data.data);
+                            this.isAnfangfind();
+                            this.isEndefind();
+                            window.location.reload();
+                        }
+                    )
             }
         }
     }

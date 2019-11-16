@@ -8,7 +8,8 @@
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                <b-form-input class="inputs" v-model="password" type="password"
+                              placeholder="Enter Password"></b-form-input>
                 <b-button v-on:click="login()">Login</b-button>
             </div>
         </div>
@@ -31,11 +32,7 @@
         },
         methods: {
             login: function () {
-<<<<<<< HEAD
-                axios.post('/login/json/', {
-=======
                 axios.post('/login/json', {
->>>>>>> f5864d5a2a3cb22953424726d24823405c2c28a8
                     email: this.email,
                     password: this.password
                 })
@@ -46,9 +43,7 @@
                 })
             },
             logout() {
-                axios.get('/logout/json', {
-
-                })
+                axios.get('/logout/json', {})
                     .then(response => {
                         console.log(response)
                     }).catch(error => {
@@ -60,13 +55,13 @@
 </script>
 
 <style scoped>
-    .test{
+    .test {
         background-image: url("../../img/library.jpg");
         height: 92.5vh;
         position: relative;
     }
 
-    .form_div{
+    .form_div {
         background-color: white;
         opacity: 85%;
         margin-left: auto;
@@ -77,7 +72,7 @@
         text-align: center;
     }
 
-    .short_navbar{
+    .short_navbar {
         width: 40%;
         border-radius: 15px;
     }
