@@ -114,12 +114,12 @@ class BooksController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
-            return response($jsonarray['id'], 201);
+            return json_encode(['status' => 400, 'statusMessage' => 'update failed']);
         } else {
             DB::table('books')
                 ->where('id', $jsonarray['id'])
                 ->update($jsonarray);
-            return response($jsonarray['id'], 201);
+            return json_encode(['status' => 200, 'statusMessage' => 'updated book']);
         }
     }
 
@@ -129,10 +129,10 @@ class BooksController extends Controller
         $json = file_get_contents('php://input');
         $id = json_decode($json, true);
         if (Book::where('id', $id)->get()->count() == 0) {
-            return response('failed', 200);
+            return json_encode(['status' => 400, 'statusMessage' => 'delete failed']);
         } else {
             Book::where('id', $id)->delete();
-            return response('sucessful', 200);
+            return json_encode(['status' => 200,'statusMessage' => 'delete successful']);
         }
     }
 
@@ -155,9 +155,9 @@ class BooksController extends Controller
                 $book->created_at = Null;
                 $book->updated_at = Null;
                 $book->save();
-                return response('added sucessfully', 200);
+                return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
             } else {
-                return response('failed', 200);
+                return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
             }
         }
 }

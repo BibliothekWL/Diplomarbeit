@@ -57,10 +57,10 @@ class LoginController extends Controller
             }
             if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
                 session(['id' => $userID]);
-                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => true]);
+                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id')]);
             }
         }
-        return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong', 'isLoggedIn' => false]);
+        return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong', 'isLoggedIn' => session()->has('id')]);
     }
 
     public function logout()

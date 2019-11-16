@@ -11810,8 +11810,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json/' + this.page).then(function (response) {
-      _this.liste = response.data;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json/').then(function (response) {
+      _this.liste = response;
 
       _this.saveContent(response.data);
 
@@ -11819,7 +11819,7 @@ __webpack_require__.r(__webpack_exports__);
 
       _this.isEndefind();
 
-      console.log(_this.isAdmin);
+      console.log(response.data.data);
     });
   },
   methods: {
@@ -77677,7 +77677,7 @@ var render = function() {
               1
             ),
             _vm._v(" "),
-            _vm._l(_vm.liste, function(book) {
+            _vm._l(_vm.liste.data.data, function(book) {
               return _c("div", { staticClass: "list" }, [
                 _c(
                   "div",

@@ -13,7 +13,7 @@
                          v-model="search"></b-input>
             </b-input-group>
 
-            <div v-for="book in liste" class="list">
+            <div v-for="book in liste.data.data" class="list">
                 <div>
                     <b-card img-left
                             img-alt="Image"
@@ -263,13 +263,13 @@
             };
         },
         mounted() {
-            axios.get('/books/json/' + this.page)
+            axios.get('/books/json/')
                 .then(response => {
-                        this.liste = response.data;
+                        this.liste = response;
                         this.saveContent(response.data);
                         this.isAnfangfind();
                         this.isEndefind();
-                        console.log(this.isAdmin);
+                        console.log(response.data.data);
                     }
                 );
         },
