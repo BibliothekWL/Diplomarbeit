@@ -7,13 +7,13 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
 
-             <!--   <b-nav-item-dropdown text="Lang" right>
-                    <b-dropdown-item href="#">EN</b-dropdown-item>
-                    <b-dropdown-item href="#">ES</b-dropdown-item>
-                    <b-dropdown-item href="#">RU</b-dropdown-item>
-                    <b-dropdown-item href="#">FA</b-dropdown-item>
-                </b-nav-item-dropdown>
-                -->
+                <!--   <b-nav-item-dropdown text="Lang" right>
+                       <b-dropdown-item href="#">EN</b-dropdown-item>
+                       <b-dropdown-item href="#">ES</b-dropdown-item>
+                       <b-dropdown-item href="#">RU</b-dropdown-item>
+                       <b-dropdown-item href="#">FA</b-dropdown-item>
+                   </b-nav-item-dropdown>
+                   -->
 
                 <b-nav-item-dropdown right>
                     <!-- Using 'button-content' slot -->
@@ -21,8 +21,8 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profile</b-dropdown-item>
-                    <b-dropdown-item href="/landing">Logout</b-dropdown-item>
-                </b-nav-item-dropdown>
+                    <b-dropdown-item href="/logout">Logout</b-dropdown-item>
+                    </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
 
@@ -47,7 +47,7 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profile</b-dropdown-item>
-                    <b-dropdown-item href="/landing">Login</b-dropdown-item>
+                    <b-dropdown-item href="/login">Login</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
@@ -57,22 +57,35 @@
 </template>
 
 <script>
+    import axios from "axios";
     export default {
         data() {
             return {
-                loggedIn : true
+                loggedIn: false
             }
-        }
+        },
+        methods:
+            {
+                logout: function () {
+                    axios.get('/logout/json', {})
+                        .then(response => {
+                            console.log(response)
+                        }).catch(error => {
+                        console.log(error.message)
+                    });
+                }
+            }
     }
+
 </script>
 
 <style>
-    a{
+    a {
         color: white;
         font-family: "Nunito", sans-serif;
     }
 
-    .link{
+    .link {
         margin-right: 1em;
     }
 </style>

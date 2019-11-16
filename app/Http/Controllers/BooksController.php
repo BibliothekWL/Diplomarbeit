@@ -68,17 +68,6 @@ class BooksController extends Controller
         return (redirect('/books'));
     }
 
-    /**
-     * adds the option to delete a book as an admin user
-     * @param Book $book
-     * @return RedirectResponse|Redirector
-     * @throws \Exception
-     */
-    public function destroy(Book $book)
-    {
-        $book->delete();
-        return (redirect('/books/'));
-    }
 
     /**
      * adds a function to borrow the books that are in your shopping cart
@@ -125,16 +114,12 @@ class BooksController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
-            return response($jsonarray['id'], 201);
+            return json_encode(['status' => 400, 'statusMessage' => 'update failed']);
         } else {
             DB::table('books')
                 ->where('id', $jsonarray['id'])
-                ->update(['title' => $jsonarray['title'],
-                    'systematik' => $jsonarray['systematik'],
-                    'medium' => $jsonarray['medium'],
-                    'content' => $jsonarray['content'],
-                    'BNR' => $jsonarray['BNR']]);
-            return response($jsonarray['id'], 201);
+                ->update($jsonarray);
+            return json_encode(['status' => 200, 'statusMessage' => 'updated book']);
         }
     }
 
@@ -144,10 +129,10 @@ class BooksController extends Controller
         $json = file_get_contents('php://input');
         $id = json_decode($json, true);
         if (Book::where('id', $id)->get()->count() == 0) {
-            return response('failed', 200);
+            return json_encode(['status' => 400, 'statusMessage' => 'delete failed']);
         } else {
             Book::where('id', $id)->delete();
-            return response('sucessful', 200);
+            return json_encode(['status' => 200,'statusMessage' => 'delete successful']);
         }
     }
 
@@ -157,23 +142,22 @@ class BooksController extends Controller
         $jsonarray = json_decode($json, true);
         $author_id_raw = DB::table('authors')->where('firstname', $jsonarray['authorname'])->pluck('id');
         $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
-        if (sizeof($jsonarray) != 0) {
-            $book = new Book();
-            $book->user_id = auth()->user()->id;
-            $book->author_id = $author_id;
-            $book->title = $jsonarray['title'];
-            $book->systematik = $jsonarray['systematik'];
-            $book->medium = $jsonarray['medium'];
-            $book->content = $jsonarray['content'];
-            $book->BNR = $jsonarray['BNR'];
-            $book->borrowed = 0;
-            $book->created_at = Null;
-            $book->updated_at = Null;
-            $book->save();
-            return response('added sucessfully', 200);
-        } else {
-            return response('failed', 200);
+            if (sizeof($jsonarray) != 0) {
+                $book = new Book();
+                $book->user_id = auth()->user()->id;
+                $book->author_id = $author_id;
+                $book->title = $jsonarray['title'];
+                $book->systematik = $jsonarray['systematik'];
+                $book->medium = $jsonarray['medium'];
+                $book->content = $jsonarray['content'];
+                $book->BNR = $jsonarray['BNR'];
+                $book->borrowed = 0;
+                $book->created_at = Null;
+                $book->updated_at = Null;
+                $book->save();
+                return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
+            } else {
+                return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
+            }
         }
-    }
-
 }
