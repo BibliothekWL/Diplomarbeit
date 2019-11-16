@@ -50,14 +50,9 @@ Route::patch('/cart/checkout', 'BooksController@borrowBooks');
  * returns all books with json
  */
 
-Route::get('/books/json/{pageID}', function ($pageID) {
-    $page = $pageID;
+Route::get('/books/json', function(){
     $all = BooksResource::collection(Book::all());
-    $books = array();
-    for ($i = 6 * $page - 6, $j = 0; $i <= 6 * $page - 1; $i++, $j++) {
-        $books[$j] = $all[$i];
-    }
-    return json_encode($books);
+    return Book::index($all);
 });
 
 Route::resource('borrowing', 'BorrowingsController');
