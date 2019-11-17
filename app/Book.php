@@ -20,4 +20,5 @@ class Book extends Model
         'title', 'systematik', 'medium', 'content', 'BNR', 'author_id'
     ];
 
+
 }
