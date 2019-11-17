@@ -55,9 +55,9 @@ Route::patch('/cart/checkout','BooksController@borrowBooks');
 /**
  * returns all books with json
  */
-Route::get('/books/json',function(){
 
-    return BooksResource::collection(Book::all());
+Route::get('/books/json', function(){
+    return DB::table('books')->paginate(6);
 });
 
 Route::resource('borrowing', 'BorrowingsController');
