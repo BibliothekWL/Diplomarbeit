@@ -29,6 +29,8 @@ Route::get('/session',function(){
 
 Route::post('/books/return','BooksController@returnBooks');
 
+Route::post('/books/borrow/', 'BooksController@borrowBooks');
+
 Route::get('/logout/json', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@authenticate');
@@ -40,9 +42,6 @@ Route::post('/books/create/json/','BooksController@addBookValidator');
 Route::post('/books/delete/json/','BooksController@deleteBookValidator');
 
 Route::post('/books/edit/json/','BooksController@BookValidator');
-
-Route::patch('returnBooks', 'BooksController@returnBooks');
-
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');

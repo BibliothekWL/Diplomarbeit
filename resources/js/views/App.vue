@@ -55,7 +55,6 @@
                         .then(response => {
                             this.$store.commit('UsernotLoggedIn');
                             this.$store.commit('UserisnotAdmin');
-                            this.$router('/login');
                             window.location.reload();
                         }).catch(error => {
                         console.log(error.message)

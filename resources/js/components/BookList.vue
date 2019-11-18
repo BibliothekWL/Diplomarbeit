@@ -1,113 +1,16 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
 
-        <div v-if="isLoggedIn">
-
-            <!---------------------------------------------------------
-
-                                    Admin-View
-
-            ---------------------------------------------------------->
-
-            <div v-if="isAdmin">
-                <h1 class="suche_title">Suche</h1>
-
-                <b-input-group>
-                    <b-input-group-append>
-                        <b-button variant="outline-dark" disabled>
-                            <font-awesome-icon icon="search"></font-awesome-icon>
-                        </b-button>
-                    </b-input-group-append>
-                    <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
-                             v-model="search"></b-input>
-                </b-input-group>
-
-                <div class="list">
-                    <b-card v-for="book in liste.data.data" img-left
-                            img-alt="Image"
-                            style="width: 15em;" class="listitem"
-                            v-on:click="buecherInformationen(book.content, book.id)" v-b-modal.BookInformationAdmin>
-                        <b-card-title>
-                            {{book.title}}
-                        </b-card-title>
-                        <b-card-text class="beschreibung">
-                            {{content_short[book.id]}}
-                        </b-card-text>
-                    </b-card>
-                </div>
-
-                <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
-                    <font-awesome-icon icon="plus"/>
-                </b-button>
-
-                <div class="page_buttons">
-                    <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>
-                    <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
-
-                    <b-button disabled>{{page}}</b-button>
-
-                    <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
-                    <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
-                </div>
-            </div>
-
-            <!---------------------------------------------------------
-
-                                    User-View
-
-            ---------------------------------------------------------->
-
-            <div v-else>
-                <h1 class="suche_title">Suche</h1>
-
-                <b-input-group>
-                    <b-input-group-append>
-                        <b-button variant="outline-dark" disabled>
-                            <font-awesome-icon icon="search"></font-awesome-icon>
-                        </b-button>
-                    </b-input-group-append>
-                    <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
-                             v-model="search"></b-input>
-                </b-input-group>
-
-                <div class="list">
-                    <b-card v-for="book in liste.data.data" img-left
-                            img-alt="Image"
-                            style="width: 15em;" class="listitem"
-                            v-on:click="buecherInformationen(book.content, book.id)" v-b-modal.BookInformationUser>
-                        <b-card-title>
-                            {{book.title}}
-                        </b-card-title>
-                        <b-card-text class="beschreibung">
-                            {{content_short[book.id]}}
-                        </b-card-text>
-                    </b-card>
-                </div>
-
-                <div class="page_buttons">
-                    <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>
-                    <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
-
-                    <b-button disabled>{{page}}</b-button>
-
-                    <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
-                    <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
-                </div>
-            </div>
-
-        </div>
-
         <!---------------------------------------------------------
 
-                            NotLoggedIn-View
+                                User-View
 
         ---------------------------------------------------------->
 
-        <div v-else>
+        <h1 class="suche_title">Suche</h1>
 
-            <h1 class="suche_title">Suche</h1>
-
-            <b-input-group>
+        <div class="searchBox">
+            <b-input-group class="searchBar">
                 <b-input-group-append>
                     <b-button variant="outline-dark" disabled>
                         <font-awesome-icon icon="search"></font-awesome-icon>
@@ -116,31 +19,45 @@
                 <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
                          v-model="search"></b-input>
             </b-input-group>
+        </div>
 
-            <div class="list">
-                <b-card v-for="book in liste.data.data" img-left
-                        img-alt="Image"
-                        style="width: 15em;" class="listitem"
-                        v-on:click="buecherInformationen(book.content, book.id)" v-b-modal.BookInformationNotLoggedIn>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
-                </b-card>
-            </div>
+        <b-button v-if="isAdmin" type="light" variant="danger" class="addButton" pill v-b-modal.AddItem
+                  v-on:click="addItem(liste.length)">
+            <font-awesome-icon icon="plus"/>
+        </b-button>
 
-            <div class="page_buttons">
-                <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>
-                <b-button v-on:click="decrement()" :disabled=isAnfang><</b-button>
+        <div class="list">
+            <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
+                    img-left
+                    img-alt="Image"
+                    style="width: 15em;" class="listitem"
+                    v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                    v-b-modal.BookInformation>
+                <b-card-title>
+                    {{book.title}}
+                </b-card-title>
+                <b-card-text class="beschreibung">
+                    {{content_short[book.id]}}
+                </b-card-text>
+            </b-card>
+        </div>
 
-                <b-button disabled>{{page}}</b-button>
+        <div class="page_buttons">
+            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
+                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+            </b-button>
+            <b-button v-on:click="decrement()" :disabled=isAnfang>
+                <font-awesome-icon icon="angle-left"></font-awesome-icon>
+            </b-button>
 
-                <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
-                <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
-            </div>
+            <b-button disabled>{{page}}</b-button>
 
+            <b-button v-on:click="increment()" :disabled=isEnde>
+                <font-awesome-icon icon="angle-right"></font-awesome-icon>
+            </b-button>
+            <b-button v-on:click="sendtoLast()" :disabled=isEnde>
+                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -150,7 +67,7 @@
         ---------------------------------------------------------->
 
         <div>
-            <b-modal id="AddItem" size="lg" centered title="Create Book"
+            <b-modal id="AddItem" centered title="Create Book"
                      @ok="saveAdd(title, systematik, medium, content_full, BNR)">
                 <b-form-group
                         label="Title"
@@ -212,6 +129,7 @@
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
+
             <b-modal id="EditItem" centered title="Edit Book"
                      @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
                 <b-form-group
@@ -275,55 +193,44 @@
                 </b-form-group>
             </b-modal>
 
-            <b-modal id="BookInformationAdmin" centered title="Information">
+            <b-modal id="BookInformation" centered title="Information">
                 <div>
                     {{ content_full }}
                 </div>
+
                 <template v-slot:modal-footer="{cancel}">
-                    <div>
-                        <b-button size="sm" variant="success" @click="cancel()">
-                            Close
-                        </b-button>
+                    <div v-if="isLoggedIn">
+                        <div v-if="isAdmin">
+                            <b-button size="sm" variant="success" @click="cancel()">
+                                Close
+                            </b-button>
 
-                        <b-button pill v-on:click="deleteItem(n.id)">
-                            <font-awesome-icon icon="trash"></font-awesome-icon>
-                        </b-button>
+                            <b-button pill v-on:click="deleteItem(id)">
+                                <font-awesome-icon icon="trash"></font-awesome-icon>
+                            </b-button>
 
-                        <b-button v-b-modal.EditItem pill
-                                  v-on:click="editItem(n.id, n.title, n.systematik, n.medium, n.content, n.BNR)">
-                            <font-awesome-icon icon="pen"></font-awesome-icon>
-                        </b-button>
+                            <b-button v-b-modal.EditItem pill
+                                      v-on:click="editItem(id, title, systematik, medium, content, BNR)">
+                                <font-awesome-icon icon="pen"></font-awesome-icon>
+                            </b-button>
 
-                        <b-button v-if="isBorrowed" pill v-on:click="returnBook(id)">
-                            <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
-                        </b-button>
+                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
+                                <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
+                            </b-button>
+                        </div>
+
+                        <div v-if="!isAdmin">
+                            <b-button size="sm" variant="success" @click="cancel()">
+                                Close
+                            </b-button>
+
+                            <b-button :disabled="isBorrowed" pill v-on:click="borrowBook(id)">
+                                <font-awesome-icon icon="cart-plus"></font-awesome-icon>
+                            </b-button>
+                        </div>
                     </div>
-                </template>
-            </b-modal>
 
-            <b-modal id="BookInformationUser" centered title="Information">
-                <div>
-                    {{ content_full }}
-                </div>
-                <template v-slot:modal-footer="{cancel}">
-                    <div>
-                        <b-button size="sm" variant="success" @click="cancel()">
-                            Close
-                        </b-button>
-
-                        <b-button v-if="!isBorrowed" pill>
-                            <font-awesome-icon icon="cart-plus"></font-awesome-icon>
-                        </b-button>
-                    </div>
-                </template>
-            </b-modal>
-
-            <b-modal id="BookInformationNotLoggedIn" centered title="Information">
-                <div>
-                    {{ content_full }}
-                </div>
-                <template v-slot:modal-footer="{cancel}">
-                    <div>
+                    <div v-if="!isLoggedIn">
                         <b-button size="sm" variant="success" @click="cancel()">
                             Close
                         </b-button>
@@ -371,14 +278,12 @@
             this.page = this.$store.state.count;
             axios.get('/books/json?page=' + this.page)
                 .then(response => {
-                        console.log(this.isAdmin);
                         this.liste.data.data = response.data.data;
                         this.lastPage = response.data.last_page;
                         this.isLoggedInCheck();
                         this.saveContent(response.data.data);
                         this.isAnfangfind();
                         this.isEndefind();
-                        console.log(response.data.data);
                         this.$store.state.lastPage = this.lastPage;
                         this.saveContent(response.data.data);
                         this.isAnfangfind();
@@ -388,11 +293,10 @@
         },
         methods: {
             deleteItem: function (id) {
-
                 axios.post('/books/delete/json/', {
                     id: id
                 }).then(response => (
-                        this.reloadSite(response.status)
+                        this.reloadSite(response.data.status + "")
                     )
                 )
             },
@@ -420,12 +324,11 @@
                     BNR: BNR,
                     authorname: 'Kevin'
                 }).then(response => {
-                        console.log(response);
+                        this.reloadSite(response.data.status + "")
                     }
                 )
             },
             saveEdit: function (id, title, systematik, medium, content, BNR) {
-                console.log(id);
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
@@ -435,7 +338,8 @@
                     BNR: BNR
                 })
                     .then(response => {
-                            this.reloadSite(response.status);
+                            console.log(response);
+                            this.reloadSite(response.data.status + "")
                         }
                     )
             },
@@ -454,31 +358,27 @@
                     }
                 }
             },
-            buecherInformationen: function (content, id) {
-                this.content_full = content;
+            buecherInformationen: function (id, title, systematik, medium, content, BNR) {
+
                 this.id = id;
+                this.content_full = content;
+                this.systematik = systematik;
+                this.medium = medium;
+                this.content = content;
+                this.BNR = BNR;
+
                 axios.post('/books/borrowed', {
                     id: id
-                })
-                    .then(response => {
-                            this.isBorrowed = response.data;
-                            console.log(response);
-                        }
-                    );
-            },
-            borrowBook: function (id) {
-                axios.get('/books/borrow', {
-                    params: {
-                        id: id
-                    }
                 }).then(response => {
-                        console.log(response);
+                        this.isBorrowed = response.data;
                     }
-                )
+                );
             },
             reloadSite: function (status) {
-                if (status === 200) {
+                if (status === "200") {
                     window.location.reload();
+                } else {
+                    console.log("error");
                 }
             },
             ausgabe: function () {
@@ -524,10 +424,19 @@
                     id: id
                 })
                     .then(response => {
-                            console.log(response);
+                            this.reloadSite(response.data.status + "")
                         }
                     )
-            }
+            },
+            borrowBook: function (id) {
+                axios.post('/books/borrow', {
+                    id: id
+                })
+                    .then(response => {
+                            this.reloadSite(response.data.status + "")
+                        }
+                    )
+            },
         }
     }
 
@@ -536,23 +445,26 @@
 <style scoped>
     .suche_title {
         text-align: center;
+        padding-top: 1em;
     }
 
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        padding-right: 20%;
-        padding-left: 20%;
-        padding-top: 2%;
+        justify-content: center;
+        padding-top: 4em;
     }
 
     .list > * {
-        flex: 1 1 10em;
+        flex-basis: 45%;
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     .listitem {
-        margin: 5em;
+        padding: 1em;
+        margin: 2em;
     }
 
     .listitem:hover {
@@ -565,6 +477,22 @@
 
     .page_buttons {
         text-align: center;
+        padding: 2em;
+    }
+
+    .addButton {
+        float: right;
+        margin: 1em;
+    }
+
+    .searchBar {
+        width: 50em;
+        vertical-align: center;
+    }
+
+    .searchBox {
+        display: flex;
+        justify-content: center;
         padding: 2em;
     }
 
