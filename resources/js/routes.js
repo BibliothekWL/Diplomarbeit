@@ -4,7 +4,6 @@ import VueRouter from "vue-router";
 import BookList from "@/js/components/BookList";
 import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
-import Landing from "@/js/components/Landing";
 import Register from "@/js/components/Register";
 
 
@@ -30,16 +29,10 @@ const router = new VueRouter({
             component: Login
         },
         {
-            path: '/landing',
-            name: 'landing',
-            component: Landing
-        },
-        {
             path: '/register',
             name: 'register',
             component: Register
-        }
-    ]
+        }]
 });
 
 export default router;

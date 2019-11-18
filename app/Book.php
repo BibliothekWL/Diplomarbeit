@@ -12,6 +12,7 @@ class Book extends Model
         return $this->hasMany(Cart::class);
     }
 
+
     public function borrowings(){
         return $this->hasMany(Borrowing::class);
     }
@@ -19,5 +20,6 @@ class Book extends Model
     protected $fillable = [
         'title', 'systematik', 'medium', 'content', 'BNR', 'author_id'
     ];
+
 
 }

@@ -17,13 +17,21 @@ Route::get('/cart/json',function(){
 
 Route::get('/home','SinglePageController@index');
 Route::get('/list','SinglePageController@index');
+Route::get('/login', 'SinglePageController@index');
+Route::get('/register', 'SinglePageController@index');
+
 
 Route::get('/','PagesController@home');
 Route::get('/contact','PagesController@contact');
+Route::get('/session',function(){
+    return json_encode(session()->has('id'));
+});
 
 Route::get('/logout/json', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@authenticate');
+
+Route::post('/user/register', '\App\Http\Controllers\Auth\RegisterController@create');
 
 Route::post('/books/create/json/','BooksController@addBookValidator');
 
@@ -49,9 +57,9 @@ Route::patch('/cart/checkout','BooksController@borrowBooks');
 /**
  * returns all books with json
  */
-Route::get('/books/json',function(){
 
-    return BooksResource::collection(Book::all());
+Route::get('/books/json', function(){
+    return DB::table('books')->paginate(6);
 });
 
 Route::resource('borrowing', 'BorrowingsController');

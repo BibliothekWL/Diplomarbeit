@@ -61,12 +61,19 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    protected function create(){
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        if (sizeof($jsonarray) != 0) {
+            $user = new User();
+            $user->name = $jsonarray['name'];
+            $user->email = $jsonarray['email'];
+            $user->password = $jsonarray['password'];
+            $user->created_at = now();
+            $user->updated_at = now();
+            $user->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
+        }
+        return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
     }
 }
