@@ -12119,7 +12119,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       name: "",
-      id: "",
+      email: "",
       password: "",
       passwordRepeat: ""
     };
@@ -12129,20 +12129,26 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/login/json', {
-        email: this.email,
-        password: this.password
-      }).then(function (response) {
-        console.log(response);
+      if (this.password === this.passwordRepeat) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/user/register', {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          password2: this.password2
+        }).then(function (response) {
+          console.log(response);
 
-        _this.$store.commit('UserLoggedIn');
+          _this.$store.commit('UserLoggedIn');
 
-        _this.$router.push({
-          path: '/home'
+          _this.$router.push({
+            path: '/home'
+          });
+        })["catch"](function (error) {
+          console.log(error.message);
         });
-      })["catch"](function (error) {
-        console.log(error.message);
-      });
+      } else {
+        console.log("Wrong pw!");
+      }
     }
   }
 });
@@ -81831,13 +81837,13 @@ var render = function() {
             _vm._v(" "),
             _c("b-form-input", {
               staticClass: "inputs",
-              attrs: { type: "text", placeholder: "Enter ID" },
+              attrs: { type: "email", placeholder: "Enter ID" },
               model: {
-                value: _vm.id,
+                value: _vm.email,
                 callback: function($$v) {
-                  _vm.id = $$v
+                  _vm.email = $$v
                 },
-                expression: "id"
+                expression: "email"
               }
             }),
             _vm._v(" "),
@@ -81865,9 +81871,17 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("b-button", { on: { click: function($event) {} } }, [
-              _vm._v("Register")
-            ])
+            _c(
+              "b-button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.register()
+                  }
+                }
+              },
+              [_vm._v("Register")]
+            )
           ],
           1
         )

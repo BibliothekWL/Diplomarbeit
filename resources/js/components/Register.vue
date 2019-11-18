@@ -8,10 +8,10 @@
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="name" type="text" placeholder="Enter Name"></b-form-input>
-                <b-form-input class="inputs" v-model="id" type="text" placeholder="Enter ID"></b-form-input>
+                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter ID"></b-form-input>
                 <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
                 <b-form-input class="inputs" v-model="passwordRepeat" type="password" placeholder="Repeat Password"></b-form-input>
-                <b-button v-on:click="">Register</b-button>
+                <b-button v-on:click="register()">Register</b-button>
             </div>
         </div>
     </div>
@@ -25,27 +25,32 @@
         data() {
             return {
                 name: "",
-                id: "",
+                email: "",
                 password: "",
                 passwordRepeat: ""
             }
         },
         mounted() {
-
         },
-        methods:{
+        methods: {
             register: function () {
-                axios.post('http://localhost:8000/login/json', {
-                    email: this.email,
-                    password: this.password
-                })
-                    .then(response => {
-                        console.log(response);
-                        this.$store.commit('UserLoggedIn');
-                        this.$router.push({ path: '/home' });
-                    }).catch(error => {
-                    console.log(error.message)
-                })
+                if (this.password === this.passwordRepeat) {
+                    axios.post('http://localhost:8000/user/register', {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password,
+                        password2: this.password2
+                    })
+                        .then(response => {
+                            console.log(response);
+                            this.$store.commit('UserLoggedIn');
+                            this.$router.push({ path: '/home' });
+                        }).catch(error => {
+                        console.log(error.message)
+                    })
+                } else {
+                    console.log("Wrong pw!")
+                }
             }
         }
     }
