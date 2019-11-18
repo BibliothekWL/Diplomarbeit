@@ -4,7 +4,13 @@
 
 <script>
     export default {
-        name: "Home"
+        data() {
+            return {
+                name: "Home"
+            }
+        },
+        mounted() {
+        }
     }
 </script>
 

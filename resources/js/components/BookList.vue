@@ -38,7 +38,7 @@
                 <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
                 <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
             </div>
-            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
+            <b-button v-show="isAdmin" pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
                 <font-awesome-icon icon="plus"/>
             </b-button>
 
