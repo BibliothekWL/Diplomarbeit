@@ -12,7 +12,7 @@
             <h4 class="site_title">Bibliothek Wiener Linien</h4>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-button color="rgba(255,255,255,0)" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login</b-button>
+                <b-button color="rgba(255,255,255,0)" v-show="!loggedIn" v-model="loggedIn" to="/login" right>Login</b-button>
                 <b-nav-item-dropdown v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>

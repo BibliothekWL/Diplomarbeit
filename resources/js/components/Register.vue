@@ -2,9 +2,8 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link to="/login">Login</router-link>
-                <&nbsp;>
-                <router-link class="disabled" disabled to="/register">Register</router-link>
+                <b-button active-class="active" to="/login">Login</b-button>
+                <b-button disabled>Register</b-button>
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="name" type="text" placeholder="Enter Name"></b-form-input>
@@ -38,8 +37,7 @@
                     axios.post('http://localhost:8000/user/register', {
                         name: this.name,
                         email: this.email,
-                        password: this.password,
-                        password2: this.password2
+                        password: this.password
                     })
                         .then(response => {
                             console.log(response);
