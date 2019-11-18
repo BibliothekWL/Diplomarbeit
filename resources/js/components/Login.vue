@@ -38,7 +38,12 @@
                     .then(response => {
                         console.log(response);
                             this.$store.commit('UserLoggedIn');
-                            this.$router.push({ path: '/home' });
+                            if(response.data.isAdmin === true) {
+                                this.$store.commit('UserisAdmin');
+                            } else {
+                                this.$store.commit('UserisnotAdmin');
+                            }
+                            this.$router.push({ path: '/list' });
                     }).catch(error => {
                     console.log(error.message)
                 })

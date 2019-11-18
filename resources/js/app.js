@@ -11,9 +11,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faPlus, faTrash, faPen, faSearch);
+library.add(faPlus, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

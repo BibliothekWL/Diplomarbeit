@@ -97,16 +97,25 @@ class BooksController extends Controller
         return (redirect('borrowing'));
     }
 
-    public function returnBooks()
-    {
-        $books = User::findOrFail(auth()->user()->id)->books;
-        Borrowing::where('user_id', auth()->user()->id)->delete();
+    public function returnBooks(){
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
+            return json_encode(['status' => 400, 'statusMessage' => 'return failed']);
+        } else {
+//            $books = User::findOrFail(auth()->user()->id)->books;
+//            Borrowing::where('user_id', auth()->user()->id)->delete();
+//
+//            foreach ($books as $book) {
+//                $book->borrowed = 0;
+//                $book->save();
+//            }
+            DB::table('books')
+                ->where('id', $jsonarray['id'])
+                ->update(['borrowed' => 0]);
 
-        foreach ($books as $book) {
-            $book->borrowed = 0;
-            $book->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
         }
-        return redirect('/borrowing');
     }
 
     public function BookValidator()

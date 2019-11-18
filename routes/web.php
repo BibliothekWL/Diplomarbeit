@@ -27,6 +27,8 @@ Route::get('/session',function(){
     return json_encode(session()->has('id'));
 });
 
+Route::post('/books/return','BooksController@returnBooks');
+
 Route::get('/logout/json', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@authenticate');
@@ -50,6 +52,17 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::patch('/books/{books}/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
 
+Route::post('/books/borrowed', function(){
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    $borrowed_raw = DB::table('books')->where('id', $jsonarray['id'])->pluck('borrowed');
+    $borrowed = explode("]", explode("[", $borrowed_raw)[1])[0];
+   if($borrowed == 1){
+        return json_encode(true);
+    } else {
+        return json_encode(false);
+    }
+});
 
 //Route::get('/books/mybooks', '');
 
