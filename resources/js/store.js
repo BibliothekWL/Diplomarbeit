@@ -19,5 +19,7 @@ export default new Vuex.Store({
         isLastPage: state => state.count = 3,
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
+        UserLoggedIn: state => state.isLoggedIn = true,
+        UsernotLoggedIn: state => state.isLoggedIn = false,
     }
 });

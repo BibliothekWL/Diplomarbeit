@@ -145,7 +145,7 @@ class BooksController extends Controller
             if (sizeof($jsonarray) != 0) {
                 $book = new Book();
                 $book->user_id = auth()->user()->id;
-                $book->author_id = $author_id;
+                $book->author_id = 1;
                 $book->title = $jsonarray['title'];
                 $book->systematik = $jsonarray['systematik'];
                 $book->medium = $jsonarray['medium'];
