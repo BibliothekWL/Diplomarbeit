@@ -37,10 +37,9 @@
 
                 <b-button v-on:click="increment()" :disabled=isEnde>></b-button>
                 <b-button v-on:click="sendtoLast()" :disabled=isEnde>>></b-button>
+
             </div>
-            <b-button v-show="isAdmin" pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
-                <font-awesome-icon icon="plus"/>
-            </b-button>
+
 
             <!--<div v-for="n in liste.data" class="list">-->
             <!--<div class="listItem">-->
@@ -89,6 +88,10 @@
                     </b-card>
                 </div>
             </div>
+
+            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
+                <font-awesome-icon icon="plus"/>
+            </b-button>
 
             <div class="page_buttons">
                 <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>
