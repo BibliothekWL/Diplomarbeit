@@ -12048,7 +12048,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Landing",
@@ -12067,8 +12066,6 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       }).then(function (response) {
-        console.log(response);
-
         _this.$store.commit('UserLoggedIn');
 
         _this.$router.push({
@@ -12112,7 +12109,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
@@ -12133,8 +12129,7 @@ __webpack_require__.r(__webpack_exports__);
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/user/register', {
           name: this.name,
           email: this.email,
-          password: this.password,
-          password2: this.password2
+          password: this.password
         }).then(function (response) {
           console.log(response);
 
@@ -81705,17 +81700,10 @@ var render = function() {
             attrs: { type: "light", variant: "danger" }
           },
           [
+            _c("b-button", { attrs: { disabled: "" } }, [_vm._v("Login")]),
+            _vm._v(" "),
             _c(
-              "router-link",
-              {
-                staticClass: "disabled",
-                attrs: { disabled: "", to: "/login" }
-              },
-              [_vm._v("Login")]
-            ),
-            _vm._v("\n            < >\n            "),
-            _c(
-              "router-link",
+              "b-button",
               { attrs: { "class-active": "active", to: "/register" } },
               [_vm._v("Register")]
             )
@@ -81805,16 +81793,13 @@ var render = function() {
             attrs: { type: "light", variant: "danger" }
           },
           [
-            _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")]),
-            _vm._v("\n            < >\n            "),
             _c(
-              "router-link",
-              {
-                staticClass: "disabled",
-                attrs: { disabled: "", to: "/register" }
-              },
-              [_vm._v("Register")]
-            )
+              "b-button",
+              { attrs: { "active-class": "active", to: "/login" } },
+              [_vm._v("Login")]
+            ),
+            _vm._v(" "),
+            _c("b-button", { attrs: { disabled: "" } }, [_vm._v("Register")])
           ],
           1
         ),
@@ -81955,7 +81940,7 @@ var render = function() {
                   ],
                   attrs: {
                     color: "rgba(255,255,255,0)",
-                    href: "/login",
+                    to: "/login",
                     right: ""
                   },
                   model: {
