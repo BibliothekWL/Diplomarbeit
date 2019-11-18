@@ -2,13 +2,13 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link disabled to="/login">Login</router-link>
+                <router-link class="disabled" disabled to="/login">Login</router-link>
                 <&nbsp;>
                 <router-link class-active="active" to="/register">Register</router-link>
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                <b-form-input class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
                 <b-button v-on:click="login()" href>Login</b-button>
             </div>
         </div>
@@ -37,22 +37,11 @@
                 })
                     .then(response => {
                         console.log(response);
-                          this.$store.state.isLoggedIn = response.data.isLoggedIn;
-                            console.log(this.$store.state.isLoggedIn);
-                            this.$router.push(this.$route.query.redirect || '/home');
-
+                            this.$store.commit('UserLoggedIn');
+                            this.$router.push({ path: '/home' });
                     }).catch(error => {
                     console.log(error.message)
                 })
-            },
-            logout() {
-                axios.get('/logout/json', {
-                })
-                    .then(response => {
-                        console.log(response)
-                    }).catch(error => {
-                    console.log(error.message)
-                });
             }
         }
     }
@@ -80,6 +69,12 @@
         width: 40%;
         border-radius: 15px;
     }
+
+    .disabled {
+        cursor: not-allowed;
+        color: gray
+    }
+
 </style>
 
 <!--<template>

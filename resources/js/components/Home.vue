@@ -6,12 +6,10 @@
     export default {
         data() {
             return {
-                name: "Home",
-                loggedIn: this.$store.state.isLoggedIn
+                name: "Home"
             }
         },
         mounted() {
-            this.loggedIn = this.$store.state.isLoggedIn;
         }
     }
 </script>

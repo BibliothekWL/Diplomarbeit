@@ -2,9 +2,9 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link class="link" to="/login">Login</router-link>
+                <router-link to="/login">Login</router-link>
                 <&nbsp;>
-                <router-link disabled to="/register">Register</router-link>
+                <router-link class="disabled" disabled to="/register">Register</router-link>
             </b-navbar>
             <div class="form_div">
                 <b-form-input class="inputs" v-model="name" type="text" placeholder="Enter Name"></b-form-input>
@@ -33,6 +33,21 @@
         mounted() {
 
         },
+        methods:{
+            register: function () {
+                axios.post('http://localhost:8000/login/json', {
+                    email: this.email,
+                    password: this.password
+                })
+                    .then(response => {
+                        console.log(response);
+                        this.$store.commit('UserLoggedIn');
+                        this.$router.push({ path: '/home' });
+                    }).catch(error => {
+                    console.log(error.message)
+                })
+            }
+        }
     }
 </script>
 
@@ -57,5 +72,10 @@
     .short_navbar{
         width: 30%;
         border-radius: 15px;
+    }
+
+    .disabled {
+        cursor: not-allowed;
+        color: gray
     }
 </style>
