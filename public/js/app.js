@@ -11789,12 +11789,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
   data: function data() {
     return {
       page: "",
+      notFound: false,
       isAdmin: this.$store.state.isAdmin,
       isLoggedIn: false,
       isBorrowed: false,
@@ -11940,8 +11975,64 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     ausgabe: function ausgabe() {
-      if (!(this.search === "")) {
-        console.log(this.search);
+      var _this6 = this;
+
+      console.log(this.search);
+
+      if (this.search === "") {
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
+          if (response.data.data.length === 0) {
+            _this6.notFound = true;
+          } else {
+            _this6.notFound = false;
+            _this6.liste.data.data = response.data.data;
+            _this6.lastPage = response.data.last_page;
+
+            _this6.isLoggedInCheck();
+
+            _this6.saveContent(response.data.data);
+
+            _this6.isAnfangfind();
+
+            _this6.isEndefind();
+
+            _this6.$store.state.lastPage = _this6.lastPage;
+
+            _this6.saveContent(response.data.data);
+
+            _this6.isAnfangfind();
+
+            _this6.isEndefind();
+          }
+        });
+      } else {
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/search', {
+          search: this.search
+        }).then(function (response) {
+          if (response.data.data.length === 0) {
+            _this6.notFound = true;
+          } else {
+            _this6.notFound = false;
+            _this6.liste.data.data = response.data.data;
+            _this6.lastPage = response.data.last_page;
+
+            _this6.isLoggedInCheck();
+
+            _this6.saveContent(response.data.data);
+
+            _this6.isAnfangfind();
+
+            _this6.isEndefind();
+
+            _this6.$store.state.lastPage = _this6.lastPage;
+
+            _this6.saveContent(response.data.data);
+
+            _this6.isAnfangfind();
+
+            _this6.isEndefind();
+          }
+        });
       }
     },
     isAnfangfind: function isAnfangfind() {
@@ -11956,44 +12047,55 @@ __webpack_require__.r(__webpack_exports__);
     },
     increment: function increment() {
       this.$store.commit('increment');
+      this.isAnfang = true;
+      this.isEnde = true;
       window.location.reload();
     },
     decrement: function decrement() {
       this.$store.commit('decrement');
+      this.isAnfang = true;
+      this.isEnde = true;
       window.location.reload();
     },
     sendtoFirst: function sendtoFirst() {
       this.$store.commit("isFirstPage");
+      this.isAnfang = true;
+      this.isEnde = true;
       window.location.reload();
     },
     sendtoLast: function sendtoLast() {
       this.$store.commit("isLastPage");
+      this.isAnfang = true;
+      this.isEnde = true;
       window.location.reload();
     },
     isLoggedInCheck: function isLoggedInCheck() {
-      var _this6 = this;
+      var _this7 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/session').then(function (response) {
-        _this6.isLoggedIn = response.data;
+        _this7.isLoggedIn = response.data;
       });
     },
     returnBook: function returnBook(id) {
-      var _this7 = this;
+      var _this8 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/return', {
         id: id
       }).then(function (response) {
-        _this7.reloadSite(response.data.status + "");
+        _this8.reloadSite(response.data.status + "");
       });
     },
     borrowBook: function borrowBook(id) {
-      var _this8 = this;
+      var _this9 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrow', {
         id: id
       }).then(function (response) {
-        _this8.reloadSite(response.data.status + "");
+        _this9.reloadSite(response.data.status + "");
       });
+    },
+    clearSearch: function clearSearch() {
+      this.search = "";
     }
   }
 });
@@ -44948,7 +45050,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.suche_title[data-v-584825dc] {\n    text-align: center;\n    padding-top: 1em;\n}\n.list[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-584825dc] {\n    flex-basis: 45%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-584825dc] {\n    padding: 1em;\n    margin: 2em;\n}\n.listitem[data-v-584825dc]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-584825dc] {\n    font-size: 12px;\n}\n.page_buttons[data-v-584825dc] {\n    text-align: center;\n    padding: 2em;\n}\n.addButton[data-v-584825dc] {\n    float: right;\n    margin: 1em;\n}\n.searchBar[data-v-584825dc] {\n    width: 50em;\n    vertical-align: center;\n}\n.searchBox[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding: 2em;\n}\n\n", ""]);
+exports.push([module.i, "\n.notFound[data-v-584825dc] {\n    text-align: center;\n}\n.suche_title[data-v-584825dc] {\n    text-align: center;\n    padding-top: 1em;\n}\n.list[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-584825dc] {\n    flex-basis: 30%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-584825dc] {\n    padding: 1em;\n    margin: 2em;\n}\n.listitem[data-v-584825dc]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-584825dc] {\n    font-size: 12px;\n}\n.page_buttons[data-v-584825dc] {\n    text-align: center;\n    padding: 2em;\n}\n.addButton[data-v-584825dc] {\n    float: right;\n    margin: 1em;\n}\n.searchBar[data-v-584825dc] {\n    width: 50em;\n    vertical-align: center;\n}\n.searchBox[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding: 2em;\n}\n", ""]);
 
 // exports
 
@@ -80547,705 +80649,726 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", { staticClass: "suche_title" }, [_vm._v("Suche")]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "searchBox" },
-        [
-          _c(
-            "b-input-group",
-            { staticClass: "searchBar" },
-            [
-              _c(
-                "b-input-group-append",
-                [
-                  _c(
-                    "b-button",
-                    { attrs: { variant: "outline-dark", disabled: "" } },
-                    [_c("font-awesome-icon", { attrs: { icon: "search" } })],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-input",
-                _vm._g(
-                  {
-                    staticClass: "search",
-                    attrs: {
-                      placeholder: "Nach Büchern stöbern",
-                      type: "text"
-                    },
-                    model: {
-                      value: _vm.search,
-                      callback: function($$v) {
-                        _vm.search = $$v
+  return _c("div", [
+    _c("h1", { staticClass: "suche_title" }, [_vm._v("Suche")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "searchBox" },
+      [
+        _c(
+          "b-input-group",
+          { staticClass: "searchBar" },
+          [
+            _c(
+              "b-input-group-prepend",
+              [
+                _c(
+                  "b-button",
+                  { attrs: { disabled: "", variant: "outline-dark" } },
+                  [_c("font-awesome-icon", { attrs: { icon: "search" } })],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("b-input", {
+              staticClass: "search",
+              attrs: { placeholder: "Nach Büchern stöbern", type: "text" },
+              on: {
+                keyup: function($event) {
+                  return _vm.ausgabe()
+                }
+              },
+              model: {
+                value: _vm.search,
+                callback: function($$v) {
+                  _vm.search = $$v
+                },
+                expression: "search"
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "b-input-group-append",
+              [
+                _vm.search != ""
+                  ? _c(
+                      "b-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.clearSearch()
+                          }
+                        }
                       },
-                      expression: "search"
+                      [_vm._v("\n                    X\n                ")]
+                    )
+                  : _vm._e()
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    !_vm.notFound
+      ? _c(
+          "div",
+          { staticClass: "UserViewBody" },
+          [
+            _vm.isAdmin
+              ? _c(
+                  "b-button",
+                  {
+                    directives: [
+                      {
+                        name: "b-modal",
+                        rawName: "v-b-modal.AddItem",
+                        modifiers: { AddItem: true }
+                      }
+                    ],
+                    staticClass: "addButton",
+                    attrs: { type: "light", variant: "danger", pill: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.addItem(_vm.liste.length)
+                      }
                     }
                   },
-                  _vm.ausgabe()
+                  [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
+                  1
                 )
-              )
-            ],
-            1
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "list" },
+              _vm._l(_vm.liste.data.data, function(book) {
+                return _c(
+                  "b-card",
+                  {
+                    directives: [
+                      {
+                        name: "b-modal",
+                        rawName: "v-b-modal.BookInformation",
+                        modifiers: { BookInformation: true }
+                      }
+                    ],
+                    key: book.id,
+                    staticClass: "listitem",
+                    staticStyle: { width: "15em" },
+                    attrs: {
+                      type: "light",
+                      variant: "danger",
+                      "img-left": "",
+                      "img-alt": "Image"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.buecherInformationen(
+                          book.id,
+                          book.title,
+                          book.systematik,
+                          book.medium,
+                          book.content,
+                          book.BNR
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("b-card-title", [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(book.title) +
+                          "\n                "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("b-card-text", { staticClass: "beschreibung" }, [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(_vm.content_short[book.id]) +
+                          "\n                "
+                      )
+                    ])
+                  ],
+                  1
+                )
+              }),
+              1
+            )
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.notFound
+      ? _c("h4", { staticClass: "notFound" }, [
+          _vm._v(
+            "Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder\n        versuchen Sie es später noch einmal."
           )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.isAdmin
-        ? _c(
-            "b-button",
-            {
-              directives: [
-                {
-                  name: "b-modal",
-                  rawName: "v-b-modal.AddItem",
-                  modifiers: { AddItem: true }
-                }
-              ],
-              staticClass: "addButton",
-              attrs: { type: "light", variant: "danger", pill: "" },
-              on: {
-                click: function($event) {
-                  return _vm.addItem(_vm.liste.length)
-                }
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "page_buttons" },
+      [
+        _c(
+          "b-button",
+          {
+            attrs: { disabled: _vm.isAnfang },
+            on: {
+              click: function($event) {
+                return _vm.sendtoFirst()
               }
-            },
-            [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
-            1
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "list" },
-        _vm._l(_vm.liste.data.data, function(book) {
-          return _c(
-            "b-card",
-            {
-              directives: [
-                {
-                  name: "b-modal",
-                  rawName: "v-b-modal.BookInformation",
-                  modifiers: { BookInformation: true }
+            }
+          },
+          [_c("font-awesome-icon", { attrs: { icon: "angle-double-left" } })],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            attrs: { disabled: _vm.isAnfang },
+            on: {
+              click: function($event) {
+                return _vm.decrement()
+              }
+            }
+          },
+          [_c("font-awesome-icon", { attrs: { icon: "angle-left" } })],
+          1
+        ),
+        _vm._v(" "),
+        _c("b-button", { attrs: { disabled: "" } }, [_vm._v(_vm._s(_vm.page))]),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            attrs: { disabled: _vm.isEnde },
+            on: {
+              click: function($event) {
+                return _vm.increment()
+              }
+            }
+          },
+          [_c("font-awesome-icon", { attrs: { icon: "angle-right" } })],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            attrs: { disabled: _vm.isEnde },
+            on: {
+              click: function($event) {
+                return _vm.sendtoLast()
+              }
+            }
+          },
+          [_c("font-awesome-icon", { attrs: { icon: "angle-double-right" } })],
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      [
+        _c(
+          "b-modal",
+          {
+            attrs: { id: "AddItem", centered: "", title: "Create Book" },
+            on: {
+              ok: function($event) {
+                return _vm.saveAdd(
+                  _vm.title,
+                  _vm.systematik,
+                  _vm.medium,
+                  _vm.content_full,
+                  _vm.BNR
+                )
+              }
+            }
+          },
+          [
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Title",
+                  "label-for": "title",
+                  "invalid-feedback": "Title is required"
                 }
-              ],
-              key: book.id,
-              staticClass: "listitem",
-              staticStyle: { width: "15em" },
-              attrs: {
-                type: "light",
-                variant: "danger",
-                "img-left": "",
-                "img-alt": "Image"
               },
-              on: {
-                click: function($event) {
-                  return _vm.buecherInformationen(
-                    book.id,
-                    book.title,
-                    book.systematik,
-                    book.medium,
-                    book.content,
-                    book.BNR
-                  )
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.title,
+                    callback: function($$v) {
+                      _vm.title = $$v
+                    },
+                    expression: "title"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Systematik",
+                  "label-for": "title",
+                  "invalid-feedback": "Systematik is required"
                 }
-              }
-            },
-            [
-              _c("b-card-title", [
-                _vm._v(
-                  "\n                " + _vm._s(book.title) + "\n            "
-                )
-              ]),
-              _vm._v(" "),
-              _c("b-card-text", { staticClass: "beschreibung" }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.content_short[book.id]) +
-                    "\n            "
-                )
-              ])
-            ],
-            1
-          )
-        }),
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "page_buttons" },
-        [
-          _c(
-            "b-button",
-            {
-              attrs: { disabled: _vm.isAnfang },
-              on: {
-                click: function($event) {
-                  return _vm.sendtoFirst()
-                }
-              }
-            },
-            [_c("font-awesome-icon", { attrs: { icon: "angle-double-left" } })],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-button",
-            {
-              attrs: { disabled: _vm.isAnfang },
-              on: {
-                click: function($event) {
-                  return _vm.decrement()
-                }
-              }
-            },
-            [_c("font-awesome-icon", { attrs: { icon: "angle-left" } })],
-            1
-          ),
-          _vm._v(" "),
-          _c("b-button", { attrs: { disabled: "" } }, [
-            _vm._v(_vm._s(_vm.page))
-          ]),
-          _vm._v(" "),
-          _c(
-            "b-button",
-            {
-              attrs: { disabled: _vm.isEnde },
-              on: {
-                click: function($event) {
-                  return _vm.increment()
-                }
-              }
-            },
-            [_c("font-awesome-icon", { attrs: { icon: "angle-right" } })],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-button",
-            {
-              attrs: { disabled: _vm.isEnde },
-              on: {
-                click: function($event) {
-                  return _vm.sendtoLast()
-                }
-              }
-            },
-            [
-              _c("font-awesome-icon", { attrs: { icon: "angle-double-right" } })
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
-            "b-modal",
-            {
-              attrs: { id: "AddItem", centered: "", title: "Create Book" },
-              on: {
-                ok: function($event) {
-                  return _vm.saveAdd(
-                    _vm.title,
-                    _vm.systematik,
-                    _vm.medium,
-                    _vm.content_full,
-                    _vm.BNR
-                  )
-                }
-              }
-            },
-            [
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Title",
-                    "label-for": "title",
-                    "invalid-feedback": "Title is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.title,
-                      callback: function($$v) {
-                        _vm.title = $$v
-                      },
-                      expression: "title"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Systematik",
-                    "label-for": "title",
-                    "invalid-feedback": "Systematik is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.systematik,
-                      callback: function($$v) {
-                        _vm.systematik = $$v
-                      },
-                      expression: "systematik"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Medium",
-                    "label-for": "title",
-                    "invalid-feedback": "Medium is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.medium,
-                      callback: function($$v) {
-                        _vm.medium = $$v
-                      },
-                      expression: "medium"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Content",
-                    "label-for": "title",
-                    "invalid-feedback": "Content is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.content_full,
-                      callback: function($$v) {
-                        _vm.content_full = $$v
-                      },
-                      expression: "content_full"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "BNR",
-                    "label-for": "title",
-                    "invalid-feedback": "BNR is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.BNR,
-                      callback: function($$v) {
-                        _vm.BNR = $$v
-                      },
-                      expression: "BNR"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-modal",
-            {
-              attrs: { id: "EditItem", centered: "", title: "Edit Book" },
-              on: {
-                ok: function($event) {
-                  return _vm.saveEdit(
-                    _vm.id,
-                    _vm.title,
-                    _vm.systematik,
-                    _vm.medium,
-                    _vm.content_full,
-                    _vm.BNR
-                  )
-                }
-              }
-            },
-            [
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Title",
-                    "label-for": "title",
-                    "invalid-feedback": "Title is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.title,
-                      callback: function($$v) {
-                        _vm.title = $$v
-                      },
-                      expression: "title"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Systematik",
-                    "label-for": "title",
-                    "invalid-feedback": "Systematik is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.systematik,
-                      callback: function($$v) {
-                        _vm.systematik = $$v
-                      },
-                      expression: "systematik"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Medium",
-                    "label-for": "title",
-                    "invalid-feedback": "Medium is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.medium,
-                      callback: function($$v) {
-                        _vm.medium = $$v
-                      },
-                      expression: "medium"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "Content",
-                    "label-for": "title",
-                    "invalid-feedback": "Content is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.content_full,
-                      callback: function($$v) {
-                        _vm.content_full = $$v
-                      },
-                      expression: "content_full"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-form-group",
-                {
-                  attrs: {
-                    label: "BNR",
-                    "label-for": "title",
-                    "invalid-feedback": "BNR is required"
-                  }
-                },
-                [
-                  _c("b-form-input", {
-                    attrs: { id: "name-input", required: "" },
-                    model: {
-                      value: _vm.BNR,
-                      callback: function($$v) {
-                        _vm.BNR = $$v
-                      },
-                      expression: "BNR"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-modal",
-            {
-              attrs: {
-                id: "BookInformation",
-                centered: "",
-                title: "Information"
               },
-              scopedSlots: _vm._u([
-                {
-                  key: "modal-footer",
-                  fn: function(ref) {
-                    var cancel = ref.cancel
-                    return [
-                      _vm.isLoggedIn
-                        ? _c("div", [
-                            _vm.isAdmin
-                              ? _c(
-                                  "div",
-                                  [
-                                    _c(
-                                      "b-button",
-                                      {
-                                        attrs: {
-                                          size: "sm",
-                                          variant: "success"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return cancel()
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                            Close\n                        "
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-button",
-                                      {
-                                        attrs: { pill: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.deleteItem(_vm.id)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("font-awesome-icon", {
-                                          attrs: { icon: "trash" }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-button",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "b-modal",
-                                            rawName: "v-b-modal.EditItem",
-                                            modifiers: { EditItem: true }
-                                          }
-                                        ],
-                                        attrs: { pill: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.editItem(
-                                              _vm.id,
-                                              _vm.title,
-                                              _vm.systematik,
-                                              _vm.medium,
-                                              _vm.content,
-                                              _vm.BNR
-                                            )
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("font-awesome-icon", {
-                                          attrs: { icon: "pen" }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-button",
-                                      {
-                                        attrs: {
-                                          disabled: !_vm.isBorrowed,
-                                          pill: ""
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.returnBook(_vm.id)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("font-awesome-icon", {
-                                          staticClass: "fa-rotate-270",
-                                          attrs: { icon: "level-up-alt" }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            !_vm.isAdmin
-                              ? _c(
-                                  "div",
-                                  [
-                                    _c(
-                                      "b-button",
-                                      {
-                                        attrs: {
-                                          size: "sm",
-                                          variant: "success"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return cancel()
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                            Close\n                        "
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-button",
-                                      {
-                                        attrs: {
-                                          disabled: _vm.isBorrowed,
-                                          pill: ""
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.borrowBook(_vm.id)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("font-awesome-icon", {
-                                          attrs: { icon: "cart-plus" }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                )
-                              : _vm._e()
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      !_vm.isLoggedIn
-                        ? _c(
-                            "div",
-                            [
-                              _c(
-                                "b-button",
-                                {
-                                  attrs: { size: "sm", variant: "success" },
-                                  on: {
-                                    click: function($event) {
-                                      return cancel()
-                                    }
-                                  }
-                                },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.systematik,
+                    callback: function($$v) {
+                      _vm.systematik = $$v
+                    },
+                    expression: "systematik"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Medium",
+                  "label-for": "title",
+                  "invalid-feedback": "Medium is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.medium,
+                    callback: function($$v) {
+                      _vm.medium = $$v
+                    },
+                    expression: "medium"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Content",
+                  "label-for": "title",
+                  "invalid-feedback": "Content is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.content_full,
+                    callback: function($$v) {
+                      _vm.content_full = $$v
+                    },
+                    expression: "content_full"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "BNR",
+                  "label-for": "title",
+                  "invalid-feedback": "BNR is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.BNR,
+                    callback: function($$v) {
+                      _vm.BNR = $$v
+                    },
+                    expression: "BNR"
+                  }
+                })
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "b-modal",
+          {
+            attrs: { id: "EditItem", centered: "", title: "Edit Book" },
+            on: {
+              ok: function($event) {
+                return _vm.saveEdit(
+                  _vm.id,
+                  _vm.title,
+                  _vm.systematik,
+                  _vm.medium,
+                  _vm.content_full,
+                  _vm.BNR
+                )
+              }
+            }
+          },
+          [
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Title",
+                  "label-for": "title",
+                  "invalid-feedback": "Title is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.title,
+                    callback: function($$v) {
+                      _vm.title = $$v
+                    },
+                    expression: "title"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Systematik",
+                  "label-for": "title",
+                  "invalid-feedback": "Systematik is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.systematik,
+                    callback: function($$v) {
+                      _vm.systematik = $$v
+                    },
+                    expression: "systematik"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Medium",
+                  "label-for": "title",
+                  "invalid-feedback": "Medium is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.medium,
+                    callback: function($$v) {
+                      _vm.medium = $$v
+                    },
+                    expression: "medium"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "Content",
+                  "label-for": "title",
+                  "invalid-feedback": "Content is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.content_full,
+                    callback: function($$v) {
+                      _vm.content_full = $$v
+                    },
+                    expression: "content_full"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-form-group",
+              {
+                attrs: {
+                  label: "BNR",
+                  "label-for": "title",
+                  "invalid-feedback": "BNR is required"
+                }
+              },
+              [
+                _c("b-form-input", {
+                  attrs: { id: "name-input", required: "" },
+                  model: {
+                    value: _vm.BNR,
+                    callback: function($$v) {
+                      _vm.BNR = $$v
+                    },
+                    expression: "BNR"
+                  }
+                })
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "b-modal",
+          {
+            attrs: {
+              id: "BookInformation",
+              centered: "",
+              title: "Information"
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "modal-footer",
+                fn: function(ref) {
+                  var cancel = ref.cancel
+                  return [
+                    _vm.isLoggedIn
+                      ? _c("div", [
+                          _vm.isAdmin
+                            ? _c(
+                                "div",
                                 [
-                                  _vm._v(
-                                    "\n                        Close\n                    "
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: { size: "sm", variant: "success" },
+                                      on: {
+                                        click: function($event) {
+                                          return cancel()
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            Close\n                        "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: { pill: "" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteItem(_vm.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("font-awesome-icon", {
+                                        attrs: { icon: "trash" }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "b-modal",
+                                          rawName: "v-b-modal.EditItem",
+                                          modifiers: { EditItem: true }
+                                        }
+                                      ],
+                                      attrs: { pill: "" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editItem(
+                                            _vm.id,
+                                            _vm.title,
+                                            _vm.systematik,
+                                            _vm.medium,
+                                            _vm.content,
+                                            _vm.BNR
+                                          )
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("font-awesome-icon", {
+                                        attrs: { icon: "pen" }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: {
+                                        disabled: !_vm.isBorrowed,
+                                        pill: ""
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.returnBook(_vm.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("font-awesome-icon", {
+                                        staticClass: "fa-rotate-270",
+                                        attrs: { icon: "level-up-alt" }
+                                      })
+                                    ],
+                                    1
                                   )
-                                ]
+                                ],
+                                1
                               )
-                            ],
-                            1
-                          )
-                        : _vm._e()
-                    ]
-                  }
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !_vm.isAdmin
+                            ? _c(
+                                "div",
+                                [
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: { size: "sm", variant: "success" },
+                                      on: {
+                                        click: function($event) {
+                                          return cancel()
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            Close\n                        "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: {
+                                        disabled: _vm.isBorrowed,
+                                        pill: ""
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.borrowBook(_vm.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("font-awesome-icon", {
+                                        attrs: { icon: "cart-plus" }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.isLoggedIn
+                      ? _c(
+                          "div",
+                          [
+                            _c(
+                              "b-button",
+                              {
+                                attrs: { size: "sm", variant: "success" },
+                                on: {
+                                  click: function($event) {
+                                    return cancel()
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        Close\n                    "
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ]
                 }
-              ])
-            },
-            [
-              _c("div", [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.content_full) +
-                    "\n            "
-                )
-              ])
-            ]
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+              }
+            ])
+          },
+          [
+            _c("div", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.content_full) +
+                  "\n            "
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

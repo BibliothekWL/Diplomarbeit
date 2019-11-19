@@ -7,40 +7,74 @@
 
         ---------------------------------------------------------->
 
+        <!---------------------------------------------------------
+
+                                Search
+
+        ---------------------------------------------------------->
+
         <h1 class="suche_title">Suche</h1>
 
         <div class="searchBox">
             <b-input-group class="searchBar">
-                <b-input-group-append>
-                    <b-button variant="outline-dark" disabled>
+                <b-input-group-prepend>
+                    <b-button disabled variant="outline-dark">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
+                </b-input-group-prepend>
+                <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
+                         v-model="search" v-on:keyup="ausgabe()"></b-input>
+                <b-input-group-append>
+                    <b-button v-if='search != ""' v-on:click='clearSearch()'>
+                        X
+                    </b-button>
                 </b-input-group-append>
-                <b-input placeholder="Nach Büchern stöbern" type="text" class="search" v-on="ausgabe()"
-                         v-model="search"></b-input>
             </b-input-group>
         </div>
 
-        <b-button v-if="isAdmin" type="light" variant="danger" class="addButton" pill v-b-modal.AddItem
-                  v-on:click="addItem(liste.length)">
-            <font-awesome-icon icon="plus"/>
-        </b-button>
+        <!---------------------------------------------------------
 
-        <div class="list">
-            <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                    img-left
-                    img-alt="Image"
-                    style="width: 15em;" class="listitem"
-                    v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                    v-b-modal.BookInformation>
-                <b-card-title>
-                    {{book.title}}
-                </b-card-title>
-                <b-card-text class="beschreibung">
-                    {{content_short[book.id]}}
-                </b-card-text>
-            </b-card>
+                                View-Body
+
+        ---------------------------------------------------------->
+
+        <div v-if="!notFound" class="UserViewBody">
+            <b-button v-if="isAdmin" type="light" variant="danger" class="addButton" pill v-b-modal.AddItem
+                      v-on:click="addItem(liste.length)">
+                <font-awesome-icon icon="plus"/>
+            </b-button>
+
+            <div class="list">
+                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
+                        img-left
+                        img-alt="Image"
+                        style="width: 15em;" class="listitem"
+                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                        v-b-modal.BookInformation>
+                    <b-card-title>
+                        {{book.title}}
+                    </b-card-title>
+                    <b-card-text class="beschreibung">
+                        {{content_short[book.id]}}
+                    </b-card-text>
+                </b-card>
+            </div>
         </div>
+
+        <!---------------------------------------------------------
+
+                                NoBooksFound
+
+        ---------------------------------------------------------->
+
+        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+            versuchen Sie es später noch einmal.</h4>
+
+        <!---------------------------------------------------------
+
+                                Pagingbuttons
+
+        ---------------------------------------------------------->
 
         <div class="page_buttons">
             <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
@@ -250,6 +284,7 @@
         data() {
             return {
                 page: "",
+                notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
                 isBorrowed: false,
@@ -359,7 +394,6 @@
                 }
             },
             buecherInformationen: function (id, title, systematik, medium, content, BNR) {
-
                 this.id = id;
                 this.content_full = content;
                 this.systematik = systematik;
@@ -382,67 +416,131 @@
                 }
             },
             ausgabe: function () {
-                if (!(this.search === "")) {
-                    console.log(this.search);
+                console.log(this.search);
+                if (this.search === "") {
+                    axios.get('/books/json?page=' + this.page)
+                        .then(response => {
+                                if (response.data.data.length === 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.$store.state.lastPage = this.lastPage;
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
+                            }
+                        );
+                } else {
+                    axios.post('/books/search', {
+                        search: this.search
+                    })
+                        .then(response => {
+                                if (response.data.data.length === 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.$store.state.lastPage = this.lastPage;
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
+                            }
+                        );
                 }
             },
             isAnfangfind: function () {
                 if (this.$store.state.count === this.firstPage) {
                     this.isAnfang = true;
                 }
-            },
+            }
+            ,
             isEndefind: function () {
                 if (this.$store.state.count === this.lastPage) {
                     this.isEnde = true;
                 }
-            },
+            }
+            ,
             increment: function () {
                 this.$store.commit('increment');
+                this.isAnfang = true;
+                this.isEnde = true;
                 window.location.reload();
-            },
+            }
+            ,
             decrement: function () {
                 this.$store.commit('decrement');
+                this.isAnfang = true;
+                this.isEnde = true;
                 window.location.reload();
-            },
+            }
+            ,
             sendtoFirst: function () {
                 this.$store.commit("isFirstPage");
+                this.isAnfang = true;
+                this.isEnde = true;
                 window.location.reload();
-            },
+            }
+            ,
             sendtoLast: function () {
                 this.$store.commit("isLastPage");
+                this.isAnfang = true;
+                this.isEnde = true;
                 window.location.reload();
-            },
+            }
+            ,
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
                             this.isLoggedIn = response.data;
                         }
                     )
-            },
+            }
+            ,
             returnBook: function (id) {
                 axios.post('/books/return', {
                     id: id
-                })
-                    .then(response => {
-                            this.reloadSite(response.data.status + "")
-                        }
-                    )
-            },
+                }).then(response => {
+                        this.reloadSite(response.data.status + "")
+                    }
+                )
+            }
+            ,
             borrowBook: function (id) {
                 axios.post('/books/borrow', {
                     id: id
-                })
-                    .then(response => {
-                            this.reloadSite(response.data.status + "")
-                        }
-                    )
-            },
+                }).then(response => {
+                        this.reloadSite(response.data.status + "")
+                    }
+                )
+            }
+            ,
+            clearSearch: function () {
+                this.search = "";
+            }
         }
     }
 
 </script>
 
 <style scoped>
+
+    .notFound {
+        text-align: center;
+    }
+
     .suche_title {
         text-align: center;
         padding-top: 1em;
@@ -457,7 +555,7 @@
     }
 
     .list > * {
-        flex-basis: 45%;
+        flex-basis: 30%;
         flex-grow: 1;
         flex-shrink: 1;
     }
@@ -495,5 +593,4 @@
         justify-content: center;
         padding: 2em;
     }
-
 </style>

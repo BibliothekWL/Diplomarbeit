@@ -87,9 +87,6 @@ class BooksController extends Controller
 
             return json_encode(['status' => 200, 'statusMessage' => 'borrow successful']);
         }
-
-        return json_encode(["json" => $json]);
-
 //        $carts = User::findOrFail(auth()->user()->id)->carts;
 //        $books = array();
 //        foreach ($carts as $cart) {
