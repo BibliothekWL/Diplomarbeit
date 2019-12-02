@@ -74,6 +74,10 @@
                          v-model="search"></b-input>
             </b-input-group>
 
+            <b-button pill v-show="isAdmin" v-b-modal.AddItem v-on:click="addItem(liste.length)">
+                <font-awesome-icon icon="plus"/>
+            </b-button>
+
             <div v-for="book in liste" class="list">
                 <div>
                     <b-card img-left
@@ -89,9 +93,6 @@
                 </div>
             </div>
 
-            <b-button pill v-b-modal.AddItem v-on:click="addItem(liste.length)">
-                <font-awesome-icon icon="plus"/>
-            </b-button>
 
             <div class="page_buttons">
                 <b-button v-on:click="sendtoFirst()" :disabled=isAnfang><<</b-button>

@@ -11794,6 +11794,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -12112,6 +12113,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
@@ -12145,6 +12147,7 @@ __webpack_require__.r(__webpack_exports__);
           console.log(error.message);
         });
       } else {
+        this.$bvToast.show('toast');
         console.log("Wrong pw!");
       }
     }
@@ -12193,13 +12196,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Push: vue_burger_menu__WEBPACK_IMPORTED_MODULE_1__["Push"] // Burger-Knopf Initlialisierung
+    Slide: vue_burger_menu__WEBPACK_IMPORTED_MODULE_1__["Slide"] // Burger-Knopf Initlialisierung
 
   },
   data: function data() {
@@ -12221,9 +12222,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/logout/json', {}).then(function (response) {
-        location.reload();
-
         _this.$store.commit('UsernotLoggedIn');
+
+        location.reload();
 
         _this.$router('/login');
       })["catch"](function (error) {
@@ -45417,7 +45418,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-6bdc8b8e] {\n    cursor: not-allowed;\n    color: gray\n}\n\n", ""]);
+exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 100%;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 50%;\n    min-width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    width: 50%;\n    min-width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-6bdc8b8e] {\n    cursor: not-allowed;\n    color: gray\n}\n\n", ""]);
 
 // exports
 
@@ -45437,7 +45438,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-97358ae4]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-97358ae4]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-97358ae4]{\n    width: 30%;\n    border-radius: 15px;\n}\n.disabled[data-v-97358ae4] {\n    cursor: not-allowed;\n    color: gray\n}\n", ""]);
+exports.push([module.i, "\n.test[data-v-97358ae4]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 100%;\n    position: relative;\n}\n.form_div[data-v-97358ae4]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    min-width: 30%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-97358ae4]{\n    width: 50%;\n    min-width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-97358ae4] {\n    cursor: not-allowed;\n    color: gray\n}\n", ""]);
 
 // exports
 
@@ -45456,7 +45457,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.site_title{\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: fixed;\n}\n.link {\n    margin-left: 3em;\n}\n.link:nth-child(1) {\n    margin-left: 7em;\n}\n.bm-burger-button {\n    position: fixed;\n    width: 20px;\n    height: 20px;\n    left: 20px;\n    top: 20px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000; /* Stay on top */\n    top: 0;\n    left: 0;\n    background-color: rgb(63, 63, 65); /* Black*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n}\n", ""]);
+exports.push([module.i, "\nhtml, body{\n    height: 100%;\n    margin: 0;\n}\n.parent{\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n    height: 100%;\n}\n.content{\n    -webkit-box-flex: 1;\n            flex: 1 1 auto;\n}\na, em{\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-right: 1em;\n}\n.site_title{\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: absolute;\n}\n.bm-burger-button {\n    position: absolute;\n    width: 25px;\n    height: 20px;\n    left: 17px;\n    top: 17px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000;\n    top: 56px;\n    left: 0;\n    background-color: rgb(220, 53, 69); /* RED*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n    opacity: 80%;\n}\n", ""]);
 
 // exports
 
@@ -81189,6 +81190,33 @@ var render = function() {
               1
             ),
             _vm._v(" "),
+            _c(
+              "b-button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.isAdmin,
+                    expression: "isAdmin"
+                  },
+                  {
+                    name: "b-modal",
+                    rawName: "v-b-modal.AddItem",
+                    modifiers: { AddItem: true }
+                  }
+                ],
+                attrs: { pill: "" },
+                on: {
+                  click: function($event) {
+                    return _vm.addItem(_vm.liste.length)
+                  }
+                }
+              },
+              [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
+              1
+            ),
+            _vm._v(" "),
             _vm._l(_vm.liste, function(book) {
               return _c("div", { staticClass: "list" }, [
                 _c(
@@ -81224,27 +81252,6 @@ var render = function() {
                 )
               ])
             }),
-            _vm._v(" "),
-            _c(
-              "b-button",
-              {
-                directives: [
-                  {
-                    name: "b-modal",
-                    rawName: "v-b-modal.AddItem",
-                    modifiers: { AddItem: true }
-                  }
-                ],
-                attrs: { pill: "" },
-                on: {
-                  click: function($event) {
-                    return _vm.addItem(_vm.liste.length)
-                  }
-                }
-              },
-              [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
-              1
-            ),
             _vm._v(" "),
             _c(
               "div",
@@ -81778,99 +81785,106 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "test" }, [
-    _c(
-      "div",
-      { staticClass: "form_div" },
-      [
-        _c(
-          "b-navbar",
-          {
-            staticClass: "short_navbar",
-            attrs: { type: "light", variant: "danger" }
-          },
-          [
-            _c(
-              "b-button",
-              { attrs: { "active-class": "active", to: "/login" } },
-              [_vm._v("Login")]
-            ),
-            _vm._v(" "),
-            _c("b-button", { attrs: { disabled: "" } }, [_vm._v("Register")])
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form_div" },
-          [
-            _c("b-form-input", {
-              staticClass: "inputs",
-              attrs: { type: "text", placeholder: "Enter Name" },
-              model: {
-                value: _vm.name,
-                callback: function($$v) {
-                  _vm.name = $$v
-                },
-                expression: "name"
-              }
-            }),
-            _vm._v(" "),
-            _c("b-form-input", {
-              staticClass: "inputs",
-              attrs: { type: "email", placeholder: "Enter ID" },
-              model: {
-                value: _vm.email,
-                callback: function($$v) {
-                  _vm.email = $$v
-                },
-                expression: "email"
-              }
-            }),
-            _vm._v(" "),
-            _c("b-form-input", {
-              staticClass: "inputs",
-              attrs: { type: "password", placeholder: "Enter Password" },
-              model: {
-                value: _vm.password,
-                callback: function($$v) {
-                  _vm.password = $$v
-                },
-                expression: "password"
-              }
-            }),
-            _vm._v(" "),
-            _c("b-form-input", {
-              staticClass: "inputs",
-              attrs: { type: "password", placeholder: "Repeat Password" },
-              model: {
-                value: _vm.passwordRepeat,
-                callback: function($$v) {
-                  _vm.passwordRepeat = $$v
-                },
-                expression: "passwordRepeat"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "b-button",
-              {
-                on: {
-                  click: function($event) {
-                    return _vm.register()
-                  }
+  return _c(
+    "div",
+    { staticClass: "test" },
+    [
+      _c("b-toaster"),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "form_div" },
+        [
+          _c(
+            "b-navbar",
+            {
+              staticClass: "short_navbar",
+              attrs: { type: "light", variant: "danger" }
+            },
+            [
+              _c(
+                "b-button",
+                { attrs: { "active-class": "active", to: "/login" } },
+                [_vm._v("Login")]
+              ),
+              _vm._v(" "),
+              _c("b-button", { attrs: { disabled: "" } }, [_vm._v("Register")])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form_div" },
+            [
+              _c("b-form-input", {
+                staticClass: "inputs",
+                attrs: { type: "text", placeholder: "Enter Name" },
+                model: {
+                  value: _vm.name,
+                  callback: function($$v) {
+                    _vm.name = $$v
+                  },
+                  expression: "name"
                 }
-              },
-              [_vm._v("Register")]
-            )
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+              }),
+              _vm._v(" "),
+              _c("b-form-input", {
+                staticClass: "inputs",
+                attrs: { type: "email", placeholder: "Enter ID" },
+                model: {
+                  value: _vm.email,
+                  callback: function($$v) {
+                    _vm.email = $$v
+                  },
+                  expression: "email"
+                }
+              }),
+              _vm._v(" "),
+              _c("b-form-input", {
+                staticClass: "inputs",
+                attrs: { type: "password", placeholder: "Enter Password" },
+                model: {
+                  value: _vm.password,
+                  callback: function($$v) {
+                    _vm.password = $$v
+                  },
+                  expression: "password"
+                }
+              }),
+              _vm._v(" "),
+              _c("b-form-input", {
+                staticClass: "inputs",
+                attrs: { type: "password", placeholder: "Repeat Password" },
+                model: {
+                  value: _vm.passwordRepeat,
+                  callback: function($$v) {
+                    _vm.passwordRepeat = $$v
+                  },
+                  expression: "passwordRepeat"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  on: {
+                    click: function($event) {
+                      return _vm.register()
+                    }
+                  }
+                },
+                [_vm._v("Register")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -81896,25 +81910,20 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "parent" },
     [
       _c(
         "b-navbar",
-        { attrs: { type: "light", variant: "danger" } },
+        {
+          staticClass: "shadow main_navbar",
+          attrs: { type: "light", variant: "danger" }
+        },
         [
-          _c(
-            "div",
-            { attrs: { id: "app" } },
-            [
-              _c("Push", { staticClass: "bm-menu" }, [
-                _c("a", { attrs: { href: "/list" } }, [_vm._v("Bücherliste")]),
-                _vm._v(" "),
-                _c("a", { attrs: { href: "/home" } }, [_vm._v("Home")])
-              ]),
-              _vm._v(" "),
-              _c("main", { attrs: { id: "page-wrap" } })
-            ],
-            1
-          ),
+          _c("Slide", { staticClass: "sidebar" }, [
+            _c("a", { attrs: { href: "/list" } }, [_vm._v("Bücherliste")]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "/home" } }, [_vm._v("Home")])
+          ]),
           _vm._v(" "),
           _c("h4", { staticClass: "site_title" }, [
             _vm._v("Bibliothek Wiener Linien")
@@ -82000,7 +82009,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("router-view")
+      _c("div", { staticClass: "content" }, [_c("router-view")], 1)
     ],
     1
   )
@@ -98785,8 +98794,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

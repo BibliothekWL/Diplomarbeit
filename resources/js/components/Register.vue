@@ -1,5 +1,6 @@
 <template>
     <div class="test">
+        <b-toaster></b-toaster>
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
                 <b-button active-class="active" to="/login">Login</b-button>
@@ -44,9 +45,10 @@
                             this.$store.commit('UserLoggedIn');
                             this.$router.push({ path: '/home' });
                         }).catch(error => {
-                        console.log(error.message)
+                        console.log(error.message);
                     })
                 } else {
+                    this.$bvToast.show('toast');
                     console.log("Wrong pw!")
                 }
             }
@@ -57,7 +59,7 @@
 <style scoped>
     .test{
         background-image: url("../../img/library.jpg");
-        height: 92.5vh;
+        height: 100%;
         position: relative;
     }
 
@@ -67,13 +69,15 @@
         margin-left: auto;
         margin-right: auto;
         width: 40%;
+        min-width: 30%;
         height: 60%;
         border-radius: 15px;
         text-align: center;
     }
 
     .short_navbar{
-        width: 30%;
+        width: 50%;
+        min-width: 40%;
         border-radius: 15px;
     }
 

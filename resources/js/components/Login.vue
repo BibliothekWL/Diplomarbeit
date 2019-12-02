@@ -48,7 +48,7 @@
 <style scoped>
     .test{
         background-image: url("../../img/library.jpg");
-        height: 92.5vh;
+        height: 100%;
         position: relative;
     }
 
@@ -57,14 +57,16 @@
         opacity: 85%;
         margin-left: auto;
         margin-right: auto;
-        width: 40%;
+        width: 50%;
+        min-width: 40%;
         height: 60%;
         border-radius: 15px;
         text-align: center;
     }
 
     .short_navbar{
-        width: 40%;
+        width: 50%;
+        min-width: 40%;
         border-radius: 15px;
     }
 
