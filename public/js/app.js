@@ -11791,9 +11791,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -12136,7 +12133,8 @@ __webpack_require__.r(__webpack_exports__);
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/user/register', {
           name: this.name,
           email: this.email,
-          password: this.password
+          password: this.password,
+          password2: this.password2
         }).then(function (response) {
           console.log(response);
 
@@ -81144,6 +81142,33 @@ var render = function() {
                 )
               ],
               1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.isAdmin,
+                    expression: "isAdmin"
+                  },
+                  {
+                    name: "b-modal",
+                    rawName: "v-b-modal.AddItem",
+                    modifiers: { AddItem: true }
+                  }
+                ],
+                attrs: { pill: "" },
+                on: {
+                  click: function($event) {
+                    return _vm.addItem(_vm.liste.length)
+                  }
+                }
+              },
+              [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
+              1
             )
           ],
           2
@@ -81228,27 +81253,6 @@ var render = function() {
                 )
               ])
             }),
-            _vm._v(" "),
-            _c(
-              "b-button",
-              {
-                directives: [
-                  {
-                    name: "b-modal",
-                    rawName: "v-b-modal.AddItem",
-                    modifiers: { AddItem: true }
-                  }
-                ],
-                attrs: { pill: "" },
-                on: {
-                  click: function($event) {
-                    return _vm.addItem(_vm.liste.length)
-                  }
-                }
-              },
-              [_c("font-awesome-icon", { attrs: { icon: "plus" } })],
-              1
-            ),
             _vm._v(" "),
             _c(
               "div",
@@ -98799,8 +98803,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

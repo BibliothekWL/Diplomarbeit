@@ -38,7 +38,7 @@
                     axios.post('http://localhost:8000/user/register', {
                         name: this.name,
                         email: this.email,
-                        password: this.password
+                        password: this.password,
                     })
                         .then(response => {
                             console.log(response);

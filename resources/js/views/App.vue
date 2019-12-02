@@ -53,9 +53,9 @@
                 logout: function () {
                     axios.get('/logout/json', {})
                         .then(response => {
-                            location.reload();
                             this.$store.commit('UsernotLoggedIn');
-                            this.$router('/login');
+                            this.$store.commit('UserisnotAdmin');
+                            window.location.reload();
                         }).catch(error => {
                         console.log(error.message)
                     });

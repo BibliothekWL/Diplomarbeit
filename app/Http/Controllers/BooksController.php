@@ -76,37 +76,58 @@ class BooksController extends Controller
      */
     public function borrowBooks()
     {
-        $carts = User::findOrFail(auth()->user()->id)->carts;
-        $books = array();
-        foreach ($carts as $cart) {
-            $book = $cart->book;
-            array_push($books, $book);
-        }
-        foreach ($books as $item) {
-            $book = Book::findorFail($item->id);
-            $book->borrowed = 1;
-            $book->save();
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
+            return json_encode(['status' => 400, 'statusMessage' => 'borrow failed']);
+        } else {
+            DB::table('books')
+                ->where('id', $jsonarray['id'])
+                ->update(['borrowed' => 1]);
 
-            $borrowing = new Borrowing();
-            $borrowing->user_id = auth()->user()->id;
-            $borrowing->book_id = $item->id;
-            $borrowing->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'borrow successful']);
         }
-
-        Cart::where('user_id', auth()->user()->id)->delete();
-        return (redirect('borrowing'));
+//        $carts = User::findOrFail(auth()->user()->id)->carts;
+//        $books = array();
+//        foreach ($carts as $cart) {
+//            $book = $cart->book;
+//            array_push($books, $book);
+//        }
+//        foreach ($books as $item) {
+//            $book = Book::findorFail($item->id);
+//            $book->borrowed = 1;
+//            $book->save();
+//
+//            $borrowing = new Borrowing();
+//            $borrowing->user_id = auth()->user()->id;
+//            $borrowing->book_id = $item->id;
+//            $borrowing->save();
+//        }
+//
+//        Cart::where('user_id', auth()->user()->id)->delete();
+//        return (redirect('borrowing'));
     }
 
     public function returnBooks()
     {
-        $books = User::findOrFail(auth()->user()->id)->books;
-        Borrowing::where('user_id', auth()->user()->id)->delete();
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
+            return json_encode(['status' => 400, 'statusMessage' => 'return failed']);
+        } else {
+//            $books = User::findOrFail(auth()->user()->id)->books;
+//            Borrowing::where('user_id', auth()->user()->id)->delete();
+//
+//            foreach ($books as $book) {
+//                $book->borrowed = 0;
+//                $book->save();
+//            }
+            DB::table('books')
+                ->where('id', $jsonarray['id'])
+                ->update(['borrowed' => 0]);
 
-        foreach ($books as $book) {
-            $book->borrowed = 0;
-            $book->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
         }
-        return redirect('/borrowing');
     }
 
     public function BookValidator()
@@ -132,7 +153,7 @@ class BooksController extends Controller
             return json_encode(['status' => 400, 'statusMessage' => 'delete failed']);
         } else {
             Book::where('id', $id)->delete();
-            return json_encode(['status' => 200,'statusMessage' => 'delete successful']);
+            return json_encode(['status' => 200, 'statusMessage' => 'delete successful']);
         }
     }
 
@@ -142,22 +163,22 @@ class BooksController extends Controller
         $jsonarray = json_decode($json, true);
         $author_id_raw = DB::table('authors')->where('firstname', $jsonarray['authorname'])->pluck('id');
         $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
-            if (sizeof($jsonarray) != 0) {
-                $book = new Book();
-                $book->user_id = auth()->user()->id;
-                $book->author_id = 1;
-                $book->title = $jsonarray['title'];
-                $book->systematik = $jsonarray['systematik'];
-                $book->medium = $jsonarray['medium'];
-                $book->content = $jsonarray['content'];
-                $book->BNR = $jsonarray['BNR'];
-                $book->borrowed = 0;
-                $book->created_at = Null;
-                $book->updated_at = Null;
-                $book->save();
-                return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
-            } else {
-                return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
-            }
+        if (sizeof($jsonarray) != 0) {
+            $book = new Book();
+            $book->user_id = auth()->user()->id;
+            $book->author_id = 1;
+            $book->title = $jsonarray['title'];
+            $book->systematik = $jsonarray['systematik'];
+            $book->medium = $jsonarray['medium'];
+            $book->content = $jsonarray['content'];
+            $book->BNR = $jsonarray['BNR'];
+            $book->borrowed = 0;
+            $book->created_at = Null;
+            $book->updated_at = Null;
+            $book->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
+        } else {
+            return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
         }
+    }
 }
