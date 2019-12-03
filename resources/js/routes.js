@@ -5,6 +5,7 @@ import BookList from "@/js/components/BookList";
 import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
+import MyBooks from "./components/MyBooks";
 
 
 
@@ -32,7 +33,13 @@ const router = new VueRouter({
             path: '/register',
             name: 'register',
             component: Register
-        }]
+        },
+        {
+            path: '/myBooks',
+            name: 'myBooks',
+            component: MyBooks
+        }
+        ]
 });
 
 export default router;
