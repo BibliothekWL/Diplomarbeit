@@ -20,7 +20,7 @@
                         <em>User</em>
                     </template>
                     <b-dropdown-item href="#">Profil</b-dropdown-item>
-                    <b-dropdown-item v-if="loggedIn" href="/myBooks">Meine Bücher</b-dropdown-item>
+                    <b-dropdown-item href="/myBooks">Meine Bücher</b-dropdown-item>
                     <b-dropdown-item v-on:click="logout()">Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
@@ -57,6 +57,8 @@
                     .then(response => {
                         this.$store.commit('UsernotLoggedIn');
                         this.$store.commit('UserisnotAdmin');
+                        this.$store.commit('setSearchEmpty');
+                        this.$store.commit('isFirstPage');
                         window.location.reload();
                     }).catch(error => {
                     console.log(error.message)

@@ -20,6 +20,7 @@ export default new Vuex.Store({
         isFirstPage: state => state.page = 1,
         isLastPage: state => state.page = state.lastPage,
         setSearch: state => state.search = state.latestSearch,
+        setSearchEmpty: state => state.search = "",
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
         UserLoggedIn: state => state.isLoggedIn = true,

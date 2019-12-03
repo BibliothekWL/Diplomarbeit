@@ -5,8 +5,7 @@ import BookList from "@/js/components/BookList";
 import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
-import MyBooks from "./components/MyBooks";
-
+import MyBooks from "@/js/components/MyBooks";
 
 
 Vue.use(VueRouter);
@@ -39,7 +38,7 @@ const router = new VueRouter({
             name: 'myBooks',
             component: MyBooks
         }
-        ]
+    ]
 });
 
 export default router;

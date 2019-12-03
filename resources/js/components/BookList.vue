@@ -20,14 +20,18 @@
                 <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button v-if='search != ""' v-on:click='clearSearch()'>
-                        X
+                    <b-button variant="outline-dark" v-if='search != ""' v-on:click='clearSearch()'>
+                        <font-awesome-icon icon="times"></font-awesome-icon>
                     </b-button>
                     <b-button variant="outline-dark" v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
+
+            <b-button variant="outline-white">
+                <font-awesome-icon icon="filter"></font-awesome-icon>
+            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -309,7 +313,6 @@
         },
         mounted() {
             this.page = this.$store.state.page;
-            console.log(this.$store.state.search);
             if (this.$store.state.search === "") {
                 axios.get('/books/json?page=' + this.page)
                     .then(response => {
@@ -321,7 +324,6 @@
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
-                                console.log(this.lastPage);
                                 this.isLoggedInCheck();
                                 this.saveContent(response.data.data);
                                 this.isAnfangfind();
@@ -339,11 +341,10 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
-                                console.log(response);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
-                                this.$store.state   .lastPage = this.lastPage;
+                                this.$store.state.lastPage = this.lastPage;
                                 this.isLoggedInCheck();
                                 this.saveContent(response.data.data);
                                 this.isAnfangfind();
@@ -400,7 +401,6 @@
                     BNR: BNR
                 })
                     .then(response => {
-                            console.log(response);
                             this.reloadSite(response.data.status + "")
                         }
                     )
