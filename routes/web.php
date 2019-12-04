@@ -16,6 +16,7 @@ Route::get('/cart/json',function(){
 Route::get('/home','SinglePageController@index');
 Route::get('/list','SinglePageController@index');
 Route::get('/login', 'SinglePageController@index');
+
 Route::get('/register', 'SinglePageController@index');
 
 
