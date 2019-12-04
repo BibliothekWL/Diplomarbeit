@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Resources\Cart as CartResource;
 
 use \App\User as User;
-use \App\Book as Book;
 use \App\Cart as Cart;
 
 /*
