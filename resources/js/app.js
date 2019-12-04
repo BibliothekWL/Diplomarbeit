@@ -18,9 +18,11 @@ import {faAngleDoubleLeft} from '@fortawesome/free-solid-svg-icons';
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons';
 import {faAngleDoubleRight} from '@fortawesome/free-solid-svg-icons';
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
+import {faFilter} from '@fortawesome/free-solid-svg-icons';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-library.add(faPlus, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
+library.add(faPlus, faTimes, faFilter, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
