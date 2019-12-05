@@ -7,9 +7,10 @@
                 <router-link class-active="active" to="/register">Register</router-link>
             </b-navbar>
             <div class="form_div">
-                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
+                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"
+                              v-on:keyup.enter="login()"></b-form-input>
                 <b-form-input class="password" v-model="password" type="password"
-                              placeholder="Enter Password"></b-form-input>
+                              placeholder="Enter Password" v-on:keyup.enter="login()"></b-form-input>
                 <b-button v-on:click="login()" href>Login</b-button>
             </div>
         </div>
@@ -40,6 +41,8 @@
                         if (response.data.status === "200") {
                             this.$store.state.latestUsername = response.data.username;
                             this.$store.commit("setUsername");
+                            this.$store.state.latestUserID = response.data.userID;
+                            this.$store.commit("setUserID");
                             console.log(response);
                             if (response.data.isLoggedIn === true) {
                                 this.$store.commit('UserLoggedIn');

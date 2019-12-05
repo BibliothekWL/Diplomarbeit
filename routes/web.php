@@ -55,7 +55,7 @@ Route::post('/books/borrowed', function () {
     }
 });
 
-Route::patch('/books/{books}/borrow', 'CartsController@create');
+Route::post('/books/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
 
 

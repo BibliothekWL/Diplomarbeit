@@ -12057,13 +12057,12 @@ __webpack_require__.r(__webpack_exports__);
         _this7.reloadSite(response.data.status + "");
       });
     },
-    borrowBook: function borrowBook(id) {
-      var _this8 = this;
-
+    putIntoCart: function putIntoCart(id) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrow', {
-        id: id
+        id: id,
+        userID: this.$store.state.userID
       }).then(function (response) {
-        _this8.reloadSite(response.data.status + "");
+        console.log(response);
       });
     },
     clearSearch: function clearSearch() {
@@ -12129,6 +12128,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Landing",
@@ -12151,6 +12151,10 @@ __webpack_require__.r(__webpack_exports__);
           _this.$store.state.latestUsername = response.data.username;
 
           _this.$store.commit("setUsername");
+
+          _this.$store.state.latestUserID = response.data.userID;
+
+          _this.$store.commit("setUserID");
 
           console.log(response);
 
@@ -81373,7 +81377,7 @@ var render = function() {
                                       },
                                       on: {
                                         click: function($event) {
-                                          return _vm.borrowBook(_vm.id)
+                                          return _vm.putIntoCart(_vm.id)
                                         }
                                       }
                                     },
@@ -81518,6 +81522,17 @@ var render = function() {
             _c("b-form-input", {
               staticClass: "inputs",
               attrs: { type: "email", placeholder: "Enter Email" },
+              on: {
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.login()
+                }
+              },
               model: {
                 value: _vm.email,
                 callback: function($$v) {
@@ -81530,6 +81545,17 @@ var render = function() {
             _c("b-form-input", {
               staticClass: "password",
               attrs: { type: "password", placeholder: "Enter Password" },
+              on: {
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.login()
+                }
+              },
               model: {
                 value: _vm.password,
                 callback: function($$v) {
@@ -98569,7 +98595,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     search: "",
     latestSearch: "",
     latestUsername: "",
-    username: ""
+    username: "",
+    latestUserID: 0,
+    userID: 0
   },
   plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_2__["default"])()],
   mutations: {
@@ -98605,6 +98633,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     },
     setUsername: function setUsername(state) {
       return state.username = state.latestUsername;
+    },
+    setUserID: function setUserID(state) {
+      return state.userID = state.latestUserID;
     }
   }
 }));

@@ -63,7 +63,7 @@ class LoginController extends Controller
                     return json_encode(['status' => '500', 'statusMsg' => 'User not verified']);
                 } else {
                     session(['id' => $userID]);
-                    return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username]);
+                    return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username, 'userID' => $userID]);
                 }
             }
         }

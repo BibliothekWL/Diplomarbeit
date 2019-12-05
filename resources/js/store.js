@@ -13,7 +13,9 @@ export default new Vuex.Store({
         search: "",
         latestSearch: "",
         latestUsername: "",
-        username: ""
+        username: "",
+        latestUserID: 0,
+        userID: 0
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -27,6 +29,7 @@ export default new Vuex.Store({
         UserisnotAdmin: state => state.isAdmin = false,
         UserLoggedIn: state => state.isLoggedIn = true,
         UsernotLoggedIn: state => state.isLoggedIn = false,
-        setUsername: state => state.username = state.latestUsername
+        setUsername: state => state.username = state.latestUsername,
+        setUserID: state => state.userID = state.latestUserID
     }
 });
