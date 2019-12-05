@@ -17,7 +17,7 @@
                 <b-nav-item-dropdown v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
-                        <em>User</em>
+                        <em>{{username}}</em>
                     </template>
                     <b-dropdown-item href="#">Profil</b-dropdown-item>
                     <b-dropdown-item href="/myBooks">Meine Bücher</b-dropdown-item>
@@ -39,7 +39,8 @@
         },
         data() {
             return {
-                loggedIn: null
+                loggedIn: null,
+                username: this.$store.state.username
             }
         },
         //Schaut auf die Statevariable für mögliche Änderungen

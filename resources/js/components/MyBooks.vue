@@ -1,6 +1,6 @@
 <template>
     <div>
-        asdkoaskod
+
     </div>
 </template>
 
@@ -21,9 +21,9 @@
             }
         },
         mounted() {
-            this.page = this.$store.state.count;
-            axios.get('/books/json?page=' + this.page)
+            axios.get('/books/mybooks/json')
                 .then(response => {
+                    console.log(response);
                         if (response.data.data.length === 0) {
                             this.notFound = true;
                         } else {

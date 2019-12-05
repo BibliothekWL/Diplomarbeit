@@ -428,6 +428,9 @@
                 this.content = content;
                 this.BNR = BNR;
 
+                console.log(this.isAdmin);
+                console.log(this.isLoggedIn);
+
                 axios.post('/books/borrowed', {
                     id: id
                 }).then(response => {

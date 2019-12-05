@@ -11986,6 +11986,8 @@ __webpack_require__.r(__webpack_exports__);
       this.medium = medium;
       this.content = content;
       this.BNR = BNR;
+      console.log(this.isAdmin);
+      console.log(this.isLoggedIn);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrowed', {
         id: id
       }).then(function (response) {
@@ -12126,6 +12128,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Landing",
@@ -12144,19 +12147,27 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       }).then(function (response) {
-        console.log(response);
+        if (response.data.status === "200") {
+          _this.$store.state.latestUsername = response.data.username;
 
-        _this.$store.commit('UserLoggedIn');
+          _this.$store.commit("setUsername");
 
-        if (response.data.isAdmin === true) {
-          _this.$store.commit('UserisAdmin');
+          console.log(response);
+
+          if (response.data.isLoggedIn === true) {
+            _this.$store.commit('UserLoggedIn');
+          }
+
+          if (response.data.isAdmin === true) {
+            _this.$store.commit('UserisAdmin');
+          } else {
+            _this.$store.commit('UserisnotAdmin');
+          }
+
+          window.location.href = "/list";
         } else {
-          _this.$store.commit('UserisnotAdmin');
+          console.log("Error");
         }
-
-        _this.$router.push({
-          path: '/list'
-        });
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -12199,8 +12210,9 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.page = this.$store.state.count;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/mybooks/json').then(function (response) {
+      console.log(response);
+
       if (response.data.data.length === 0) {
         _this.notFound = true;
       } else {
@@ -12341,7 +12353,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      loggedIn: null
+      loggedIn: null,
+      username: this.$store.state.username
     };
   },
   //Schaut auf die Statevariable für mögliche Änderungen
@@ -45106,7 +45119,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-6bdc8b8e] {\n    cursor: not-allowed;\n    color: gray\n}\n\n", ""]);
+exports.push([module.i, "\n.test[data-v-6bdc8b8e] {\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e] {\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e] {\n    width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-6bdc8b8e] {\n    cursor: not-allowed;\n    color: gray\n}\n\n", ""]);
 
 // exports
 
@@ -81568,7 +81581,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    asdkoaskod\n")])
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -81784,7 +81797,7 @@ var render = function() {
                     {
                       key: "button-content",
                       fn: function() {
-                        return [_c("em", [_vm._v("User")])]
+                        return [_c("em", [_vm._v(_vm._s(_vm.username))])]
                       },
                       proxy: true
                     }
@@ -98554,7 +98567,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     isAdmin: false,
     isLoggedIn: false,
     search: "",
-    latestSearch: ""
+    latestSearch: "",
+    latestUsername: "",
+    username: ""
   },
   plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_2__["default"])()],
   mutations: {
@@ -98587,6 +98602,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     },
     UsernotLoggedIn: function UsernotLoggedIn(state) {
       return state.isLoggedIn = false;
+    },
+    setUsername: function setUsername(state) {
+      return state.username = state.latestUsername;
     }
   }
 }));
