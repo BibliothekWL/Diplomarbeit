@@ -1,26 +1,23 @@
 <template>
     <div>
-        <div v-if="!notFound" class="notFound">
-
-            <div class="list">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
-                        style="width: 15em;" class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
-                </b-card>
-            </div>
+        <div class="list">
+            <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
+                    img-left
+                    img-alt="Image"
+                    style="width: 15em;" class="listitem"
+                    v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                    v-b-modal.BookInformation>
+                <b-card-title>
+                    {{book.title}}
+                </b-card-title>
+                <b-card-text class="beschreibung">
+                    {{content_short[book.id]}}
+                </b-card-text>
+            </b-card>
         </div>
-
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts ausgeborgt!
-        </h4>
+        <b-button class="center" v-on:click="checkout()">
+            Ausborgen
+        </b-button>
     </div>
 </template>
 
@@ -28,26 +25,27 @@
     import axios from 'axios';
 
     export default {
-        name: "MyBooks",
+        name: "Cart",
         data() {
             return {
-                notFound: "",
+                isAdmin: this.$store.state.isAdmin,
+                isLoggedIn: false,
                 liste: {
                     data: {
                         data: ""
                     }
                 },
-                isAdmin: this.$store.state.isAdmin,
-                isLoggedIn: false,
-                content_full: [],
                 content_short: [],
+                notFound: ""
             }
         },
         mounted() {
             if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                 window.location.href = "/login"
             } else {
-                axios.get('/books/mybooks/json')
+                axios.post('/cart/json', {
+                    id: this.$store.state.userID
+                })
                     .then(response => {
                             console.log(response);
                             if (response.data.data.length === 0) {
@@ -94,12 +92,23 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-
+            checkout: function () {
+                axios.get('/cart/checkout')
+                    .then(
+                        response => {
+                            console.log(response);
+                        }
+                    )
+            }
         }
     }
 </script>
 
 <style scoped>
+
+    .center {
+        text-align: center;
+    }
 
     .notFound {
         text-align: center;

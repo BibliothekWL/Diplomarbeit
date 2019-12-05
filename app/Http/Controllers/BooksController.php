@@ -113,7 +113,10 @@ class BooksController extends Controller
 //            }
             DB::table('books')
                 ->where('id', $jsonarray['id'])
-                ->update(['borrowed' => 0]);
+                ->update([
+                    'borrowed' => 0,
+                    'user_id' => null
+                ]);
 
             return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
         }

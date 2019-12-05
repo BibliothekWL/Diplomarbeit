@@ -110,10 +110,12 @@
                         label-for="title"
                         invalid-feedback="Title is required"
                 >
+
                     <b-form-input
                             id="name-input"
                             v-model="title"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -126,6 +128,7 @@
                             id="name-input"
                             v-model="systematik"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -138,6 +141,7 @@
                             id="name-input"
                             v-model="medium"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -150,6 +154,7 @@
                             id="name-input"
                             v-model="content_full"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -162,6 +167,7 @@
                             id="name-input"
                             v-model="BNR"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
@@ -177,6 +183,7 @@
                             id="name-input"
                             v-model="title"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -189,6 +196,7 @@
                             id="name-input"
                             v-model="systematik"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -201,6 +209,7 @@
                             id="name-input"
                             v-model="medium"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -213,6 +222,7 @@
                             id="name-input"
                             v-model="content_full"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -225,6 +235,7 @@
                             id="name-input"
                             v-model="BNR"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
@@ -246,7 +257,7 @@
                             </b-button>
 
                             <b-button v-b-modal.EditItem pill
-                                      v-on:click="editItem(id, title, systematik, medium, content, BNR)">
+                                      v-on:click="editItem(id)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
@@ -299,6 +310,7 @@
                 lastPage: 0,
                 id: "",
                 title: "",
+                title_1: "",
                 systematik: "",
                 medium: "",
                 BNR: "",
@@ -323,6 +335,7 @@
                             } else {
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
+                                console.log(this.liste.data.data);
                                 this.lastPage = response.data.last_page;
                                 this.isLoggedInCheck();
                                 this.saveContent(response.data.data);
@@ -358,18 +371,24 @@
             deleteItem: function (id) {
                 axios.post('/books/delete/json/', {
                     id: id
-                }).then(response => (
+                }).then(response => {
                         this.reloadSite(response.data.status + "")
-                    )
+                    }
                 )
             },
-            editItem: function (id, title, systematik, medium, content, BNR) {
+            editItem: function (id) {
                 this.id = id;
-                this.title = title;
-                this.content_full = content;
-                this.systematik = systematik;
-                this.medium = medium;
-                this.BNR = BNR;
+                axios.post('/getBook', {
+                    id: id
+                }).then(response => {
+                        console.log(response);
+                        this.title = response.data.title;
+                        this.content_full = response.data.content;
+                        this.systematik = response.data.systematik;
+                        this.medium = response.data.medium;
+                        this.BNR = response.data.BNR;
+                    }
+                );
             },
             addItem: function () {
                 this.title = "";
@@ -387,7 +406,14 @@
                     BNR: BNR,
                     authorname: 'Kevin'
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status + "");
+                        this.id = "";
+                        this.title = "";
+                        this.title_1 = "";
+                        this.content_full = "";
+                        this.systematik = "";
+                        this.medium = "";
+                        this.BNR = "";
                     }
                 )
             },
@@ -427,10 +453,6 @@
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
-
-                console.log(this.isAdmin);
-                console.log(this.isLoggedIn);
-
                 axios.post('/books/borrowed', {
                     id: id
                 }).then(response => {
@@ -494,7 +516,7 @@
                     )
             },
             returnBook: function (id) {
-                axios.post('/books/return', {
+                axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
                         this.reloadSite(response.data.status + "")
