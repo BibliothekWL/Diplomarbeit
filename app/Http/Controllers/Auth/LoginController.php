@@ -59,7 +59,7 @@ class LoginController extends Controller
 
             $cache = User::all()->where('email', $jsonarray['email'])->first();
             if ($cache->email_verified_at===NULL) {
-                return json_encode(['status' => '500', 'statusMsg' => 'User not verified']);
+                return json_encode(['status' => '400', 'statusMsg' => 'User not verified']);
             }
             elseif (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
                 $username_raw = User::where('email', $jsonarray['email'])->pluck('name');
