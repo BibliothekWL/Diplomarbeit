@@ -260,7 +260,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed" pill v-on:click="borrowBook(id)">
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -428,6 +428,9 @@
                 this.content = content;
                 this.BNR = BNR;
 
+                console.log(this.isAdmin);
+                console.log(this.isLoggedIn);
+
                 axios.post('/books/borrowed', {
                     id: id
                 }).then(response => {
@@ -498,13 +501,15 @@
                     }
                 )
             },
-            borrowBook: function (id) {
+            putIntoCart: function (id) {
                 axios.post('/books/borrow', {
-                    id: id
-                }).then(response => {
-                        this.reloadSite(response.data.status + "")
-                    }
-                )
+                    id: id,
+                    userID: this.$store.state.userID
+                })
+                    .then(response => {
+                            console.log(response);
+                        }
+                    )
             },
             clearSearch: function () {
                 this.search = "";

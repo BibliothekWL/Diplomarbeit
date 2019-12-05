@@ -7,8 +7,10 @@
                 <router-link class-active="active" to="/register">Register</router-link>
             </b-navbar>
             <div class="form_div">
-                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"
+                              v-on:keyup.enter="login()"></b-form-input>
+                <b-form-input class="password" v-model="password" type="password"
+                              placeholder="Enter Password" v-on:keyup.enter="login()"></b-form-input>
                 <b-button v-on:click="login()" href>Login</b-button>
             </div>
         </div>
@@ -36,14 +38,24 @@
                     password: this.password
                 })
                     .then(response => {
-                        console.log(response);
-                            this.$store.commit('UserLoggedIn');
-                            if(response.data.isAdmin === true) {
+                        if (response.data.status === "200") {
+                            this.$store.state.latestUsername = response.data.username;
+                            this.$store.commit("setUsername");
+                            this.$store.state.latestUserID = response.data.userID;
+                            this.$store.commit("setUserID");
+                            console.log(response);
+                            if (response.data.isLoggedIn === true) {
+                                this.$store.commit('UserLoggedIn');
+                            }
+                            if (response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            this.$router.push({ path: '/list' });
+                            window.location.href = "/list";
+                        } else {
+                            console.log("Error");
+                        }
                     }).catch(error => {
                     console.log(error.message)
                 })
@@ -53,13 +65,13 @@
 </script>
 
 <style scoped>
-    .test{
+    .test {
         background-image: url("../../img/library.jpg");
         height: 92.5vh;
         position: relative;
     }
 
-    .form_div{
+    .form_div {
         background-color: white;
         opacity: 85%;
         margin-left: auto;
@@ -70,7 +82,7 @@
         text-align: center;
     }
 
-    .short_navbar{
+    .short_navbar {
         width: 40%;
         border-radius: 15px;
     }

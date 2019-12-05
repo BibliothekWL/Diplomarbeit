@@ -41,7 +41,19 @@ Route::patch('returnBooks', 'BooksController@returnBooks');
 
 Auth::routes(['verify' => true]);
 
-Route::patch('/books/{books}/borrow', 'CartsController@create');
+Route::post('/books/borrowed', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    $borrowed_raw = DB::table('books')->where('id', $jsonarray['id'])->pluck('borrowed');
+    $borrowed = explode("]", explode("[", $borrowed_raw)[1])[0];
+    if ($borrowed == 1) {
+        return json_encode(true);
+    } else {
+        return json_encode(false);
+    }
+});
+
+Route::post('/books/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
 
 
