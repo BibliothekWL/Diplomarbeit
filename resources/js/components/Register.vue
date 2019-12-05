@@ -43,8 +43,7 @@
                     })
                         .then(response => {
                             console.log(response);
-                            this.$store.commit('UserLoggedIn');
-                            this.$router.push({ path: '/home' });
+                            this.$router.push({ path: '/login' });
                         }).catch(error => {
                         console.log(error.message);
                     })

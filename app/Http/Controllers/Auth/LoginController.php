@@ -44,7 +44,8 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function authenticate(){
+    public function authenticate()
+    {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         if (User::where('email', $jsonarray['email'])->count() == 1) {
@@ -56,8 +57,14 @@ class LoginController extends Controller
                 $isAdmin = false;
             }
             if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
-                session(['id' => $userID]);
-                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id')]);
+                $username_raw = User::where('email', $jsonarray['email'])->pluck('name');
+                $username = explode('"', $username_raw)[1];
+                if (is_null(User::where('email', $jsonarray['email'])->pluck('email_verified_at'))) {
+                    return json_encode(['status' => '500', 'statusMsg' => 'User not verified']);
+                } else {
+                    session(['id' => $userID]);
+                    return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username, 'userID' => $userID]);
+                }
             }
         }
         return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong', 'isLoggedIn' => session()->has('id')]);
@@ -68,18 +75,9 @@ class LoginController extends Controller
         session()->forget('id');
         session()->flush();
         Auth::logout();
-        return response()->json(['status' => '200','statusMsg' => 'You have been logged out', 'isLoggedIn' => false]);
+        return response()->json(['status' => '200', 'statusMsg' => 'You have been logged out', 'isLoggedIn' => false]);
     }
 
-//    public function addIsLoggedIn($input){
-//        $inputDC = json_decode($input);
-//        if(ctype_digit(auth()->user()->id)){
-//            return json_encode($inputDC, 'isLoggedIn' => true)
-//        }
-//        else{
-//            return(json++{isLoggedIn = false})
-//        }
-//}
 
 }
 

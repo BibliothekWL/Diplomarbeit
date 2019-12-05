@@ -11823,6 +11823,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -11848,7 +11850,7 @@ __webpack_require__.r(__webpack_exports__);
       content_full: [],
       content_short: [],
       dialog_title: "",
-      search: "",
+      search: this.$store.state.search,
       isAnfang: false,
       isEnde: false,
       show: true
@@ -11857,27 +11859,52 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.page = this.$store.state.count;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
-      _this.liste.data.data = response.data.data;
-      _this.lastPage = response.data.last_page;
+    this.page = this.$store.state.page;
 
-      _this.isLoggedInCheck();
+    if (this.$store.state.search === "") {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
+        if (response.data.data.length === 0) {
+          _this.notFound = true;
+          _this.isAnfang = true;
+          _this.isEnde = true;
+        } else {
+          _this.notFound = false;
+          _this.liste.data.data = response.data.data;
+          _this.lastPage = response.data.last_page;
 
-      _this.saveContent(response.data.data);
+          _this.isLoggedInCheck();
 
-      _this.isAnfangfind();
+          _this.saveContent(response.data.data);
 
-      _this.isEndefind();
+          _this.isAnfangfind();
 
-      _this.$store.state.lastPage = _this.lastPage;
+          _this.isEndefind();
+        }
+      });
+    } else {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/search?page=' + this.page, {
+        search: this.search
+      }).then(function (response) {
+        if (response.data.data.length === 0) {
+          _this.notFound = true;
+          _this.isAnfang = true;
+          _this.isEnde = true;
+        } else {
+          _this.notFound = false;
+          _this.liste.data.data = response.data.data;
+          _this.lastPage = response.data.last_page;
+          _this.$store.state.lastPage = _this.lastPage;
 
-      _this.saveContent(response.data.data);
+          _this.isLoggedInCheck();
 
-      _this.isAnfangfind();
+          _this.saveContent(response.data.data);
 
-      _this.isEndefind();
-    });
+          _this.isAnfangfind();
+
+          _this.isEndefind();
+        }
+      });
+    }
   },
   methods: {
     deleteItem: function deleteItem(id) {
@@ -11929,8 +11956,6 @@ __webpack_require__.r(__webpack_exports__);
         content: content,
         BNR: BNR
       }).then(function (response) {
-        console.log(response);
-
         _this4.reloadSite(response.data.status + "");
       });
     },
@@ -11961,6 +11986,8 @@ __webpack_require__.r(__webpack_exports__);
       this.medium = medium;
       this.content = content;
       this.BNR = BNR;
+      console.log(this.isAdmin);
+      console.log(this.isLoggedIn);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrowed', {
         id: id
       }).then(function (response) {
@@ -11975,84 +12002,28 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     ausgabe: function ausgabe() {
-      var _this6 = this;
-
-      console.log(this.search);
-
-      if (this.search === "") {
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/json?page=' + this.page).then(function (response) {
-          if (response.data.data.length === 0) {
-            _this6.notFound = true;
-          } else {
-            _this6.notFound = false;
-            _this6.liste.data.data = response.data.data;
-            _this6.lastPage = response.data.last_page;
-
-            _this6.isLoggedInCheck();
-
-            _this6.saveContent(response.data.data);
-
-            _this6.isAnfangfind();
-
-            _this6.isEndefind();
-
-            _this6.$store.state.lastPage = _this6.lastPage;
-
-            _this6.saveContent(response.data.data);
-
-            _this6.isAnfangfind();
-
-            _this6.isEndefind();
-          }
-        });
-      } else {
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/search', {
-          search: this.search
-        }).then(function (response) {
-          if (response.data.data.length === 0) {
-            _this6.notFound = true;
-          } else {
-            _this6.notFound = false;
-            _this6.liste.data.data = response.data.data;
-            _this6.lastPage = response.data.last_page;
-
-            _this6.isLoggedInCheck();
-
-            _this6.saveContent(response.data.data);
-
-            _this6.isAnfangfind();
-
-            _this6.isEndefind();
-
-            _this6.$store.state.lastPage = _this6.lastPage;
-
-            _this6.saveContent(response.data.data);
-
-            _this6.isAnfangfind();
-
-            _this6.isEndefind();
-          }
-        });
-      }
+      this.$store.state.latestSearch = this.search;
+      this.$store.commit("setSearch");
+      window.location.reload();
     },
     isAnfangfind: function isAnfangfind() {
-      if (this.$store.state.count === this.firstPage) {
+      if (this.$store.state.page === this.firstPage) {
         this.isAnfang = true;
       }
     },
     isEndefind: function isEndefind() {
-      if (this.$store.state.count === this.lastPage) {
+      if (this.$store.state.page === this.lastPage) {
         this.isEnde = true;
       }
     },
     increment: function increment() {
-      this.$store.commit('increment');
+      this.$store.commit("increment");
       this.isAnfang = true;
       this.isEnde = true;
       window.location.reload();
     },
     decrement: function decrement() {
-      this.$store.commit('decrement');
+      this.$store.commit("decrement");
       this.isAnfang = true;
       this.isEnde = true;
       window.location.reload();
@@ -12064,38 +12035,40 @@ __webpack_require__.r(__webpack_exports__);
       window.location.reload();
     },
     sendtoLast: function sendtoLast() {
+      this.$store.state.lastPage = this.lastPage;
       this.$store.commit("isLastPage");
-      this.isAnfang = true;
+      this.isAnfang = false;
       this.isEnde = true;
       window.location.reload();
     },
     isLoggedInCheck: function isLoggedInCheck() {
-      var _this7 = this;
+      var _this6 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/session').then(function (response) {
-        _this7.isLoggedIn = response.data;
+        _this6.isLoggedIn = response.data;
       });
     },
     returnBook: function returnBook(id) {
-      var _this8 = this;
+      var _this7 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/return', {
         id: id
       }).then(function (response) {
-        _this8.reloadSite(response.data.status + "");
+        _this7.reloadSite(response.data.status + "");
       });
     },
-    borrowBook: function borrowBook(id) {
-      var _this9 = this;
-
+    putIntoCart: function putIntoCart(id) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrow', {
-        id: id
+        id: id,
+        userID: this.$store.state.userID
       }).then(function (response) {
-        _this9.reloadSite(response.data.status + "");
+        console.log(response);
       });
     },
     clearSearch: function clearSearch() {
       this.search = "";
+      this.$store.state.search = "";
+      this.ausgabe();
     }
   }
 });
@@ -12197,6 +12170,58 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MyBooks.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MyBooks.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "MyBooks",
+  data: function data() {
+    return {
+      notFound: "",
+      liste: {
+        data: {
+          data: ""
+        }
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/books/mybooks/json').then(function (response) {
+      console.log(response);
+
+      if (response.data.data.length === 0) {
+        _this.notFound = true;
+      } else {
+        _this.notFound = false;
+        _this.liste.data.data = response.data.data;
+
+        _this.isLoggedInCheck();
+
+        _this.saveContent(response.data.data);
+      }
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Register.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Register.vue?vue&type=script&lang=js& ***!
@@ -12252,10 +12277,8 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (response) {
           console.log(response);
 
-          _this.$store.commit('UserLoggedIn');
-
           _this.$router.push({
-            path: '/home'
+            path: '/login'
           });
         })["catch"](function (error) {
           console.log(error.message);
@@ -12312,6 +12335,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12321,7 +12346,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      loggedIn: null
+      loggedIn: null,
+      username: this.$store.state.username
     };
   },
   //Schaut auf die Statevariable für mögliche Änderungen
@@ -12342,6 +12368,10 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$store.commit('UserisnotAdmin');
 
+        _this.$store.commit('setSearchEmpty');
+
+        _this.$store.commit('isFirstPage');
+
         _this.$router.push({
           path: '/login'
         });
@@ -12349,6 +12379,13 @@ __webpack_require__.r(__webpack_exports__);
         window.location.reload();
       })["catch"](function (error) {
         console.log(error.message);
+      });
+    },
+    isLoggedInCheck: function isLoggedInCheck() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/session').then(function (response) {
+        _this2.loggedIn = response.data;
       });
     }
   }
@@ -45577,7 +45614,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.navbar_btn{\n    background-color: white;\n    color: red;\n    border-color: white;\n}\n.site_title{\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: fixed;\n}\n.link {\n    margin-left: 3em;\n}\n.link:nth-child(1) {\n    margin-left: 7em;\n}\n.bm-burger-button {\n    position: fixed;\n    width: 20px;\n    height: 20px;\n    left: 20px;\n    top: 20px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000; /* Stay on top */\n    top: 0;\n    left: 0;\n    background-color: rgb(63, 63, 65); /* Black*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n}\n", ""]);
+exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.site_title {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: fixed;\n}\n.link {\n    margin-left: 3em;\n}\n.link:nth-child(1) {\n    margin-left: 7em;\n}\n.bm-burger-button {\n    position: fixed;\n    width: 20px;\n    height: 20px;\n    left: 20px;\n    top: 20px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000; /* Stay on top */\n    top: 0;\n    left: 0;\n    background-color: rgb(63, 63, 65); /* Black*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n}\n.navbar_btn{\n    background-color: white;\n    color: red;\n    border-color: white;\n}\n", ""]);
 
 // exports
 
@@ -81128,24 +81165,17 @@ var render = function() {
           "b-input-group",
           { staticClass: "searchBar" },
           [
-            _c(
-              "b-input-group-prepend",
-              [
-                _c(
-                  "b-button",
-                  { attrs: { disabled: "", variant: "outline-dark" } },
-                  [_c("font-awesome-icon", { attrs: { icon: "search" } })],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
             _c("b-input", {
               staticClass: "search",
               attrs: { placeholder: "Nach Büchern stöbern", type: "text" },
               on: {
                 keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
                   return _vm.ausgabe()
                 }
               },
@@ -81165,19 +81195,42 @@ var render = function() {
                   ? _c(
                       "b-button",
                       {
+                        attrs: { variant: "outline-dark" },
                         on: {
                           click: function($event) {
                             return _vm.clearSearch()
                           }
                         }
                       },
-                      [_vm._v("\n                    X\n                ")]
+                      [_c("font-awesome-icon", { attrs: { icon: "times" } })],
+                      1
                     )
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "b-button",
+                  {
+                    attrs: { variant: "outline-dark" },
+                    on: {
+                      click: function($event) {
+                        return _vm.ausgabe()
+                      }
+                    }
+                  },
+                  [_c("font-awesome-icon", { attrs: { icon: "search" } })],
+                  1
+                )
               ],
               1
             )
           ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          { attrs: { variant: "outline-white" } },
+          [_c("font-awesome-icon", { attrs: { icon: "filter" } })],
           1
         )
       ],
@@ -81776,7 +81829,7 @@ var render = function() {
                                       },
                                       on: {
                                         click: function($event) {
-                                          return _vm.borrowBook(_vm.id)
+                                          return _vm.putIntoCart(_vm.id)
                                         }
                                       }
                                     },
@@ -81954,6 +82007,30 @@ var render = function() {
       1
     )
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82168,7 +82245,7 @@ var render = function() {
                     expression: "loggedIn"
                   }
                 },
-                [_vm._v("Login")]
+                [_vm._v("Login\n            ")]
               ),
               _vm._v(" "),
               _c(
@@ -82187,7 +82264,7 @@ var render = function() {
                     {
                       key: "button-content",
                       fn: function() {
-                        return [_c("em", [_vm._v("User")])]
+                        return [_c("em", [_vm._v(_vm._s(_vm.username))])]
                       },
                       proxy: true
                     }
@@ -82196,7 +82273,11 @@ var render = function() {
                 [
                   _vm._v(" "),
                   _c("b-dropdown-item", { attrs: { href: "#" } }, [
-                    _vm._v("Profile")
+                    _vm._v("Profil")
+                  ]),
+                  _vm._v(" "),
+                  _c("b-dropdown-item", { attrs: { href: "/myBooks" } }, [
+                    _vm._v("Meine Bücher")
                   ]),
                   _vm._v(" "),
                   _c(
@@ -98399,7 +98480,9 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
 
 
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_4__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faPlus"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faTrash"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faPen"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faSearch"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faLevelUpAlt"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faCartPlus"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleLeft"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleDoubleLeft"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleRight"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleDoubleRight"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faChevronLeft"]);
+
+
+_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_4__["library"].add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faPlus"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faTimes"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faFilter"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faTrash"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faPen"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faSearch"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faLevelUpAlt"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faCartPlus"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleLeft"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleDoubleLeft"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleRight"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faAngleDoubleRight"], _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faChevronLeft"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('font-awesome-icon', _fortawesome_vue_fontawesome__WEBPACK_IMPORTED_MODULE_6__["FontAwesomeIcon"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.config.productionTip = false;
 
@@ -98718,6 +98801,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/MyBooks.vue":
+/*!*********************************************!*\
+  !*** ./resources/js/components/MyBooks.vue ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true& */ "./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true&");
+/* harmony import */ var _MyBooks_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MyBooks.vue?vue&type=script&lang=js& */ "./resources/js/components/MyBooks.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _MyBooks_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "b67cca7a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/MyBooks.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/MyBooks.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/MyBooks.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MyBooks_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./MyBooks.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MyBooks.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MyBooks_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MyBooks.vue?vue&type=template&id=b67cca7a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MyBooks_vue_vue_type_template_id_b67cca7a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Register.vue":
 /*!**********************************************!*\
   !*** ./resources/js/components/Register.vue ***!
@@ -98821,6 +98973,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_components_Home__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/components/Home */ "./resources/js/components/Home.vue");
 /* harmony import */ var _js_components_Login__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/components/Login */ "./resources/js/components/Login.vue");
 /* harmony import */ var _js_components_Register__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/components/Register */ "./resources/js/components/Register.vue");
+/* harmony import */ var _js_components_MyBooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/js/components/MyBooks */ "./resources/js/components/MyBooks.vue");
+
 
 
 
@@ -98846,6 +99000,10 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/register',
     name: 'register',
     component: _js_components_Register__WEBPACK_IMPORTED_MODULE_5__["default"]
+  }, {
+    path: '/myBooks',
+    name: 'myBooks',
+    component: _js_components_MyBooks__WEBPACK_IMPORTED_MODULE_6__["default"]
   }]
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
@@ -98871,24 +99029,36 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
-    count: 1,
+    page: 1,
     lastPage: 0,
     isAdmin: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+    search: "",
+    latestSearch: "",
+    latestUsername: "",
+    username: "",
+    latestUserID: 0,
+    userID: 0
   },
   plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_2__["default"])()],
   mutations: {
     increment: function increment(state) {
-      return state.count++;
+      return state.page++;
     },
     decrement: function decrement(state) {
-      return state.count--;
+      return state.page--;
     },
     isFirstPage: function isFirstPage(state) {
-      return state.count = 1;
+      return state.page = 1;
     },
     isLastPage: function isLastPage(state) {
-      return state.count = 3;
+      return state.page = state.lastPage;
+    },
+    setSearch: function setSearch(state) {
+      return state.search = state.latestSearch;
+    },
+    setSearchEmpty: function setSearchEmpty(state) {
+      return state.search = "";
     },
     UserisAdmin: function UserisAdmin(state) {
       return state.isAdmin = true;
@@ -98901,6 +99071,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     },
     UsernotLoggedIn: function UsernotLoggedIn(state) {
       return state.isLoggedIn = false;
+    },
+    setUsername: function setUsername(state) {
+      return state.username = state.latestUsername;
+    },
+    setUserID: function setUserID(state) {
+      return state.userID = state.latestUserID;
     }
   }
 }));
