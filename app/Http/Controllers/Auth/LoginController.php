@@ -56,15 +56,16 @@ class LoginController extends Controller
             } else {
                 $isAdmin = false;
             }
-            if (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
+
+            $cache = User::all()->where('email', $jsonarray['email'])->first();
+            if ($cache->email_verified_at===NULL) {
+                return json_encode(['status' => '500', 'statusMsg' => 'User not verified']);
+            }
+            elseif (Auth::attempt(['email' => $jsonarray['email'], 'password' => $jsonarray['password']])) {
                 $username_raw = User::where('email', $jsonarray['email'])->pluck('name');
                 $username = explode('"', $username_raw)[1];
-                if (is_null(User::where('email', $jsonarray['email'])->pluck('email_verified_at'))) {
-                    return json_encode(['status' => '500', 'statusMsg' => 'User not verified']);
-                } else {
-                    session(['id' => $userID]);
-                    return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username, 'userID' => $userID]);
-                }
+                session(['id' => $userID]);
+                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username, 'userID' => $userID]);
             }
         }
         return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong', 'isLoggedIn' => session()->has('id')]);
