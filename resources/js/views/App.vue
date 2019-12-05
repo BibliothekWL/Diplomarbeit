@@ -12,7 +12,7 @@
             <h4 class="site_title">Bibliothek Wiener Linien</h4>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-button color="rgba(255,255,255,0)" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login
+                <b-button class="navbar_btn" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login
                 </b-button>
                 <b-nav-item-dropdown v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
@@ -60,6 +60,7 @@
                         this.$store.commit('UserisnotAdmin');
                         this.$store.commit('setSearchEmpty');
                         this.$store.commit('isFirstPage');
+                        this.$router.push({ path: '/login' });
                         window.location.reload();
                     }).catch(error => {
                     console.log(error.message)
@@ -123,5 +124,11 @@
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 60px; /* Place content 60px from the top */
         transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/
+    }
+    .navbar_btn{
+        background-color: white;
+        color: red;
+        border-color: white;
+
     }
 </style>

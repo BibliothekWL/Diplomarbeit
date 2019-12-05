@@ -2,15 +2,12 @@
     <div class="test">
         <div class="form_div">
             <b-navbar class="short_navbar" type="light" variant="danger">
-                <router-link class="disabled" disabled to="/login">Login</router-link>
-                <&nbsp;>
-                <router-link class-active="active" to="/register">Register</router-link>
+                <b-button class="navbar_btn">Login</b-button>
+                <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
             <div class="form_div">
-                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"
-                              v-on:keyup.enter="login()"></b-form-input>
-                <b-form-input class="password" v-model="password" type="password"
-                              placeholder="Enter Password" v-on:keyup.enter="login()"></b-form-input>
+                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
+                <b-form-input class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
                 <b-button v-on:click="login()" href>Login</b-button>
             </div>
         </div>
@@ -38,23 +35,18 @@
                     password: this.password
                 })
                     .then(response => {
-                        if (response.data.status === "200") {
-                            this.$store.state.latestUsername = response.data.username;
-                            this.$store.commit("setUsername");
-                            this.$store.state.latestUserID = response.data.userID;
-                            this.$store.commit("setUserID");
-                            console.log(response);
-                            if (response.data.isLoggedIn === true) {
-                                this.$store.commit('UserLoggedIn');
-                            }
-                            if (response.data.isAdmin === true) {
+                        console.log(response);
+                        if(response.data.status !== '200'){
+                            console.log('Status: ' + response.data.status +'; Error Messasge: ' + response.data.statusMsg);
+                        }
+                        else {
+                            this.$store.commit('UserLoggedIn');
+                            if(response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            window.location.href = "/list";
-                        } else {
-                            console.log("Error");
+                            this.$router.push({ path: '/list' });
                         }
                     }).catch(error => {
                     console.log(error.message)
@@ -65,101 +57,41 @@
 </script>
 
 <style scoped>
-    .test {
+    .test{
+        display: flex;
+        align-items: center;
         background-image: url("../../img/library.jpg");
-        height: 92.5vh;
-        position: relative;
+        background-size: cover;
+        height: calc(100vh - 54px);
     }
 
-    .form_div {
+    .form_div{
+        display: flex;
         background-color: white;
-        opacity: 85%;
+        opacity: 90%;
         margin-left: auto;
         margin-right: auto;
-        width: 40%;
+        width: 50%;
+        min-width: 30%;
         height: 60%;
         border-radius: 15px;
-        text-align: center;
+        align-items: center;
+        flex-direction: column;
     }
 
-    .short_navbar {
-        width: 40%;
-        border-radius: 15px;
-    }
 
-    .disabled {
-        cursor: not-allowed;
-        color: gray
-    }
-
-</style>
-
-<!--<template>
-    <div class="login_form">
-        <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter your Email"></b-form-input>
-        <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter your Password"></b-form-input>
-        <b-button v-on:click="login()">Login</b-button>
-        <b-button v-on:click="logout()">Logout</b-button>
-    </div>
-</template>
-
-<script>
-    import axios from "axios";
-
-    export default {
-        name: "Login",
-        data() {
-            return {
-                email: "",
-                password: ""
-            }
-        },
-        mounted() {
-
-        },
-        methods: {
-            login: function () {
-                axios.post('http://localhost:8000/login/json', {
-                        email: this.email,
-                        password: this.password
-                })
-                    .then(response => {
-                        console.log(response);
-                        this.$store.state.isAdmin = response.data.isAdmin;
-                        this.$store.state.isLoggedIn = response.data.isLoggedIn;
-                        // window.location.href = "/list";
-
-                    }).catch(error => {
-                    console.log(error.message)
-                })
-            },
-            logout() {
-                axios.get('/logout/json')
-                    .then(response => {
-                        console.log(response);
-                        this.$store.commit("UserisnotAdmin");
-                    }).catch(error => {
-                        console.log(error.message)
-                });
-            }
-        }
-    }
-</script>
-
-<style scoped>
-    .login_form{
+    .short_navbar{
         display: flex;
-        flex-wrap: nowrap;
-        align-items: flex-start;
-        justify-content: space-around;
-        margin-top: 3em;
-        margin-left: 1em;
-        margin-right: 1em;
+        justify-content: flex-start;
+        width: 100%;
+        border-radius: 15px;
+        color: #e30013;
     }
 
-    .inputs{
-
+    .navbar_btn{
+        background-color: white;
+        color: red;
+        border-color: white;
+        margin-right: 0.5em;
     }
 </style>
-
--->

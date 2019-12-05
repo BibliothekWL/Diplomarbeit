@@ -12126,9 +12126,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Landing",
@@ -12147,20 +12144,12 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       }).then(function (response) {
-        if (response.data.status === "200") {
-          _this.$store.state.latestUsername = response.data.username;
+        console.log(response);
 
-          _this.$store.commit("setUsername");
-
-          _this.$store.state.latestUserID = response.data.userID;
-
-          _this.$store.commit("setUserID");
-
-          console.log(response);
-
-          if (response.data.isLoggedIn === true) {
-            _this.$store.commit('UserLoggedIn');
-          }
+        if (response.data.status !== '200') {
+          console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
+        } else {
+          _this.$store.commit('UserLoggedIn');
 
           if (response.data.isAdmin === true) {
             _this.$store.commit('UserisAdmin');
@@ -12168,9 +12157,9 @@ __webpack_require__.r(__webpack_exports__);
             _this.$store.commit('UserisnotAdmin');
           }
 
-          window.location.href = "/list";
-        } else {
-          console.log("Error");
+          _this.$router.push({
+            path: '/list'
+          });
         }
       })["catch"](function (error) {
         console.log(error.message);
@@ -12265,11 +12254,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Register",
   data: function data() {
     return {
       name: "",
       email: "",
+      id: "",
       password: "",
       passwordRepeat: ""
     };
@@ -12282,20 +12271,20 @@ __webpack_require__.r(__webpack_exports__);
       if (this.password === this.passwordRepeat) {
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://localhost:8000/user/register', {
           name: this.name,
+          id: this.id,
           email: this.email,
           password: this.password
         }).then(function (response) {
           console.log(response);
 
-          _this.$store.commit('UserLoggedIn');
-
           _this.$router.push({
-            path: '/home'
+            path: '/login'
           });
         })["catch"](function (error) {
           console.log(error.message);
         });
       } else {
+        this.$bvToast.show('toast');
         console.log("Wrong pw!");
       }
     }
@@ -12382,6 +12371,10 @@ __webpack_require__.r(__webpack_exports__);
         _this.$store.commit('setSearchEmpty');
 
         _this.$store.commit('isFirstPage');
+
+        _this.$router.push({
+          path: '/login'
+        });
 
         window.location.reload();
       })["catch"](function (error) {
@@ -45582,7 +45575,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-6bdc8b8e] {\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-6bdc8b8e] {\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-6bdc8b8e] {\n    width: 40%;\n    border-radius: 15px;\n}\n.disabled[data-v-6bdc8b8e] {\n    cursor: not-allowed;\n    color: gray\n}\n\n", ""]);
+exports.push([module.i, "\n.test[data-v-6bdc8b8e]{\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-align: center;\n            align-items: center;\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    background-size: cover;\n    height: calc(100vh - 54px);\n}\n.form_div[data-v-6bdc8b8e]{\n    display: -webkit-box;\n    display: flex;\n    background-color: white;\n    opacity: 90%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 50%;\n    min-width: 30%;\n    height: 60%;\n    border-radius: 15px;\n    -webkit-box-align: center;\n            align-items: center;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-direction: column;\n}\n.short_navbar[data-v-6bdc8b8e]{\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    width: 100%;\n    border-radius: 15px;\n    color: #e30013;\n}\n.navbar_btn[data-v-6bdc8b8e]{\n    background-color: white;\n    color: red;\n    border-color: white;\n    margin-right: 0.5em;\n}\n", ""]);
 
 // exports
 
@@ -45602,7 +45595,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.test[data-v-97358ae4]{\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    height: 92.5vh;\n    position: relative;\n}\n.form_div[data-v-97358ae4]{\n    background-color: white;\n    opacity: 85%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 40%;\n    height: 60%;\n    border-radius: 15px;\n    text-align: center;\n}\n.short_navbar[data-v-97358ae4]{\n    width: 30%;\n    border-radius: 15px;\n}\n.disabled[data-v-97358ae4] {\n    cursor: not-allowed;\n    color: gray\n}\n", ""]);
+exports.push([module.i, "\n.test[data-v-97358ae4]{\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-align: center;\n            align-items: center;\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/library.jpg */ "./resources/img/library.jpg")) + ");\n    background-size: cover;\n    height: calc(100vh - 54px);\n}\n.form_div[data-v-97358ae4]{\n    display: -webkit-box;\n    display: flex;\n    background-color: white;\n    opacity: 90%;\n    margin-left: auto;\n    margin-right: auto;\n    width: 50%;\n    min-width: 30%;\n    height: 60%;\n    border-radius: 15px;\n    -webkit-box-align: center;\n            align-items: center;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-direction: column;\n}\n.short_navbar[data-v-97358ae4]{\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    width: 100%;\n    border-radius: 15px;\n    color: #e30013;\n}\n.navbar_btn[data-v-97358ae4]{\n    background-color: white;\n    color: red;\n    border-color: white;\n    margin-right: 0.5em;\n}\n\n", ""]);
 
 // exports
 
@@ -45621,7 +45614,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.site_title {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: fixed;\n}\n.link {\n    margin-left: 3em;\n}\n.link:nth-child(1) {\n    margin-left: 7em;\n}\n.bm-burger-button {\n    position: fixed;\n    width: 20px;\n    height: 20px;\n    left: 20px;\n    top: 20px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000; /* Stay on top */\n    top: 0;\n    left: 0;\n    background-color: rgb(63, 63, 65); /* Black*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n}\n", ""]);
+exports.push([module.i, "\na {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n}\n.site_title {\n    color: white;\n    font-family: \"Nunito\", sans-serif;\n    margin-left: 2em;\n    position: fixed;\n}\n.link {\n    margin-left: 3em;\n}\n.link:nth-child(1) {\n    margin-left: 7em;\n}\n.bm-burger-button {\n    position: fixed;\n    width: 20px;\n    height: 20px;\n    left: 20px;\n    top: 20px;\n    cursor: pointer;\n    margin-right: 2em;\n}\n.bm-burger-bars {\n    background-color: #ffffff;\n}\n.bm-menu {\n    height: 100%; /* 100% Full-height */\n    width: 0; /* 0 width - change this with JavaScript */\n    position: fixed; /* Stay in place */\n    z-index: 1000; /* Stay on top */\n    top: 0;\n    left: 0;\n    background-color: rgb(63, 63, 65); /* Black*/\n    overflow-x: hidden; /* Disable horizontal scroll */\n    padding-top: 60px; /* Place content 60px from the top */\n    -webkit-transition: 0.5s;\n    transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/\n}\n.navbar_btn{\n    background-color: white;\n    color: red;\n    border-color: white;\n}\n", ""]);
 
 // exports
 
@@ -81956,18 +81949,11 @@ var render = function() {
             attrs: { type: "light", variant: "danger" }
           },
           [
+            _c("b-button", { staticClass: "navbar_btn" }, [_vm._v("Login")]),
+            _vm._v(" "),
             _c(
-              "router-link",
-              {
-                staticClass: "disabled",
-                attrs: { disabled: "", to: "/login" }
-              },
-              [_vm._v("Login")]
-            ),
-            _vm._v("\n            < >\n            "),
-            _c(
-              "router-link",
-              { attrs: { "class-active": "active", to: "/register" } },
+              "b-button",
+              { staticClass: "navbar_btn", attrs: { to: "/register" } },
               [_vm._v("Register")]
             )
           ],
@@ -81981,17 +81967,6 @@ var render = function() {
             _c("b-form-input", {
               staticClass: "inputs",
               attrs: { type: "email", placeholder: "Enter Email" },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  return _vm.login()
-                }
-              },
               model: {
                 value: _vm.email,
                 callback: function($$v) {
@@ -82004,17 +81979,6 @@ var render = function() {
             _c("b-form-input", {
               staticClass: "password",
               attrs: { type: "password", placeholder: "Enter Password" },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  return _vm.login()
-                }
-              },
               model: {
                 value: _vm.password,
                 callback: function($$v) {
@@ -82102,16 +82066,13 @@ var render = function() {
             attrs: { type: "light", variant: "danger" }
           },
           [
-            _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")]),
-            _vm._v("\n            < >\n            "),
             _c(
-              "router-link",
-              {
-                staticClass: "disabled",
-                attrs: { disabled: "", to: "/register" }
-              },
-              [_vm._v("Register")]
-            )
+              "b-button",
+              { staticClass: "navbar_btn", attrs: { to: "/login" } },
+              [_vm._v("Login")]
+            ),
+            _vm._v(" "),
+            _c("b-button", { staticClass: "navbar_btn" }, [_vm._v("Register")])
           ],
           1
         ),
@@ -82122,7 +82083,7 @@ var render = function() {
           [
             _c("b-form-input", {
               staticClass: "inputs",
-              attrs: { type: "text", placeholder: "Enter Name" },
+              attrs: { type: "text", placeholder: "Enter Name", required: "" },
               model: {
                 value: _vm.name,
                 callback: function($$v) {
@@ -82134,7 +82095,23 @@ var render = function() {
             _vm._v(" "),
             _c("b-form-input", {
               staticClass: "inputs",
-              attrs: { type: "email", placeholder: "Enter ID" },
+              attrs: { type: "text", placeholder: "Enter ID", required: "" },
+              model: {
+                value: _vm.id,
+                callback: function($$v) {
+                  _vm.id = $$v
+                },
+                expression: "id"
+              }
+            }),
+            _vm._v(" "),
+            _c("b-form-input", {
+              staticClass: "inputs",
+              attrs: {
+                type: "email",
+                placeholder: "Enter Email",
+                required: ""
+              },
               model: {
                 value: _vm.email,
                 callback: function($$v) {
@@ -82146,7 +82123,11 @@ var render = function() {
             _vm._v(" "),
             _c("b-form-input", {
               staticClass: "inputs",
-              attrs: { type: "password", placeholder: "Enter Password" },
+              attrs: {
+                type: "password",
+                placeholder: "Enter Password",
+                required: ""
+              },
               model: {
                 value: _vm.password,
                 callback: function($$v) {
@@ -82158,7 +82139,11 @@ var render = function() {
             _vm._v(" "),
             _c("b-form-input", {
               staticClass: "inputs",
-              attrs: { type: "password", placeholder: "Repeat Password" },
+              attrs: {
+                type: "password",
+                placeholder: "Repeat Password",
+                required: ""
+              },
               model: {
                 value: _vm.passwordRepeat,
                 callback: function($$v) {
@@ -82250,11 +82235,8 @@ var render = function() {
                       expression: "!loggedIn"
                     }
                   ],
-                  attrs: {
-                    color: "rgba(255,255,255,0)",
-                    href: "/login",
-                    right: ""
-                  },
+                  staticClass: "navbar_btn",
+                  attrs: { href: "/login", right: "" },
                   model: {
                     value: _vm.loggedIn,
                     callback: function($$v) {
@@ -99206,8 +99188,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\5Klasse(5AI)\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Kamil Koziol\Diplomarbeit2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
