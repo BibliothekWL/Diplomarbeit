@@ -76,36 +76,25 @@ class BooksController extends Controller
      */
     public function borrowBooks()
     {
-        $json = file_get_contents('php://input');
-        $jsonarray = json_decode($json, true);
-        if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
-            return json_encode(['status' => 400, 'statusMessage' => 'borrow failed']);
-        } else {
-            DB::table('books')
-                ->where('id', $jsonarray['id'])
-                ->update(['borrowed' => 1]);
-
-            return json_encode(['status' => 200, 'statusMessage' => 'borrow successful']);
+        $carts = User::findOrFail(auth()->user()->id)->carts;
+        $books = array();
+        foreach ($carts as $cart) {
+            $book = $cart->book;
+            array_push($books, $book);
         }
-//        $carts = User::findOrFail(auth()->user()->id)->carts;
-//        $books = array();
-//        foreach ($carts as $cart) {
-//            $book = $cart->book;
-//            array_push($books, $book);
-//        }
-//        foreach ($books as $item) {
-//            $book = Book::findorFail($item->id);
-//            $book->borrowed = 1;
-//            $book->save();
-//
-//            $borrowing = new Borrowing();
-//            $borrowing->user_id = auth()->user()->id;
-//            $borrowing->book_id = $item->id;
-//            $borrowing->save();
-//        }
-//
-//        Cart::where('user_id', auth()->user()->id)->delete();
-//        return (redirect('borrowing'));
+        foreach ($books as $item) {
+            $book = Book::findorFail($item->id);
+            $book->borrowed = 1;
+            $book->save();
+
+            $borrowing = new Borrowing();
+            $borrowing->user_id = auth()->user()->id;
+            $borrowing->book_id = $item->id;
+            $borrowing->save();
+        }
+
+        Cart::where('user_id', auth()->user()->id)->delete();
+        return json_encode(['status' => 200, 'statusMessage' => 'yeah man']);
     }
 
     public function returnBooks()
