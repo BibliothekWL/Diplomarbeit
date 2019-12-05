@@ -63,7 +63,7 @@ class RegisterController extends Controller
                 $user = new User();
                 $user->name = $jsonarray['name'];
                 $user->email = $jsonarray['email'];
-                $user->password = $jsonarray['password'];
+                $user->password = Hash::make($jsonarray['password']);
                 $user->created_at = now();
                 $user->updated_at = now();
                 $user->save();
