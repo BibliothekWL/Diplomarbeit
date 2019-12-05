@@ -9,7 +9,7 @@
 
         <!---------------------------------------------------------
 
-                                Search
+                                  Search
 
         ---------------------------------------------------------->
 
@@ -17,19 +17,21 @@
 
         <div class="searchBox">
             <b-input-group class="searchBar">
-                <b-input-group-prepend>
-                    <b-button disabled variant="outline-dark">
-                        <font-awesome-icon icon="search"></font-awesome-icon>
-                    </b-button>
-                </b-input-group-prepend>
                 <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
-                         v-model="search" v-on:keyup="ausgabe()"></b-input>
+                         v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button v-if='search != ""' v-on:click='clearSearch()'>
-                        X
+                    <b-button variant="outline-dark" v-if='search != ""' v-on:click='clearSearch()'>
+                        <font-awesome-icon icon="times"></font-awesome-icon>
+                    </b-button>
+                    <b-button variant="outline-dark" v-on:click="ausgabe()">
+                        <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
+
+            <b-button variant="outline-white">
+                <font-awesome-icon icon="filter"></font-awesome-icon>
+            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -258,7 +260,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed" pill v-on:click="borrowBook(id)">
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -303,28 +305,54 @@
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
-                search: "",
+                search: this.$store.state.search,
                 isAnfang: false,
                 isEnde: false,
                 show: true
             };
         },
         mounted() {
-            this.page = this.$store.state.count;
-            axios.get('/books/json?page=' + this.page)
-                .then(response => {
-                        this.liste.data.data = response.data.data;
-                        this.lastPage = response.data.last_page;
-                        this.isLoggedInCheck();
-                        this.saveContent(response.data.data);
-                        this.isAnfangfind();
-                        this.isEndefind();
-                        this.$store.state.lastPage = this.lastPage;
-                        this.saveContent(response.data.data);
-                        this.isAnfangfind();
-                        this.isEndefind();
-                    }
-                );
+            this.page = this.$store.state.page;
+            if (this.$store.state.search === "") {
+                axios.get('/books/json?page=' + this.page)
+                    .then(response => {
+                            if (response.data.data.length === 0) {
+                                this.notFound = true;
+                                this.isAnfang = true;
+                                this.isEnde = true;
+                            } else {
+                                this.notFound = false;
+                                this.liste.data.data = response.data.data;
+                                this.lastPage = response.data.last_page;
+                                this.isLoggedInCheck();
+                                this.saveContent(response.data.data);
+                                this.isAnfangfind();
+                                this.isEndefind();
+                            }
+                        }
+                    );
+            } else {
+                axios.post('/books/search?page=' + this.page, {
+                    search: this.search
+                })
+                    .then(response => {
+                            if (response.data.data.length === 0) {
+                                this.notFound = true;
+                                this.isAnfang = true;
+                                this.isEnde = true;
+                            } else {
+                                this.notFound = false;
+                                this.liste.data.data = response.data.data;
+                                this.lastPage = response.data.last_page;
+                                this.$store.state.lastPage = this.lastPage;
+                                this.isLoggedInCheck();
+                                this.saveContent(response.data.data);
+                                this.isAnfangfind();
+                                this.isEndefind();
+                            }
+                        }
+                    );
+            }
         },
         methods: {
             deleteItem: function (id) {
@@ -373,7 +401,6 @@
                     BNR: BNR
                 })
                     .then(response => {
-                            console.log(response);
                             this.reloadSite(response.data.status + "")
                         }
                     )
@@ -401,6 +428,9 @@
                 this.content = content;
                 this.BNR = BNR;
 
+                console.log(this.isAdmin);
+                console.log(this.isLoggedIn);
+
                 axios.post('/books/borrowed', {
                     id: id
                 }).then(response => {
@@ -416,99 +446,53 @@
                 }
             },
             ausgabe: function () {
-                console.log(this.search);
-                if (this.search === "") {
-                    axios.get('/books/json?page=' + this.page)
-                        .then(response => {
-                                if (response.data.data.length === 0) {
-                                    this.notFound = true;
-                                } else {
-                                    this.notFound = false;
-                                    this.liste.data.data = response.data.data;
-                                    this.lastPage = response.data.last_page;
-                                    this.isLoggedInCheck();
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                    this.$store.state.lastPage = this.lastPage;
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                }
-                            }
-                        );
-                } else {
-                    axios.post('/books/search', {
-                        search: this.search
-                    })
-                        .then(response => {
-                                if (response.data.data.length === 0) {
-                                    this.notFound = true;
-                                } else {
-                                    this.notFound = false;
-                                    this.liste.data.data = response.data.data;
-                                    this.lastPage = response.data.last_page;
-                                    this.isLoggedInCheck();
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                    this.$store.state.lastPage = this.lastPage;
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                }
-                            }
-                        );
-                }
+                this.$store.state.latestSearch = this.search;
+                this.$store.commit("setSearch");
+                window.location.reload();
             },
             isAnfangfind: function () {
-                if (this.$store.state.count === this.firstPage) {
+                if (this.$store.state.page === this.firstPage) {
                     this.isAnfang = true;
                 }
-            }
-            ,
+            },
             isEndefind: function () {
-                if (this.$store.state.count === this.lastPage) {
+                if (this.$store.state.page === this.lastPage) {
                     this.isEnde = true;
                 }
-            }
-            ,
+            },
             increment: function () {
-                this.$store.commit('increment');
+                this.$store.commit("increment");
                 this.isAnfang = true;
                 this.isEnde = true;
                 window.location.reload();
-            }
-            ,
+            },
             decrement: function () {
-                this.$store.commit('decrement');
+                this.$store.commit("decrement");
                 this.isAnfang = true;
                 this.isEnde = true;
                 window.location.reload();
-            }
-            ,
+            },
             sendtoFirst: function () {
                 this.$store.commit("isFirstPage");
                 this.isAnfang = true;
                 this.isEnde = true;
                 window.location.reload();
-            }
-            ,
+
+            },
             sendtoLast: function () {
+                this.$store.state.lastPage = this.lastPage;
                 this.$store.commit("isLastPage");
-                this.isAnfang = true;
+                this.isAnfang = false;
                 this.isEnde = true;
                 window.location.reload();
-            }
-            ,
+            },
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
                             this.isLoggedIn = response.data;
                         }
                     )
-            }
-            ,
+            },
             returnBook: function (id) {
                 axios.post('/books/return', {
                     id: id
@@ -516,19 +500,21 @@
                         this.reloadSite(response.data.status + "")
                     }
                 )
-            }
-            ,
-            borrowBook: function (id) {
+            },
+            putIntoCart: function (id) {
                 axios.post('/books/borrow', {
-                    id: id
-                }).then(response => {
-                        this.reloadSite(response.data.status + "")
-                    }
-                )
-            }
-            ,
+                    id: id,
+                    userID: this.$store.state.userID
+                })
+                    .then(response => {
+                            console.log(response);
+                        }
+                    )
+            },
             clearSearch: function () {
                 this.search = "";
+                this.$store.state.search = "";
+                this.ausgabe();
             }
         }
     }

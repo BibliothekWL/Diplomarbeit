@@ -6,20 +6,30 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        count: 1,
+        page: 1,
         lastPage: 0,
         isAdmin: false,
-        isLoggedIn: false
+        isLoggedIn: false,
+        search: "",
+        latestSearch: "",
+        latestUsername: "",
+        username: "",
+        latestUserID: 0,
+        userID: 0
     },
     plugins: [createPersistedState()],
     mutations: {
-        increment: state => state.count++,
-        decrement: state => state.count--,
-        isFirstPage: state => state.count = 1,
-        isLastPage: state => state.count = 3,
+        increment: state => state.page++,
+        decrement: state => state.page--,
+        isFirstPage: state => state.page = 1,
+        isLastPage: state => state.page = state.lastPage,
+        setSearch: state => state.search = state.latestSearch,
+        setSearchEmpty: state => state.search = "",
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
         UserLoggedIn: state => state.isLoggedIn = true,
-        UsernotLoggedIn: state => state.isLoggedIn = false
+        UsernotLoggedIn: state => state.isLoggedIn = false,
+        setUsername: state => state.username = state.latestUsername,
+        setUserID: state => state.userID = state.latestUserID
     }
 });
