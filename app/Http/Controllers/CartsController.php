@@ -9,7 +9,9 @@ class CartsController extends Controller
 {
     public function create()
     {
-        if(Book::all()->where('id',request()->bookId)->first()->borrowed == 1){
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        if(Book::all()->where('id',request()->$jsonarray['id'])->first()->borrowed == 1){
             dd('this book is not available');
         }
         elseif(Cart::all()->where('book_id',request()->bookId)->isEmpty()==false) {
