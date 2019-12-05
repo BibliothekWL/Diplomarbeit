@@ -1,14 +1,18 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="parent">
-        <b-navbar type="light" variant="danger" class="shadow main_navbar">
-                <Slide class="sidebar">
+    <div >
+        <b-navbar type="light" variant="danger">
+            <div id="app">
+                <Push class="bm-menu">
                         <a href="/list">Bücherliste</a>
                         <a href="/home">Home</a>
-                </Slide>
+                </Push>
+                <main id="page-wrap">
+                </main>
+            </div>
             <h4 class="site_title">Bibliothek Wiener Linien</h4>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-button color="rgba(255,255,255,0)" v-show="!loggedIn" v-model="loggedIn" to="/login" right>Login</b-button>
+                <b-button class="navbar_btn" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login</b-button>
                 <b-nav-item-dropdown v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
@@ -19,19 +23,17 @@
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-navbar>
-        <div class="content">
-            <router-view></router-view>
-        </div>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
     import axios from "axios";
-    import { Slide } from 'vue-burger-menu';
+    import { Push } from 'vue-burger-menu';
 
     export default {
         components: {
-            Slide // Burger-Knopf Initlialisierung
+            Push // Burger-Knopf Initlialisierung
         },
         data() {
             return {
@@ -52,9 +54,9 @@
                     axios.get('/logout/json', {})
                         .then(response => {
                             this.$store.commit('UsernotLoggedIn');
-
-                            location.reload();
-                            this.$router('/login');
+                            this.$store.commit('UserisnotAdmin');
+                            this.$router.push({ path: '/login' });
+                            window.location.reload();
                         }).catch(error => {
                         console.log(error.message)
                     });
@@ -64,41 +66,39 @@
 </script>
 
 <style>
-    html, body{
-        height: 100%;
-        margin: 0;
-    }
-
-    .parent{
-        display: flex;
-        flex-flow: column;
-        height: 100%;
-    }
-
-    .content{
-        flex: 1 1 auto;
-    }
-
-    a, em{
+    a {
         color: white;
         font-family: "Nunito", sans-serif;
-        margin-right: 1em;
     }
 
+    .navbar_btn{
+        background-color: white;
+        color: red;
+        border-color: white;
+
+    }
 
     .site_title{
         color: white;
         font-family: "Nunito", sans-serif;
         margin-left: 2em;
-        position: absolute;
+        position: fixed;
+    }
+    .link {
+        margin-left: 3em;
     }
 
+    .link:nth-child(1) {
+        margin-left: 7em;
+    }
+
+
     .bm-burger-button {
-        position: absolute;
-        width: 25px;
+        position: fixed;
+        width: 20px;
         height: 20px;
-        left: 17px;
-        top: 17px;
+        left: 20px;
+        top: 20px;
         cursor: pointer;
         margin-right: 2em;
     }
@@ -106,18 +106,16 @@
     .bm-burger-bars {
         background-color: #ffffff;
     }
-
     .bm-menu {
         height: 100%; /* 100% Full-height */
         width: 0; /* 0 width - change this with JavaScript */
         position: fixed; /* Stay in place */
-        z-index: 1000;
-        top: 56px;
+        z-index: 1000; /* Stay on top */
+        top: 0;
         left: 0;
-        background-color: rgb(220, 53, 69); /* RED*/
+        background-color: rgb(63, 63, 65); /* Black*/
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 60px; /* Place content 60px from the top */
         transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/
-        opacity: 80%;
     }
 </style>
