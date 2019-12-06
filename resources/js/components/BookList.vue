@@ -278,7 +278,7 @@
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
-                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
+                            <b-button :disabled="!isBorrowed[id]" pill v-on:click="returnBook(id)">
                                 <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -288,7 +288,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
+                            <b-button :disabled="isBorrowed[id]" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -354,7 +354,6 @@
                                 this.isBorrowedfind(response.data.data);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
-                                console.log(this.liste.data.data);
                                 this.lastPage = response.data.last_page;
                                 this.isLoggedInCheck();
                                 this.saveContent(response.data.data);
@@ -401,7 +400,6 @@
                 axios.post('/getBook', {
                     id: id
                 }).then(response => {
-                        console.log(response);
                         this.title = response.data.title;
                         this.content_full = response.data.content;
                         this.systematik = response.data.systematik;
@@ -475,7 +473,6 @@
                 this.BNR = BNR;
             },
             isBorrowedfind: function (data) {
-                console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     axios.post('/books/borrowed', {
                         id: data[i].id
