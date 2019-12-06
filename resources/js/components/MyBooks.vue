@@ -1,6 +1,6 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <div v-if="!notFound" class="notFound">
+        <div v-if="!notFound">
 
             <div class="list">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
@@ -19,8 +19,21 @@
             </div>
         </div>
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts ausgeborgt!
-        </h4>
+        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts reserviert!</h4>
+
+        <b-modal id="BookInformation" centered title="Information">
+            <div>
+                {{ content_full }}
+            </div>
+
+            <template v-slot:modal-footer="{cancel}">
+                <div>
+                    <b-button size="sm" variant="success" @click="cancel()">
+                        Close
+                    </b-button>
+                </div>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -75,7 +88,7 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 12) {
+                    if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
                         for (let j = 0; j < 12; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
@@ -100,14 +113,8 @@
 </script>
 
 <style scoped>
-
     .notFound {
         text-align: center;
-    }
-
-    .suche_title {
-        text-align: center;
-        padding-top: 1em;
     }
 
     .list {
@@ -135,9 +142,5 @@
 
     .beschreibung {
         font-size: 12px;
-    }
-
-    .notFound {
-        padding: 2em;
     }
 </style>

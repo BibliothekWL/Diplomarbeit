@@ -50,15 +50,32 @@
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
                         img-left
                         img-alt="Image"
-                        style="width: 15em;" class="listitem"
+                        style="width: 15em;"
+                        class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
+                    <div class="card_flex">
+                        <div>
+                            <b-card-title>
+                                {{book.title}}
+                            </b-card-title>
+                            <b-card-text class="beschreibung">
+                                {{content_short[book.id]}}
+                            </b-card-text>
+                        </div>
+
+                        <div v-if="!isBorrowed[book.id] && !reserviert" class="info frei">
+                            Frei
+                        </div>
+
+                        <div v-if="isBorrowed[book.id]" class="info borrowed">
+                            Ausgeborgt
+                        </div>
+
+                        <div v-if="reserviert" class="info reserved">
+                            Reserviert
+                        </div>
+                    </div>
                 </b-card>
             </div>
         </div>
@@ -300,7 +317,7 @@
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
-                isBorrowed: false,
+                isBorrowed: [],
                 liste: {
                     data: {
                         data: ""
@@ -320,7 +337,8 @@
                 search: this.$store.state.search,
                 isAnfang: false,
                 isEnde: false,
-                show: true
+                show: true,
+                reserviert: false
             };
         },
         mounted() {
@@ -333,6 +351,7 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                this.isBorrowedfind(response.data.data);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 console.log(this.liste.data.data);
@@ -354,6 +373,7 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                this.isBorrowedfind(response.data.data);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -435,7 +455,7 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 12) {
+                    if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
                         for (let j = 0; j < 12; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
@@ -453,12 +473,17 @@
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
-                axios.post('/books/borrowed', {
-                    id: id
-                }).then(response => {
-                        this.isBorrowed = response.data;
-                    }
-                );
+            },
+            isBorrowedfind: function (data) {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                    axios.post('/books/borrowed', {
+                        id: data[i].id
+                    }).then(response => {
+                            this.isBorrowed[data[i].id] = response.data;
+                        }
+                    );
+                }
             },
             reloadSite: function (status) {
                 if (status === "200") {
@@ -530,6 +555,7 @@
                 })
                     .then(response => {
                             console.log(response);
+                            window.location.reload();
                         }
                     )
             },
@@ -573,6 +599,13 @@
         margin: 2em;
     }
 
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .listitem:hover {
         cursor: pointer;
     }
@@ -600,5 +633,25 @@
         display: flex;
         justify-content: center;
         padding: 2em;
+    }
+
+    .frei {
+        border: 1px green solid;
+        border-radius: 10px;
+        color: green;
+        width: 4em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .borrowed {
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 6em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
     }
 </style>

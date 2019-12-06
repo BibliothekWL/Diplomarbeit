@@ -85,6 +85,7 @@ class BooksController extends Controller
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
             $book->borrowed = 1;
+            $book->user_id = auth()->user()->id;
             $book->save();
 
             $borrowing = new Borrowing();

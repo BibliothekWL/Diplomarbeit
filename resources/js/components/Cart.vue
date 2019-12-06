@@ -15,7 +15,10 @@
                 </b-card-text>
             </b-card>
         </div>
-        <b-button class="center" v-on:click="checkout()">
+
+        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts ausgeborgt!</h4>
+
+        <b-button v-if="!notFound" class="center" v-on:click="checkout()">
             Ausborgen
         </b-button>
     </div>
@@ -47,14 +50,14 @@
                     id: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response);
-                            if (response.data.data.length === 0) {
+                            console.log(response.data.data);
+                            if (response.length === 0) {
                                 this.notFound = true;
                             } else {
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
+                                this.saveContent(response);
                             }
                         }
                     );
@@ -75,7 +78,7 @@
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 12) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 12; j++) {
+                        for (let j = 0; j < 10; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
