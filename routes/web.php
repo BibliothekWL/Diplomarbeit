@@ -99,5 +99,5 @@ Route::post('/books/search', function () {
 Route::post('/cart/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    return CartResource::collection(Cart::where('user_id',  $jsonarray['id'])->get());
+    return BooksResource::collection(Book::where('user_id',  $jsonarray['id'])->get());
 });

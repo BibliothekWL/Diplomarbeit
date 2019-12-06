@@ -492,6 +492,7 @@
             ausgabe: function () {
                 this.$store.state.latestSearch = this.search;
                 this.$store.commit("setSearch");
+                this.$store.commit("isFirstPage");
                 window.location.reload();
             },
             isAnfangfind: function () {
