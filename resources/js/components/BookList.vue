@@ -64,11 +64,11 @@
                             </b-card-text>
                         </div>
 
-                        <div v-if="!isBorrowed[book.id] && !reserviert" class="info frei">
+                        <div v-if="book.borrowed === 0" class="info frei">
                             Frei
                         </div>
 
-                        <div v-if="isBorrowed[book.id]" class="info borrowed">
+                        <div v-if="book.borrowed === 1" class="info borrowed">
                             Ausgeborgt
                         </div>
 
@@ -317,7 +317,7 @@
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
-                isBorrowed: [],
+                isBorrowed: "",
                 liste: {
                     data: {
                         data: ""
@@ -351,7 +351,6 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
-                                this.isBorrowedfind(response.data.data);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -372,7 +371,6 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
-                                this.isBorrowedfind(response.data.data);
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -455,7 +453,7 @@
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 12; j++) {
+                        for (let j = 0; j < 10; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -471,16 +469,13 @@
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
-            },
-            isBorrowedfind: function (data) {
-                for (let i = 0; i < data.length; i++) {
-                    axios.post('/books/borrowed', {
-                        id: data[i].id
-                    }).then(response => {
-                            this.isBorrowed[data[i].id] = response.data;
-                        }
-                    );
-                }
+
+                axios.post('/books/borrowed', {
+                    id: id
+                }).then(response => {
+                        this.isBorrowed = response.data;
+                    }
+                );
             },
             reloadSite: function (status) {
                 if (status === "200") {

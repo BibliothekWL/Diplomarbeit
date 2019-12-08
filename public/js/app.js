@@ -11862,7 +11862,7 @@ __webpack_require__.r(__webpack_exports__);
       notFound: false,
       isAdmin: this.$store.state.isAdmin,
       isLoggedIn: false,
-      isBorrowed: [],
+      isBorrowed: "",
       liste: {
         data: {
           data: ""
@@ -11898,11 +11898,8 @@ __webpack_require__.r(__webpack_exports__);
           _this.isAnfang = true;
           _this.isEnde = true;
         } else {
-          _this.isBorrowedfind(response.data.data);
-
           _this.notFound = false;
           _this.liste.data.data = response.data.data;
-          console.log(_this.liste.data.data);
           _this.lastPage = response.data.last_page;
 
           _this.isLoggedInCheck();
@@ -11923,8 +11920,6 @@ __webpack_require__.r(__webpack_exports__);
           _this.isAnfang = true;
           _this.isEnde = true;
         } else {
-          _this.isBorrowedfind(response.data.data);
-
           _this.notFound = false;
           _this.liste.data.data = response.data.data;
           _this.lastPage = response.data.last_page;
@@ -11958,7 +11953,6 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/getBook', {
         id: id
       }).then(function (response) {
-        console.log(response);
         _this3.title = response.data.title;
         _this3.content_full = response.data.content;
         _this3.systematik = response.data.systematik;
@@ -12017,7 +12011,7 @@ __webpack_require__.r(__webpack_exports__);
         if (content_words.length >= 10) {
           this.content_short[content[i].id] = "";
 
-          for (var j = 0; j < 12; j++) {
+          for (var j = 0; j < 10; j++) {
             this.content_short[content[i].id] += content_words[j] + " ";
           }
 
@@ -12028,29 +12022,19 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     buecherInformationen: function buecherInformationen(id, title, systematik, medium, content, BNR) {
+      var _this6 = this;
+
       this.id = id;
       this.content_full = content;
       this.systematik = systematik;
       this.medium = medium;
       this.content = content;
       this.BNR = BNR;
-    },
-    isBorrowedfind: function isBorrowedfind(data) {
-      var _this6 = this;
-
-      console.log(data);
-
-      var _loop = function _loop(i) {
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrowed', {
-          id: data[i].id
-        }).then(function (response) {
-          _this6.isBorrowed[data[i].id] = response.data;
-        });
-      };
-
-      for (var i = 0; i < data.length; i++) {
-        _loop(i);
-      }
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/books/borrowed', {
+        id: id
+      }).then(function (response) {
+        _this6.isBorrowed = response.data;
+      });
     },
     reloadSite: function reloadSite(status) {
       if (status === "200") {
@@ -12196,7 +12180,7 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/cart/json', {
         id: this.$store.state.userID
       }).then(function (response) {
-        console.log(response.data.data);
+        console.log(response);
 
         if (response.length === 0) {
           _this.notFound = true;
@@ -12206,7 +12190,7 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.isLoggedInCheck();
 
-          _this.saveContent(response);
+          _this.saveContent(response.data);
         }
       });
     }
@@ -12224,7 +12208,7 @@ __webpack_require__.r(__webpack_exports__);
         this.content_full[content[i].id] = content[i].content;
         var content_words = content[i].content.split(" ");
 
-        if (content_words.length >= 12) {
+        if (content_words.length >= 10) {
           this.content_short[content[i].id] = "";
 
           for (var j = 0; j < 10; j++) {
@@ -12248,6 +12232,7 @@ __webpack_require__.r(__webpack_exports__);
     checkout: function checkout() {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/cart/checkout').then(function (response) {
         console.log(response);
+        window.location.href = "/list";
       });
     }
   }
@@ -12461,7 +12446,7 @@ __webpack_require__.r(__webpack_exports__);
         if (content_words.length >= 10) {
           this.content_short[content[i].id] = "";
 
-          for (var j = 0; j < 12; j++) {
+          for (var j = 0; j < 10; j++) {
             this.content_short[content[i].id] += content_words[j] + " ";
           }
 
@@ -45381,7 +45366,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.center[data-v-b7f93bea] {\n    text-align: center;\n}\n.notFound[data-v-b7f93bea] {\n    text-align: center;\n}\n.suche_title[data-v-b7f93bea] {\n    text-align: center;\n    padding-top: 1em;\n}\n.list[data-v-b7f93bea] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-b7f93bea] {\n    flex-basis: 30%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-b7f93bea] {\n    padding: 1em;\n    margin: 2em;\n}\n.listitem[data-v-b7f93bea]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-b7f93bea] {\n    font-size: 12px;\n}\n.notFound[data-v-b7f93bea] {\n    padding: 2em;\n}\n", ""]);
+exports.push([module.i, "\n.center[data-v-b7f93bea] {\n    text-align: center;\n}\n.notFound[data-v-b7f93bea] {\n    text-align: center;\n}\n.list[data-v-b7f93bea] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-b7f93bea] {\n    flex-basis: 30%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-b7f93bea] {\n    padding: 1em;\n    margin: 2em;\n}\n.listitem[data-v-b7f93bea]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-b7f93bea] {\n    font-size: 12px;\n}\n.notFound[data-v-b7f93bea] {\n    padding: 2em;\n}\n", ""]);
 
 // exports
 
@@ -81231,7 +81216,7 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      !_vm.isBorrowed[book.id] && !_vm.reserviert
+                      book.borrowed === 0
                         ? _c("div", { staticClass: "info frei" }, [
                             _vm._v(
                               "\n                        Frei\n                    "
@@ -81239,7 +81224,7 @@ var render = function() {
                           ])
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.isBorrowed[book.id]
+                      book.borrowed === 1
                         ? _c("div", { staticClass: "info borrowed" }, [
                             _vm._v(
                               "\n                        Ausgeborgt\n                    "
@@ -81876,7 +81861,7 @@ var render = function() {
                                     "b-button",
                                     {
                                       attrs: {
-                                        disabled: !_vm.isBorrowed,
+                                        disabled: !_vm.isBorrowed[_vm.id],
                                         pill: ""
                                       },
                                       on: {
@@ -81923,7 +81908,7 @@ var render = function() {
                                     "b-button",
                                     {
                                       attrs: {
-                                        disabled: _vm.isBorrowed,
+                                        disabled: _vm.isBorrowed[_vm.id],
                                         pill: ""
                                       },
                                       on: {
