@@ -6,6 +6,7 @@ import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
 import MyBooks from "@/js/components/MyBooks";
+import Profile from "@/js/components/Profile";
 
 
 Vue.use(VueRouter);
@@ -32,6 +33,11 @@ const router = new VueRouter({
             path: '/register',
             name: 'register',
             component: Register
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: Profile
         },
         {
             path: '/myBooks',

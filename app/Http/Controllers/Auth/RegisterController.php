@@ -56,16 +56,14 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\User
      */
-    protected function create()
-    {
-
+    protected function create(){
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
             if (sizeof($jsonarray) != 0) {
                 $user = new User();
                 $user->name = $jsonarray['name'];
                 $user->email = $jsonarray['email'];
-                $user->password = $jsonarray['password'];
+                $user->password = Hash::make($jsonarray['password']);
                 $user->created_at = now();
                 $user->updated_at = now();
                 $user->save();
@@ -74,5 +72,4 @@ class RegisterController extends Controller
             }
             return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
         }
-
 }

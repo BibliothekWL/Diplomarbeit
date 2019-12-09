@@ -19,7 +19,7 @@
                     <template v-slot:button-content>
                         <em>{{username}}</em>
                     </template>
-                    <b-dropdown-item href="#">Profil</b-dropdown-item>
+                    <b-dropdown-item href="/profile">Profil</b-dropdown-item>
                     <b-dropdown-item href="/myBooks">Meine Bücher</b-dropdown-item>
                     <b-dropdown-item v-on:click="logout()">Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
