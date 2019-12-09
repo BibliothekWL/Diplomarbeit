@@ -12008,10 +12008,10 @@ __webpack_require__.r(__webpack_exports__);
         this.content_full[content[i].id] = content[i].content;
         var content_words = content[i].content.split(" ");
 
-        if (content_words.length >= 10) {
+        if (content_words.length >= 8) {
           this.content_short[content[i].id] = "";
 
-          for (var j = 0; j < 10; j++) {
+          for (var j = 0; j < 8; j++) {
             this.content_short[content[i].id] += content_words[j] + " ";
           }
 
@@ -45342,12 +45342,13 @@ exports.push([module.i, "/*!\n * Bootstrap v4.3.1 (https://getbootstrap.com/)\n 
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+var escape = __webpack_require__(/*! ../../../node_modules/css-loader/lib/url/escape.js */ "./node_modules/css-loader/lib/url/escape.js");
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
 
 
 // module
-exports.push([module.i, "\n.notFound[data-v-584825dc] {\n    text-align: center;\n}\n.suche_title[data-v-584825dc] {\n    text-align: center;\n    padding-top: 1em;\n}\n.list[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-584825dc] {\n    flex-basis: 30%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-584825dc] {\n    padding: 1em;\n    margin: 2em;\n}\n.card_flex[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    -webkit-box-align: center;\n            align-items: center;\n    -webkit-box-pack: justify;\n            justify-content: space-between;\n}\n.listitem[data-v-584825dc]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-584825dc] {\n    font-size: 12px;\n}\n.page_buttons[data-v-584825dc] {\n    text-align: center;\n    padding: 2em;\n}\n.addButton[data-v-584825dc] {\n    float: right;\n    margin: 1em;\n}\n.searchBar[data-v-584825dc] {\n    width: 50em;\n    vertical-align: center;\n}\n.searchBox[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding: 2em;\n}\n.frei[data-v-584825dc] {\n    border: 1px green solid;\n    border-radius: 10px;\n    color: green;\n    width: 4em;\n    padding: 0.25em;\n    margin: 1em;\n    text-align: center;\n}\n.borrowed[data-v-584825dc] {\n    border: 1px red solid;\n    border-radius: 10px;\n    color: red;\n    width: 6em;\n    padding: 0.25em;\n    margin: 1em;\n    text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.notFound[data-v-584825dc] {\n    text-align: center;\n}\n.suche_title[data-v-584825dc] {\n    text-align: center;\n    padding-top: 1em;\n}\n.list[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding-top: 4em;\n}\n.list > *[data-v-584825dc] {\n    flex-basis: 30%;\n    -webkit-box-flex: 1;\n            flex-grow: 1;\n    flex-shrink: 1;\n}\n.listitem[data-v-584825dc] {\n    margin: 2em;\n    padding: 1em;\n}\n.card_flex[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n    -webkit-box-align: center;\n            align-items: center;\n    -webkit-box-pack: justify;\n            justify-content: space-between;\n}\n.listitem[data-v-584825dc]:hover {\n    cursor: pointer;\n}\n.beschreibung[data-v-584825dc] {\n    font-size: 14px;\n    width: 20em;\n}\n.page_buttons[data-v-584825dc] {\n    text-align: center;\n    padding: 2em;\n}\n.addButton[data-v-584825dc] {\n    float: right;\n    margin: 1em;\n}\n.searchBar[data-v-584825dc] {\n    width: 50em;\n    vertical-align: center;\n}\n.searchBox[data-v-584825dc] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-pack: center;\n            justify-content: center;\n    padding: 2em;\n}\n.frei[data-v-584825dc] {\n    border: 1px green solid;\n    border-radius: 10px;\n    color: green;\n    width: 3em;\n    padding: 0.25em;\n    margin: 1em;\n    text-align: center;\n}\n.borrowed[data-v-584825dc] {\n    border: 1px red solid;\n    border-radius: 10px;\n    color: red;\n    width: 6em;\n    padding: 0.25em;\n    margin: 1em;\n    text-align: center;\n}\n.bildbruh[data-v-584825dc] {\n    background-image: url(" + escape(__webpack_require__(/*! ../../img/default_cover.jpg */ "./resources/img/default_cover.jpg")) + ");\n    width: 125px;\n    height: 167px;\n}\n", ""]);
 
 // exports
 
@@ -81173,12 +81174,7 @@ var render = function() {
                     key: book.id,
                     staticClass: "listitem",
                     staticStyle: { width: "15em" },
-                    attrs: {
-                      type: "light",
-                      variant: "danger",
-                      "img-left": "",
-                      "img-alt": "Image"
-                    },
+                    attrs: { type: "light", variant: "danger" },
                     on: {
                       click: function($event) {
                         return _vm.buecherInformationen(
@@ -81194,6 +81190,8 @@ var render = function() {
                   },
                   [
                     _c("div", { staticClass: "card_flex" }, [
+                      _c("div", { staticClass: "bildbruh" }, [_vm._v(" ")]),
+                      _vm._v(" "),
                       _c(
                         "div",
                         [
@@ -81476,7 +81474,7 @@ var render = function() {
                 }
               },
               [
-                _c("b-form-input", {
+                _c("b-form-textarea", {
                   attrs: { id: "name-input", required: "" },
                   on: {
                     keyup: function($event) {
@@ -81702,7 +81700,7 @@ var render = function() {
                 }
               },
               [
-                _c("b-form-input", {
+                _c("b-form-textarea", {
                   attrs: { id: "name-input", required: "" },
                   on: {
                     keyup: function($event) {
@@ -98770,6 +98768,17 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+
+/***/ "./resources/img/default_cover.jpg":
+/*!*****************************************!*\
+  !*** ./resources/img/default_cover.jpg ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/default_cover.jpg?413aa3aee81d4760401a05db74cd012a";
 
 /***/ }),
 

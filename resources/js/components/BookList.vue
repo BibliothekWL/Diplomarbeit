@@ -48,17 +48,17 @@
 
             <div class="list">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
                         style="width: 15em;"
                         class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
                     <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
                         <div>
-                            <b-card-title>
+                             <b-card-title>
                                 {{book.title}}
                             </b-card-title>
+
                             <b-card-text class="beschreibung">
                                 {{content_short[book.id]}}
                             </b-card-text>
@@ -167,12 +167,12 @@
                         label-for="title"
                         invalid-feedback="Content is required"
                 >
-                    <b-form-input
+                    <b-form-textarea
                             id="name-input"
                             v-model="content_full"
                             required
                             v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+                    ></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group
@@ -235,12 +235,12 @@
                         label-for="title"
                         invalid-feedback="Content is required"
                 >
-                    <b-form-input
+                    <b-form-textarea
                             id="name-input"
                             v-model="content_full"
                             required
                             v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+                    ></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group
@@ -451,9 +451,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 10) {
+                    if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 10; j++) {
+                        for (let j = 0; j < 8; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -587,8 +587,8 @@
     }
 
     .listitem {
-        padding: 1em;
         margin: 2em;
+        padding: 1em;
     }
 
     .card_flex {
@@ -603,7 +603,8 @@
     }
 
     .beschreibung {
-        font-size: 12px;
+        font-size: 14px;
+        width: 20em;
     }
 
     .page_buttons {
@@ -631,7 +632,7 @@
         border: 1px green solid;
         border-radius: 10px;
         color: green;
-        width: 4em;
+        width: 3em;
         padding: 0.25em;
         margin: 1em;
         text-align: center;
@@ -645,5 +646,11 @@
         padding: 0.25em;
         margin: 1em;
         text-align: center;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
     }
 </style>
