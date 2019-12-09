@@ -12,7 +12,7 @@
             <h4 class="site_title">Bibliothek Wiener Linien</h4>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-button v-if="loggedIn" href="/warenkorb" variant="transparent">
+                <b-button v-if="loggedIn & !isAdmin" href="/warenkorb" variant="transparent">
                     <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
                 </b-button>
                 <b-button class="navbar_btn" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login
