@@ -239,7 +239,6 @@
                             id="name-input"
                             v-model="content_full"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-textarea>
                 </b-form-group>
 
@@ -257,7 +256,7 @@
                 </b-form-group>
             </b-modal>
 
-            <b-modal id="BookInformation" centered title="Information">
+            <b-modal id="BookInformation" size="xl" centered title="Information">
                 <div>
                     {{ content_full }}
                 </div>
@@ -278,7 +277,7 @@
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
-                            <b-button :disabled="!isBorrowed[id]" pill v-on:click="returnBook(id)">
+                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
                                 <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -288,7 +287,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed[id]" pill v-on:click="putIntoCart(id)">
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -548,7 +547,6 @@
                 })
                     .then(response => {
                             console.log(response);
-                            window.location.reload();
                         }
                     )
             },

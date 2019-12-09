@@ -11852,7 +11852,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BookList",
@@ -12046,6 +12045,7 @@ __webpack_require__.r(__webpack_exports__);
     ausgabe: function ausgabe() {
       this.$store.state.latestSearch = this.search;
       this.$store.commit("setSearch");
+      this.$store.commit("isFirstPage");
       window.location.reload();
     },
     isAnfangfind: function isAnfangfind() {
@@ -12105,7 +12105,6 @@ __webpack_require__.r(__webpack_exports__);
         userID: this.$store.state.userID
       }).then(function (response) {
         console.log(response);
-        window.location.reload();
       });
     },
     clearSearch: function clearSearch() {
@@ -81702,23 +81701,6 @@ var render = function() {
               [
                 _c("b-form-textarea", {
                   attrs: { id: "name-input", required: "" },
-                  on: {
-                    keyup: function($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      return _vm.saveAdd(
-                        _vm.title,
-                        _vm.systematik,
-                        _vm.medium,
-                        _vm.content_full,
-                        _vm.BNR
-                      )
-                    }
-                  },
                   model: {
                     value: _vm.content_full,
                     callback: function($$v) {
@@ -81780,6 +81762,7 @@ var render = function() {
           {
             attrs: {
               id: "BookInformation",
+              size: "xl",
               centered: "",
               title: "Information"
             },
@@ -81859,7 +81842,7 @@ var render = function() {
                                     "b-button",
                                     {
                                       attrs: {
-                                        disabled: !_vm.isBorrowed[_vm.id],
+                                        disabled: !_vm.isBorrowed,
                                         pill: ""
                                       },
                                       on: {
@@ -81906,7 +81889,7 @@ var render = function() {
                                     "b-button",
                                     {
                                       attrs: {
-                                        disabled: _vm.isBorrowed[_vm.id],
+                                        disabled: _vm.isBorrowed,
                                         pill: ""
                                       },
                                       on: {
@@ -82551,7 +82534,7 @@ var render = function() {
             "b-navbar-nav",
             { staticClass: "ml-auto" },
             [
-              _vm.loggedIn
+              _vm.loggedIn & !_vm.isAdmin
                 ? _c(
                     "b-button",
                     { attrs: { href: "/warenkorb", variant: "transparent" } },
