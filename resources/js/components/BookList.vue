@@ -50,15 +50,32 @@
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
                         img-left
                         img-alt="Image"
-                        style="width: 15em;" class="listitem"
+                        style="width: 15em;"
+                        class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
+                    <div class="card_flex">
+                        <div>
+                            <b-card-title>
+                                {{book.title}}
+                            </b-card-title>
+                            <b-card-text class="beschreibung">
+                                {{content_short[book.id]}}
+                            </b-card-text>
+                        </div>
+
+                        <div v-if="book.borrowed === 0" class="info frei">
+                            Frei
+                        </div>
+
+                        <div v-if="book.borrowed === 1" class="info borrowed">
+                            Ausgeborgt
+                        </div>
+
+                        <div v-if="reserviert" class="info reserved">
+                            Reserviert
+                        </div>
+                    </div>
                 </b-card>
             </div>
         </div>
@@ -110,10 +127,12 @@
                         label-for="title"
                         invalid-feedback="Title is required"
                 >
+
                     <b-form-input
                             id="name-input"
                             v-model="title"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -126,6 +145,7 @@
                             id="name-input"
                             v-model="systematik"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -138,6 +158,7 @@
                             id="name-input"
                             v-model="medium"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -150,6 +171,7 @@
                             id="name-input"
                             v-model="content_full"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -162,6 +184,7 @@
                             id="name-input"
                             v-model="BNR"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
@@ -177,6 +200,7 @@
                             id="name-input"
                             v-model="title"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -189,6 +213,7 @@
                             id="name-input"
                             v-model="systematik"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -201,6 +226,7 @@
                             id="name-input"
                             v-model="medium"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -213,6 +239,7 @@
                             id="name-input"
                             v-model="content_full"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -225,6 +252,7 @@
                             id="name-input"
                             v-model="BNR"
                             required
+                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
@@ -246,11 +274,11 @@
                             </b-button>
 
                             <b-button v-b-modal.EditItem pill
-                                      v-on:click="editItem(id, title, systematik, medium, content, BNR)">
+                                      v-on:click="editItem(id)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
-                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
+                            <b-button :disabled="!isBorrowed[id]" pill v-on:click="returnBook(id)">
                                 <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -260,7 +288,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
+                            <b-button :disabled="isBorrowed[id]" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -289,7 +317,7 @@
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
-                isBorrowed: false,
+                isBorrowed: "",
                 liste: {
                     data: {
                         data: ""
@@ -299,6 +327,7 @@
                 lastPage: 0,
                 id: "",
                 title: "",
+                title_1: "",
                 systematik: "",
                 medium: "",
                 BNR: "",
@@ -308,7 +337,8 @@
                 search: this.$store.state.search,
                 isAnfang: false,
                 isEnde: false,
-                show: true
+                show: true,
+                reserviert: false
             };
         },
         mounted() {
@@ -358,18 +388,23 @@
             deleteItem: function (id) {
                 axios.post('/books/delete/json/', {
                     id: id
-                }).then(response => (
+                }).then(response => {
                         this.reloadSite(response.data.status + "")
-                    )
+                    }
                 )
             },
-            editItem: function (id, title, systematik, medium, content, BNR) {
+            editItem: function (id) {
                 this.id = id;
-                this.title = title;
-                this.content_full = content;
-                this.systematik = systematik;
-                this.medium = medium;
-                this.BNR = BNR;
+                axios.post('/getBook', {
+                    id: id
+                }).then(response => {
+                        this.title = response.data.title;
+                        this.content_full = response.data.content;
+                        this.systematik = response.data.systematik;
+                        this.medium = response.data.medium;
+                        this.BNR = response.data.BNR;
+                    }
+                );
             },
             addItem: function () {
                 this.title = "";
@@ -387,7 +422,14 @@
                     BNR: BNR,
                     authorname: 'Kevin'
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status + "");
+                        this.id = "";
+                        this.title = "";
+                        this.title_1 = "";
+                        this.content_full = "";
+                        this.systematik = "";
+                        this.medium = "";
+                        this.BNR = "";
                     }
                 )
             },
@@ -409,9 +451,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 12) {
+                    if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 12; j++) {
+                        for (let j = 0; j < 10; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -427,9 +469,6 @@
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
-
-                console.log(this.isAdmin);
-                console.log(this.isLoggedIn);
 
                 axios.post('/books/borrowed', {
                     id: id
@@ -448,6 +487,7 @@
             ausgabe: function () {
                 this.$store.state.latestSearch = this.search;
                 this.$store.commit("setSearch");
+                this.$store.commit("isFirstPage");
                 window.location.reload();
             },
             isAnfangfind: function () {
@@ -494,7 +534,7 @@
                     )
             },
             returnBook: function (id) {
-                axios.post('/books/return', {
+                axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
                         this.reloadSite(response.data.status + "")
@@ -508,6 +548,7 @@
                 })
                     .then(response => {
                             console.log(response);
+                            window.location.reload();
                         }
                     )
             },
@@ -551,6 +592,13 @@
         margin: 2em;
     }
 
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .listitem:hover {
         cursor: pointer;
     }
@@ -578,5 +626,25 @@
         display: flex;
         justify-content: center;
         padding: 2em;
+    }
+
+    .frei {
+        border: 1px green solid;
+        border-radius: 10px;
+        color: green;
+        width: 4em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .borrowed {
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 6em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
     }
 </style>

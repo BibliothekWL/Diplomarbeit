@@ -6,6 +6,7 @@ import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
 import MyBooks from "@/js/components/MyBooks";
+import Cart from "@/js/components/Cart";
 
 
 Vue.use(VueRouter);
@@ -37,6 +38,11 @@ const router = new VueRouter({
             path: '/myBooks',
             name: 'myBooks',
             component: MyBooks
+        },
+        {
+            path: '/warenkorb',
+            name: 'warenkorb',
+            component: Cart
         }
     ]
 });

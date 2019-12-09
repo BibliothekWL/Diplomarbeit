@@ -7,8 +7,7 @@ use App\Book as Book;
 
 class CartsController extends Controller
 {
-    public function create()
-    {
+    public function create(){
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         if(Book::all()->where('id',$jsonarray['id'])->first()->borrowed == 1){
