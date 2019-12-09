@@ -90,7 +90,7 @@
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 12; j++) {
+                        for (let j = 0; j < 10; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";

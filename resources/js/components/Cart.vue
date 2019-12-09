@@ -50,14 +50,14 @@
                     id: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response.data.data);
+                            console.log(response);
                             if (response.length === 0) {
                                 this.notFound = true;
                             } else {
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.isLoggedInCheck();
-                                this.saveContent(response);
+                                this.saveContent(response.data);
                             }
                         }
                     );
@@ -76,7 +76,7 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 12) {
+                    if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
                         for (let j = 0; j < 10; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
@@ -100,6 +100,7 @@
                     .then(
                         response => {
                             console.log(response);
+                            window.location.href = "/list";
                         }
                     )
             }
@@ -115,11 +116,6 @@
 
     .notFound {
         text-align: center;
-    }
-
-    .suche_title {
-        text-align: center;
-        padding-top: 1em;
     }
 
     .list {
