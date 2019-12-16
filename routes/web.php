@@ -8,6 +8,8 @@ use \App\User as User;
 use \App\Cart as Cart;
 use \App\Book as Book;
 
+
+Auth::routes(['verify' => true]);
 /*
  * return all items of cart of current user in json
  */
@@ -37,7 +39,6 @@ Route::post('/books/edit/json/', 'BooksController@BookValidator');
 
 Route::post('returnBooks', 'BooksController@returnBooks');
 
-Auth::routes(['verify' => true]);
 
 Route::post('/books/borrowed', function () {
     $json = file_get_contents('php://input');
@@ -99,5 +100,11 @@ Route::post('/books/search', function () {
 Route::post('/cart/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    return BooksResource::collection(Book::where('user_id',  $jsonarray['id'])->get());
+    $cartArray = Cart::where('user_id',  $jsonarray['id'])->get();
+    $books = array();
+    for($i=0; $i<count($cartArray); $i++) {
+        $book = Book::findOrFail($cartArray[$i]['book_id']);
+        array_push($books,$book);
+    }
+    return $books;
 });
