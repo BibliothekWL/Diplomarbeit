@@ -17,7 +17,7 @@
                 </b-button>
                 <b-button class="navbar_btn" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login
                 </b-button>
-                <b-nav-item-dropdown v-show="loggedIn" right>
+                <b-nav-item-dropdown class="dropdownBtn" v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
                         <em>{{username}}</em>
@@ -85,6 +85,14 @@
     a {
         color: white;
         font-family: "Nunito", sans-serif;
+    }
+
+    a#__BVID__9__BV_button_{
+        color:white;
+    }
+
+    .dropdownBtn{
+        color: #ffffff;
     }
 
     .site_title {

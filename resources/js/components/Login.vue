@@ -6,9 +6,15 @@
                 <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
             <div class="form_div">
+<<<<<<< HEAD
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
                 <b-form-input v-on:keyup.enter="login()" class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
                 <b-button v-on:click="login()" href>Login</b-button>
+=======
+                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
+                <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                <b-button class="inputs" v-on:click="login()" href>Login</b-button>
+>>>>>>> 40db8d4d591136231c9e915bf6f5f142690f513b
             </div>
         </div>
     </div>
@@ -61,41 +67,5 @@
 </script>
 
 <style scoped>
-    .test{
-        display: flex;
-        align-items: center;
-        background-image: url("../../img/library.jpg");
-        background-size: cover;
-        height: calc(100vh - 54px);
-    }
 
-    .form_div{
-        display: flex;
-        background-color: white;
-        opacity: 90%;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-        min-width: 30%;
-        height: 60%;
-        border-radius: 15px;
-        align-items: center;
-        flex-direction: column;
-    }
-
-
-    .short_navbar{
-        display: flex;
-        justify-content: flex-start;
-        width: 100%;
-        border-radius: 15px;
-        color: #e30013;
-    }
-
-    .navbar_btn{
-        background-color: white;
-        color: red;
-        border-color: white;
-        margin-right: 0.5em;
-    }
 </style>

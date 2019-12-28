@@ -57,7 +57,11 @@
     "bootstrap-vue": "^2.1.0",
     "email-scramble": "^2.0.1",
     "js-cookie": "^2.2.1",
+<<<<<<< HEAD
     "serialize-javascript": "^2.1.1",
+=======
+    "sweetalert2": "^9.4.3",
+>>>>>>> 40db8d4d591136231c9e915bf6f5f142690f513b
     "vue": "^2.6.10",
     "vue-burger-menu": "^2.0.3",
     "vue-router": "^3.1.3",
