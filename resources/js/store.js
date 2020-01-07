@@ -15,7 +15,9 @@ export default new Vuex.Store({
         latestUsername: "",
         username: "",
         latestUserID: 0,
-        userID: 0
+        userID: 0,
+        warenkorb: false,
+        nichtwarenkorb: false
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -30,6 +32,10 @@ export default new Vuex.Store({
         UserLoggedIn: state => state.isLoggedIn = true,
         UsernotLoggedIn: state => state.isLoggedIn = false,
         setUsername: state => state.username = state.latestUsername,
-        setUserID: state => state.userID = state.latestUserID
+        setUserID: state => state.userID = state.latestUserID,
+        UserisInCart: state => state.warenkorb = true,
+        UserisInCart_2: state => state.nichtwarenkorb = false,
+        UserisNotInCart: state => state.nichtwarenkorb = true,
+        UserisNotInCart_2: state => state.warenkorb = false,
     }
 });

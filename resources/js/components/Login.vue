@@ -6,15 +6,11 @@
                 <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
             <div class="form_div">
-<<<<<<< HEAD
-                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input v-on:keyup.enter="login()" class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
-                <b-button v-on:click="login()" href>Login</b-button>
-=======
-                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email"
+                              placeholder="Enter Email"></b-form-input>
+                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password"
+                              placeholder="Enter Password"></b-form-input>
                 <b-button class="inputs" v-on:click="login()" href>Login</b-button>
->>>>>>> 40db8d4d591136231c9e915bf6f5f142690f513b
             </div>
         </div>
     </div>
@@ -42,21 +38,20 @@
                 })
                     .then(response => {
                         console.log(response);
-                        if(response.data.status !== '200'){
-                            console.log('Status: ' + response.data.status +'; Error Messasge: ' + response.data.statusMsg);
-                        }
-                        else {
+                        if (response.data.status !== '200') {
+                            console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
+                        } else {
                             this.$store.state.latestUsername = response.data.username;
                             this.$store.commit("setUsername");
                             this.$store.state.latestUserID = response.data.userID;
                             this.$store.commit("setUserID");
                             this.$store.commit('UserLoggedIn');
-                            if(response.data.isAdmin === true) {
+                            if (response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            window.location.href = "/list";
+                            window.location.href = "/home";
                         }
                     }).catch(error => {
                     console.log(error.message)

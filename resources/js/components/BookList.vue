@@ -1,11 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-
-        <!---------------------------------------------------------
-
-                                User-View
-
-        ---------------------------------------------------------->
+    <div class="body">
 
         <!---------------------------------------------------------
 
@@ -13,16 +7,13 @@
 
         ---------------------------------------------------------->
 
-        <h1 class="suche_title">Suche</h1>
+        <h1 class="suche_title">&nbsp;</h1>
 
         <div class="searchBox">
             <b-input-group class="searchBar">
-                <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
+                <b-input placeholder="Nach Büchern stöbern" type="search" class="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="outline-dark" v-if='search != ""' v-on:click='clearSearch()'>
-                        <font-awesome-icon icon="times"></font-awesome-icon>
-                    </b-button>
                     <b-button variant="outline-dark" v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
@@ -55,7 +46,7 @@
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
                         <div>
-                             <b-card-title>
+                            <b-card-title>
                                 {{book.title}}
                             </b-card-title>
 
@@ -77,6 +68,8 @@
                         </div>
                     </div>
                 </b-card>
+
+                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
             </div>
         </div>
 
@@ -86,8 +79,10 @@
 
         ---------------------------------------------------------->
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
-            versuchen Sie es später noch einmal.</h4>
+        <h4 v-if="notFound" class="notFound">
+            Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+            versuchen Sie es später noch einmal.
+        </h4>
 
         <!---------------------------------------------------------
 
@@ -337,10 +332,16 @@
                 isAnfang: false,
                 isEnde: false,
                 show: true,
-                reserviert: false
+                reserviert: false,
+                cart_count: 0,
+                platzhalter: false
             };
         },
         mounted() {
+            this.$store.commit("UserisNotInCart");
+            this.$store.commit("UserisNotInCart_2");
+            console.log(this.$store.state.warenkorb);
+            console.log(this.$store.state.nichtwarenkorb);
             this.page = this.$store.state.page;
             if (this.$store.state.search === "") {
                 axios.get('/books/json?page=' + this.page)
@@ -350,6 +351,11 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -549,11 +555,6 @@
                             console.log(response);
                         }
                     )
-            },
-            clearSearch: function () {
-                this.search = "";
-                this.$store.state.search = "";
-                this.ausgabe();
             }
         }
     }
@@ -564,6 +565,7 @@
 
     .notFound {
         text-align: center;
+        padding: 8em;
     }
 
     .suche_title {
@@ -652,4 +654,9 @@
         width: 125px;
         height: 167px;
     }
+
+    .body {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,0.2));
+    }
+
 </style>
