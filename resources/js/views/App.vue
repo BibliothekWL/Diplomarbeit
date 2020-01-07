@@ -2,13 +2,14 @@
     <div>
         <b-navbar type="light" variant="danger">
             <div id="app">
-                <Push class="bm-menu">
-                    <a href="/list">Bücherliste</a>
-                    <a href="/home">Home</a>
-                </Push>
-                <main id="page-wrap">
-                </main>
+                <div>
+                    <Slide class="bm-menu">
+                        <a href="/home">Home</a>
+                        <a href="/list">Bücherliste</a>
+                    </Slide>
+                </div>
             </div>
+
             <h4 class="site_title">Bibliothek Wiener Linien</h4>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
@@ -17,7 +18,7 @@
                 <b-nav-item-dropdown class="dropdownBtn" v-show="loggedIn" right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
-                        <em>{{username}}</em>
+                        <em>{{ username }}</em>
                     </template>
                     <b-dropdown-item href="/profile">Profil</b-dropdown-item>
                     <b-dropdown-item href="/myBooks">Meine Bücher</b-dropdown-item>
@@ -31,11 +32,12 @@
 
 <script>
     import axios from "axios";
-    import {Push} from 'vue-burger-menu';
+    import {Slide} from 'vue-burger-menu';
+
 
     export default {
         components: {
-            Push // Burger-Knopf Initlialisierung
+            Slide // Burger-Knopf Initlialisierung
         },
         data() {
             return {
@@ -128,7 +130,7 @@
         z-index: 1000; /* Stay on top */
         top: 0;
         left: 0;
-        background-color: rgb(63, 63, 65); /* Black*/
+        background-color: #dc3546; /* Black*/
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 60px; /* Place content 60px from the top */
         transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/

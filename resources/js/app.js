@@ -32,6 +32,9 @@ import store from './store';
 
 import Routes from '@/js/routes';
 import App from '@/js/views/App';
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
+
 
 const app = new Vue({
     el: '#app',

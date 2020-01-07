@@ -5,10 +5,11 @@
                 <b-button class="navbar_btn">Login</b-button>
                 <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
-            <div class="form_div">
+                <img src="../../img/logo.png" height="240px" width="320px">
+            <div class="col-6" style="margin-top: 1em">
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
-                <b-button class="navbar_btn" v-on:click="login()" href>Login</b-button>
+                <b-button class="inputs" v-on:click="login()" href>Login</b-button>
             </div>
         </div>
     </div>
