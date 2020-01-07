@@ -21,7 +21,7 @@
         </div>
 
         <b-button class="warenkorb" v-if="loggedIn & !isAdmin & notcart" href="/warenkorb" variant="transparent">
-            <span class="fa-stack fa-2x has-badge" data-count="5">
+            <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
                 <i class="fa fa-circle"></i>
                 <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
             </span>
@@ -55,6 +55,15 @@
     export default {
         components: {
             Push
+        },
+        mounted() {
+            axios.post('/cart/json', {
+                id: this.$store.state.userID
+            }).then(response => {
+                    this.$store.state.latestCartCount = response.data.length;
+                    this.$store.commit("setCartCount");
+                }
+            );
         },
         data() {
             return {
@@ -93,7 +102,7 @@
                             this.loggedIn = response.data;
                         }
                     )
-            }
+            },
         }
     }
 </script>

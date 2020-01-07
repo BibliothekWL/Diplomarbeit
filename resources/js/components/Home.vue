@@ -26,7 +26,8 @@
             }
         },
         mounted() {
-            this.$store.commit("UserisNotBoth");
+            this.$store.commit("UserisNotInCart_2");
+            this.$store.commit("UserisInCart_2");
             this.search = "";
         },
         methods: {
@@ -38,6 +39,7 @@
                     this.$store.commit("setSearch");
                     this.$store.commit("isFirstPage");
                     window.location.href = "/list";
+                    window.location.reload();
                 }
             }
         }

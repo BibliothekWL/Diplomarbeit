@@ -17,7 +17,9 @@ export default new Vuex.Store({
         latestUserID: 0,
         userID: 0,
         warenkorb: false,
-        nichtwarenkorb: false
+        nichtwarenkorb: false,
+        cart_count: 0,
+        latestCartCount: 0
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -37,5 +39,6 @@ export default new Vuex.Store({
         UserisInCart_2: state => state.nichtwarenkorb = false,
         UserisNotInCart: state => state.nichtwarenkorb = true,
         UserisNotInCart_2: state => state.warenkorb = false,
+        setCartCount: state => state.cart_count = state.latestCartCount
     }
 });

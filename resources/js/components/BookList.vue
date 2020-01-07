@@ -333,15 +333,14 @@
                 isEnde: false,
                 show: true,
                 reserviert: false,
-                cart_count: 0,
                 platzhalter: false
             };
         },
-        mounted() {
+        beforeMount() {
             this.$store.commit("UserisNotInCart");
             this.$store.commit("UserisNotInCart_2");
-            console.log(this.$store.state.warenkorb);
-            console.log(this.$store.state.nichtwarenkorb);
+        },
+        mounted() {
             this.page = this.$store.state.page;
             if (this.$store.state.search === "") {
                 axios.get('/books/json?page=' + this.page)
