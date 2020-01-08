@@ -336,11 +336,9 @@
                 platzhalter: false
             };
         },
-        beforeMount() {
+        mounted() {
             this.$store.commit("UserisNotInCart");
             this.$store.commit("UserisNotInCart_2");
-        },
-        mounted() {
             this.page = this.$store.state.page;
             if (this.$store.state.search === "") {
                 axios.get('/books/json?page=' + this.page)

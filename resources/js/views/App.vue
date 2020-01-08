@@ -20,14 +20,14 @@
             </main>
         </div>
 
-        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & notcart" href="/warenkorb" variant="transparent">
+        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb" href="/warenkorb" variant="transparent">
             <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
                 <i class="fa fa-circle"></i>
                 <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
             </span>
         </b-button>
 
-        <b-button class="warenkorb_checkout" v-if="cart & loggedIn" v-on:click="checkout()">
+        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
             Ausborgen
         </b-button>
 
@@ -70,8 +70,6 @@
                 loggedIn: null,
                 username: this.$store.state.username,
                 isAdmin: this.$store.state.isAdmin,
-                cart: this.$store.state.warenkorb,
-                notcart: this.$store.state.nichtwarenkorb
             }
         },
         //Schaut auf die Statevariable für mögliche Änderungen
