@@ -39,7 +39,6 @@
                     this.$store.commit("setSearch");
                     this.$store.commit("isFirstPage");
                     window.location.href = "/list";
-                    window.location.reload();
                 }
             }
         }

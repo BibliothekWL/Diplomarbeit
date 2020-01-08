@@ -3,6 +3,7 @@
         <div id="app">
             <div class="upper-bm-menu">
                 <Push class="bm-menu">
+                    <img src="../../img/logo.png" height="200" width="275">
                     <p v-if="loggedIn">Hallo {{username}}!</p>
                     <p v-if="!loggedIn"></p>
                     <div class="menu">
