@@ -1,11 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-
-        <!---------------------------------------------------------
-
-                                User-View
-
-        ---------------------------------------------------------->
+    <div class="body">
 
         <!---------------------------------------------------------
 
@@ -13,16 +7,13 @@
 
         ---------------------------------------------------------->
 
-        <h1 class="suche_title">Suche</h1>
+        <h1 class="suche_title">&nbsp;</h1>
 
         <div class="searchBox">
             <b-input-group class="searchBar">
-                <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
+                <b-input placeholder="Nach Büchern stöbern" type="search" class="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="outline-dark" v-if='search != ""' v-on:click='clearSearch()'>
-                        <font-awesome-icon icon="times"></font-awesome-icon>
-                    </b-button>
                     <b-button variant="outline-dark" v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
@@ -48,17 +39,17 @@
 
             <div class="list">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
                         style="width: 15em;"
                         class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
                     <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
                         <div>
                             <b-card-title>
                                 {{book.title}}
                             </b-card-title>
+
                             <b-card-text class="beschreibung">
                                 {{content_short[book.id]}}
                             </b-card-text>
@@ -77,6 +68,8 @@
                         </div>
                     </div>
                 </b-card>
+
+                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
             </div>
         </div>
 
@@ -86,8 +79,10 @@
 
         ---------------------------------------------------------->
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
-            versuchen Sie es später noch einmal.</h4>
+        <h4 v-if="notFound" class="notFound">
+            Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+            versuchen Sie es später noch einmal.
+        </h4>
 
         <!---------------------------------------------------------
 
@@ -167,12 +162,12 @@
                         label-for="title"
                         invalid-feedback="Content is required"
                 >
-                    <b-form-input
+                    <b-form-textarea
                             id="name-input"
                             v-model="content_full"
                             required
                             v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+                    ></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group
@@ -235,12 +230,11 @@
                         label-for="title"
                         invalid-feedback="Content is required"
                 >
-                    <b-form-input
+                    <b-form-textarea
                             id="name-input"
                             v-model="content_full"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+                    ></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group
@@ -257,7 +251,7 @@
                 </b-form-group>
             </b-modal>
 
-            <b-modal id="BookInformation" centered title="Information">
+            <b-modal id="BookInformation" size="xl" centered title="Information">
                 <div>
                     {{ content_full }}
                 </div>
@@ -278,7 +272,7 @@
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
-                            <b-button :disabled="!isBorrowed[id]" pill v-on:click="returnBook(id)">
+                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
                                 <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -288,7 +282,7 @@
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed[id]" pill v-on:click="putIntoCart(id)">
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -338,10 +332,13 @@
                 isAnfang: false,
                 isEnde: false,
                 show: true,
-                reserviert: false
+                reserviert: false,
+                platzhalter: false
             };
         },
         mounted() {
+            this.$store.commit("UserisNotInCart");
+            this.$store.commit("UserisNotInCart_2");
             this.page = this.$store.state.page;
             if (this.$store.state.search === "") {
                 axios.get('/books/json?page=' + this.page)
@@ -351,6 +348,11 @@
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -451,9 +453,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 10) {
+                    if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 10; j++) {
+                        for (let j = 0; j < 8; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -548,14 +550,8 @@
                 })
                     .then(response => {
                             console.log(response);
-                            window.location.reload();
                         }
                     )
-            },
-            clearSearch: function () {
-                this.search = "";
-                this.$store.state.search = "";
-                this.ausgabe();
             }
         }
     }
@@ -566,6 +562,7 @@
 
     .notFound {
         text-align: center;
+        padding: 8em;
     }
 
     .suche_title {
@@ -588,8 +585,8 @@
     }
 
     .listitem {
-        padding: 1em;
         margin: 2em;
+        padding: 1em;
     }
 
     .card_flex {
@@ -604,7 +601,8 @@
     }
 
     .beschreibung {
-        font-size: 12px;
+        font-size: 14px;
+        width: 20em;
     }
 
     .page_buttons {
@@ -632,7 +630,7 @@
         border: 1px green solid;
         border-radius: 10px;
         color: green;
-        width: 4em;
+        width: 3em;
         padding: 0.25em;
         margin: 1em;
         text-align: center;
@@ -647,4 +645,15 @@
         margin: 1em;
         text-align: center;
     }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+    }
+
+    .body {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,0.2));
+    }
+
 </style>

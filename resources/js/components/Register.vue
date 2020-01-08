@@ -11,7 +11,7 @@
                 <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email" required></b-form-input>
                 <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password" required></b-form-input>
                 <b-form-input class="inputs" v-model="passwordRepeat" type="password" placeholder="Repeat Password" required></b-form-input>
-                <b-button v-on:click="register()">Register</b-button>
+                <b-button class="inputs" v-on:click="register()">Register</b-button>
             </div>
         </div>
     </div>
@@ -19,6 +19,7 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
 
     export default {
         data() {
@@ -48,21 +49,24 @@
                         console.log(error.message);
                     })
                 } else {
-                    this.$bvToast.show('toast');
-                    console.log("Wrong pw!")
+                    Swal.fire({
+                        title: 'Passwords do not match! / Account with following Email already exists!',
+                        icon: 'error',
+                        confirmButtonText: 'Retry'});
+                    console.log("Passwords do not match! / Account with following Email already exists!")
                 }
             }
         }
     }
 </script>
 
-<style scoped>
+<style >
     .test{
         display: flex;
         align-items: center;
         background-image: url("../../img/library.jpg");
         background-size: cover;
-        height: calc(100vh - 54px);
+        height: calc(100vh);
     }
 
     .form_div{
@@ -72,12 +76,14 @@
         margin-left: auto;
         margin-right: auto;
         width: 50%;
-        min-width: 30%;
-        height: 60%;
+        min-width: 40%;
+        height: 65%;
+        min-height: 60%;
         border-radius: 15px;
         align-items: center;
         flex-direction: column;
     }
+
 
     .short_navbar{
         display: flex;
@@ -87,6 +93,9 @@
         color: #e30013;
     }
 
+    .inputs{
+        margin-top: 10px;
+    }
 
     .navbar_btn{
         background-color: white;
