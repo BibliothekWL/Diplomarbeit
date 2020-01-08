@@ -68,6 +68,7 @@ class RegisterController extends Controller
                 $user->updated_at = now();
                 $user->save();
                 $user->sendEmailVerificationNotification();
+                var_dump(session()->all());
                 return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
             }
             return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
