@@ -2,26 +2,24 @@
 
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Resources\Cart as CartResource;
+use App\Http\Resources\User as UserResource;
 
 use \App\User as User;
 use \App\Cart as Cart;
+use \App\Book as Book;
 
+
+Auth::routes(['verify' => true]);
 /*
  * return all items of cart of current user in json
  */
-Route::get('/cart/json', function () {
-    return CartResource::collection(Cart::where('user_id', auth()->user()->id)->get());
-});
-
 Route::get('/home', 'SinglePageController@index');
 Route::get('/', 'SinglePageController@index');
 Route::get('/list', 'SinglePageController@index');
 Route::get('/login', 'SinglePageController@index');
-Route::get('/profile', 'SinglePageController@index');
-
-
 Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
+Route::get('/warenkorb  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -39,9 +37,8 @@ Route::post('/books/delete/json/', 'BooksController@deleteBookValidator');
 
 Route::post('/books/edit/json/', 'BooksController@BookValidator');
 
-Route::patch('returnBooks', 'BooksController@returnBooks');
+Route::post('returnBooks', 'BooksController@returnBooks');
 
-Auth::routes(['verify' => true]);
 
 Route::post('/books/borrowed', function () {
     $json = file_get_contents('php://input');
@@ -58,10 +55,16 @@ Route::post('/books/borrowed', function () {
 Route::post('/books/borrow', 'CartsController@create');
 Route::get('/books/mybooks', 'UserController@show');
 
+Route::post('/getBook', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    $book = Book::where('id', $jsonarray['id'])->first();
+    return $book;
+});
 
 //Route::get('/books/mybooks', '');
 
-Route::patch('/cart/checkout', 'BooksController@borrowBooks');
+Route::get('/cart/checkout', 'BooksController@borrowBooks');
 /**
  * returns all books with json
  */
@@ -92,4 +95,16 @@ Route::post('/books/search', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
     return DB::table('books')->where('title', 'LIKE', '%' . $jsonarray['search'] . '%')->paginate(6);
+});
+
+Route::post('/cart/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    $cartArray = Cart::where('user_id',  $jsonarray['id'])->get();
+    $books = array();
+    for($i=0; $i<count($cartArray); $i++) {
+        $book = Book::findOrFail($cartArray[$i]['book_id']);
+        array_push($books,$book);
+    }
+    return $books;
 });

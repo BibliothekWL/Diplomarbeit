@@ -1,29 +1,73 @@
 <template>
-    <div class="row">
-        <div class="col-6">
-            <h1 class="homepage-title">Bibliothek Wiener Linien</h1>
-            <h4>Die moderne Bibliothek der Wiener Linien</h4>
-        </div>
-        <div class="col-6">
-            <p>Placeholder</p>
+    <div class="body">
+        <div class="searchBox">
+            <b-input-group class="searchBar">
+                <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
+                         v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
+                <b-input-group-append>
+                    <b-button v-on:click="ausgabe()">
+                        <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+                    <b-button>
+                        <font-awesome-icon icon="filter"></font-awesome-icon>
+                    </b-button>
+                </b-input-group-append>
+            </b-input-group>
         </div>
     </div>
 </template>
 
 <script>
     export default {
+        name: "Home",
         data() {
             return {
-                name: "Home"
+                search: this.$store.state.search,
             }
         },
         mounted() {
+            this.$store.commit("UserisNotInCart_2");
+            this.$store.commit("UserisInCart_2");
+            this.search = "";
+        },
+        methods: {
+            ausgabe: function () {
+                if (this.search === "") {
+
+                } else {
+                    this.$store.state.latestSearch = this.search;
+                    this.$store.commit("setSearch");
+                    this.$store.commit("isFirstPage");
+                    window.location.href = "/list";
+                    window.location.reload();
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
-    .homepage-title{
-        color: #666666;
+    html {
+        overflow: hidden;
+    }
+
+    .body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url("../../img/library.jpg");
+        background-size: cover;
+        height: calc(100vh);
+    }
+
+    .searchBar {
+        width: 50em;
+        vertical-align: center;
+    }
+
+    .searchBox {
+        display: flex;
+        justify-content: center;
+        padding: 2em;
     }
 </style>

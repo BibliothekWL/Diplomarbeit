@@ -116,7 +116,7 @@
         align-items: center;
         background-image: url("../../img/library.jpg");
         background-size: cover;
-        height: calc(100vh - 54px);
+        height: calc(100vh);
     }
 
     .form_div{

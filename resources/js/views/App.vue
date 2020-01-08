@@ -1,49 +1,75 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <b-navbar type="light" variant="danger">
-            <div id="app">
-                <div>
-                    <Slide class="bm-menu">
-                        <img class="col-12 logo" src="../../img/logo.png">
-                        <a href="/">Home</a>
-                        <a href="/list">Bücherliste</a>
-                    </Slide>
-                </div>
+        <div id="app">
+            <div class="upper-bm-menu">
+                <Push class="bm-menu">
+                    <p v-if="loggedIn">Hallo {{username}}!</p>
+                    <p v-if="!loggedIn"></p>
+                    <div class="menu">
+                        <a style="cursor: pointer; padding-bottom: 1em;" href="/list">Bücherliste</a>
+                        <a style="cursor: pointer;" href="/home">Home</a>
+                    </div>
+                    <div class="menu1">
+                        <a style="cursor: pointer;" v-if="loggedIn & !isAdmin" href="/profil">Profil</a>
+                        <a style="cursor: pointer; padding-top: 1em;" v-if="!loggedIn" href="/login">Login</a>
+                        <a style="cursor: pointer; padding-top: 1em;" v-if="loggedIn" href="#" v-on:click="logout()">Logout</a>
+                    </div>
+                </Push>
             </div>
+            <main id="page-wrap">
+            </main>
+        </div>
 
-            <h4 class="site_title">Bibliothek Wiener Linien</h4>
-            <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
-                <b-button class="navbar_btn" v-show="!loggedIn" v-model="loggedIn" href="/login" right>Login
-                </b-button>
-                <b-nav-item-dropdown class="dropdownBtn" v-show="loggedIn" right>
-                    <!-- Using 'button-content' slot -->
-                    <template v-slot:button-content>
-                        <em>{{ username }}</em>
-                    </template>
-                    <b-dropdown-item href="/profile">Profil</b-dropdown-item>
-                    <b-dropdown-item href="/myBooks">Meine Bücher</b-dropdown-item>
-                    <b-dropdown-item v-on:click="logout()">Logout</b-dropdown-item>
-                </b-nav-item-dropdown>
-            </b-navbar-nav>
-        </b-navbar>
+        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb" href="/warenkorb" variant="transparent">
+            <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
+                <i class="fa fa-circle"></i>
+                <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
+            </span>
+        </b-button>
+
+        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
+            Ausborgen
+        </b-button>
+
+        <!--<h4 class="site_title">Bibliothek Wiener Linien</h4>-->
+        <!---->
+        <!--</b-button>-->
+
+        <!--<b-nav-item-dropdown class="dropdownBtn" v-show="loggedIn" right>-->
+        <!--&lt;!&ndash; Using 'button-content' slot &ndash;&gt;-->
+        <!--<template v-slot:button-content>-->
+        <!--<em></em>-->
+        <!--</template>-->
+        <!--<b-dropdown-item href="#">Profil</b-dropdown-item>-->
+        <!--<b-dropdown-item href="/myBooks" v-if="!isAdmin">Meine Bücher</b-dropdown-item>-->
+        <!--<b-dropdown-item v-on:click="logout()">Logout</b-dropdown-item>-->
+        <!--</b-nav-item-dropdown>-->
         <router-view></router-view>
     </div>
 </template>
 
 <script>
     import axios from "axios";
-    import {Slide} from 'vue-burger-menu';
-
+    import {Push} from 'vue-burger-menu';
 
     export default {
         components: {
-            Slide // Burger-Knopf Initlialisierung
+            Push
+        },
+        mounted() {
+            axios.post('/cart/json', {
+                id: this.$store.state.userID
+            }).then(response => {
+                    this.$store.state.latestCartCount = response.data.length;
+                    this.$store.commit("setCartCount");
+                }
+            );
         },
         data() {
             return {
                 loggedIn: null,
-                username: this.$store.state.username
+                username: this.$store.state.username,
+                isAdmin: this.$store.state.isAdmin,
             }
         },
         //Schaut auf die Statevariable für mögliche Änderungen
@@ -63,8 +89,7 @@
                         this.$store.commit('UserisnotAdmin');
                         this.$store.commit('setSearchEmpty');
                         this.$store.commit('isFirstPage');
-                        this.$router.push({ path: '/login' });
-                        window.location.reload();
+                        window.location.href = "/login";
                     }).catch(error => {
                     console.log(error.message)
                 });
@@ -75,7 +100,7 @@
                             this.loggedIn = response.data;
                         }
                     )
-            }
+            },
         }
     }
 </script>
@@ -86,11 +111,11 @@
         font-family: "Nunito", sans-serif;
     }
 
-    a#__BVID__9__BV_button_{
-        color:white;
+    a#__BVID__9__BV_button_ {
+        color: white;
     }
 
-    .dropdownBtn{
+    .dropdownBtn {
         color: #ffffff;
     }
 
@@ -109,37 +134,167 @@
         margin-left: 7em;
     }
 
-
     .bm-burger-button {
         position: fixed;
-        width: 20px;
-        height: 20px;
-        left: 20px;
-        top: 20px;
+        width: 25px;
+        height: 25px;
+        left: 15px;
+        top: 15px;
         cursor: pointer;
         margin-right: 2em;
     }
 
     .bm-burger-bars {
         background-color: #ffffff;
+        border: 0.7px black solid;
     }
 
+    /*.upper-bm-menu {*/
+    /*background-color: rgba(217,83,79,0.4);*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*margin: 0.9em;*/
+    /*width: 2em;*/
+    /*height: 2em;*/
+    /*position: fixed;*/
+    /*}*/
+
     .bm-menu {
-        height: 100%; /* 100% Full-height */
-        width: 0; /* 0 width - change this with JavaScript */
-        position: fixed; /* Stay in place */
-        z-index: 1000; /* Stay on top */
+        height: 100vh;
+        position: fixed;
+        z-index: 1000;
         top: 0;
-        left: 0;
-        background-color: #dc3546; /* Black*/
-        overflow-x: hidden; /* Disable horizontal scroll */
-        padding-top: 60px; /* Place content 60px from the top */
-        transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/
+        right: 0;
+        background-color: rgba(217, 83, 79, 1);
+        overflow: hidden;
+        transition: 0.5s;
     }
-    .navbar_btn{
+
+    .bm-menu a:hover {
+        color: white;
+    }
+
+    .navbar_btn {
         background-color: white;
         color: red;
         border-color: white;
+    }
 
+    #ex4 .p1[data-count]:after {
+        position: absolute;
+        right: 10%;
+        top: 8%;
+        content: attr(data-count);
+        font-size: 40%;
+        padding: .2em;
+        border-radius: 50%;
+        line-height: 1em;
+        color: white;
+        background: rgba(255, 0, 0, .85);
+        text-align: center;
+        min-width: 1em;
+    }
+
+    #ex3 .fa-stack[data-count]:after {
+        position: absolute;
+        right: 0%;
+        top: 1%;
+        content: attr(data-count);
+        font-size: 30%;
+        padding: .6em;
+        border-radius: 50%;
+        line-height: .8em;
+        color: white;
+        background: rgba(255, 0, 0, .85);
+        text-align: center;
+        min-width: 1em;
+        font-weight: bold;
+    }
+
+    #ex2 .fa-stack[data-count]:after {
+        position: absolute;
+        right: 0%;
+        top: 1%;
+        content: attr(data-count);
+        font-size: 30%;
+        padding: .6em;
+        border-radius: 999px;
+        line-height: .75em;
+        color: white;
+        background: rgba(255, 0, 0, .85);
+        text-align: center;
+        min-width: 2em;
+        font-weight: bold;
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 17.5em;
+    }
+
+    .menu1 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #ex1 i {
+        width: 100px;
+        text-align: center;
+        vertical-align: middle;
+        position: relative;
+    }
+
+    #ex1 .badge:after {
+        content: "100";
+        position: absolute;
+        background: rgba(0, 0, 255, 1);
+        height: 2rem;
+        top: 1rem;
+        right: 1.5rem;
+        width: 2rem;
+        text-align: center;
+        line-height: 2rem;;
+        font-size: 1rem;
+        border-radius: 50%;
+        color: white;
+        border: 1px solid blue;
+    }
+
+    .warenkorb {
+        position: absolute;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        margin: 0.2em;
+    }
+
+    .warenkorb_checkout {
+        position: absolute;
+        z-index: 1000;
+        top: 5em;
+        right: 1.3em;
+        margin: 0.8em;
+    }
+
+    .fa-stack[data-count]:after {
+        position: absolute;
+        right: 0;
+        top: 0;
+        content: attr(data-count);
+        font-size: 40%;
+        padding: .6em;
+        border-radius: 999px;
+        line-height: .75em;
+        color: #000000;
+        text-align: center;
+        min-width: 2em;
+        font-weight: bold;
+        background: white;
+        border-style: solid;
+    }
+
+    .fa-circle {
+        color: #000000;
     }
 </style>

@@ -6,7 +6,7 @@ import Home from "@/js/components/Home";
 import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
 import MyBooks from "@/js/components/MyBooks";
-import Profile from "@/js/components/Profile";
+import Cart from "@/js/components/Cart";
 
 
 Vue.use(VueRouter);
@@ -15,8 +15,13 @@ const router = new VueRouter({
     mode: 'history',
     routes: [
         {
-            path: '/',
+            path: '/home',
             name: 'home',
+            component: Home
+        },
+        {
+            path: '/',
+            name: 'home_/',
             component: Home
         },
         {
@@ -35,14 +40,14 @@ const router = new VueRouter({
             component: Register
         },
         {
-            path: '/profile',
-            name: 'profile',
-            component: Profile
-        },
-        {
             path: '/myBooks',
             name: 'myBooks',
             component: MyBooks
+        },
+        {
+            path: '/warenkorb',
+            name: 'warenkorb',
+            component: Cart
         }
     ]
 });
