@@ -5,7 +5,7 @@
                 <b-button class="navbar_btn" to="/login">Login</b-button>
                 <b-button class="navbar_btn">Register</b-button>
             </b-navbar>
-                <div class="col-6" style="margin-top: 1em">
+            <div class="col-6" style="margin-top: 1em">
                         <form>
                         <!-- NAME -->
                             <div class="form-group" :class="{ 'form-group--error': name.$error }">
@@ -56,7 +56,6 @@
 
 <script>
     import axios from "axios";
-    import Vue from 'vue';
     import { required, sameAs, minLength, email } from 'vuelidate/lib/validators'
 
     export default {
@@ -159,13 +158,21 @@
         margin-bottom: 0.9375rem;
         color: red;}
 
-    .form-group--error {
+    .form-group {
         border-color: red;
     }
 
     a:hover{
         color: #666666;
         text-decoration: none;
+    }
+
+    .inputs{
+        margin-top: 1em;
+    }
+
+    .login-btn{
+
     }
 
 </style>

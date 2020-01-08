@@ -4,7 +4,8 @@
             <div id="app">
                 <div>
                     <Slide class="bm-menu">
-                        <a href="/home">Home</a>
+                        <img class="col-12 logo" src="../../img/logo.png">
+                        <a href="/">Home</a>
                         <a href="/list">Bücherliste</a>
                     </Slide>
                 </div>

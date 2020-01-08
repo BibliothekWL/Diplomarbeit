@@ -1,18 +1,21 @@
 <template>
     <div class="test">
         <div class="form_div">
-            <b-navbar class="short_navbar" type="light" variant="danger">
-                <b-button class="navbar_btn">Login</b-button>
-                <b-button class="navbar_btn" to="/register">Register</b-button>
-            </b-navbar>
-                <img src="../../img/logo.png" height="240px" width="320px">
-            <div class="col-6" style="margin-top: 1em">
-                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
-                <b-button class="inputs" v-on:click="login()" href>Login</b-button>
+                <b-navbar class="short_navbar" type="light" variant="danger">
+                    <b-button class="navbar_btn">Login</b-button>
+                    <b-button class="navbar_btn" to="/register">Register</b-button>
+                </b-navbar>
+                    <img src="../../img/logo.png" width="300" height="200" class="logo">
+                <div class="col-6">
+                    <form>
+                        <!-- NAME -->
+                        <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
+                        <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
+                    </form>
+                </div>
+                    <b-button class="login-btn" type="submit" v-on:click="login()" href>Login</b-button>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -61,6 +64,6 @@
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>
