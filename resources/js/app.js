@@ -29,6 +29,12 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+import Vuesax from 'vuesax'
+
+import 'vuesax/dist/vuesax.css' //Vuesax styles
+Vue.use(Vuesax);
+import 'material-icons/iconfont/material-icons.css';
+
 import store from './store';
 
 import Routes from '@/js/routes';
