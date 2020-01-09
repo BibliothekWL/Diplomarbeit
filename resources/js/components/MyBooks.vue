@@ -1,38 +1,42 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <div v-if="!notFound">
+<template>
+    <div class="body">
+        <div class="UserViewBody">
+            <div v-if="!notFound" class="title_div">
+                <p class="title center">Meine Bücher</p>
+            </div>
 
-            <div class="list">
+            <h6 class="notFound" v-if="notFound">Sie haben noch keine Bücher ausgeborgt!</h6>
+
+            <div class="list" v-if="!notFound">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
-                        style="width: 15em;" class="listitem"
+                        class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
+                    <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
+                        <div>
+                            <b-card-title>
+                                {{book.title}}
+                            </b-card-title>
+
+                            <b-card-text class="beschreibung">
+                                {{content_short[book.id]}}
+                            </b-card-text>
+                        </div>
+
+                        <div v-on:click="entfernen" class="info entfernen">
+                            Entfernen
+                        </div>
+                    </div>
                 </b-card>
+                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
             </div>
         </div>
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts reserviert!</h4>
-
-        <b-modal id="BookInformation" centered title="Information">
+        <b-modal id="BookInformation" size="l" centered title="Information">
             <div>
                 {{ content_full }}
             </div>
-
-            <template v-slot:modal-footer="{cancel}">
-                <div>
-                    <b-button size="sm" variant="success" @click="cancel()">
-                        Close
-                    </b-button>
-                </div>
-            </template>
         </b-modal>
     </div>
 </template>
@@ -113,6 +117,10 @@
 </script>
 
 <style scoped>
+    .center {
+        text-align: center;
+    }
+
     .notFound {
         text-align: center;
     }
@@ -122,7 +130,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        padding-top: 4em;
+        padding-left: 4em;
     }
 
     .list > * {
@@ -141,6 +149,46 @@
     }
 
     .beschreibung {
-        font-size: 12px;
+        font-size: 14px;
+        width: 20em;
+    }
+
+    .body {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 0.2));
+    }
+
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .entfernen {
+        z-index: 1000;
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 5em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+    }
+
+    .title {
+        font-size: 3em;
+        padding-top: 1em;
+    }
+
+    .notFound {
+        font-size: 2em;
+        padding: 10.5em;
     }
 </style>

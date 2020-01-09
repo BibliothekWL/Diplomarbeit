@@ -39,7 +39,6 @@
 
             <div class="list">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        style="width: 15em;"
                         class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
@@ -69,7 +68,7 @@
                     </div>
                 </b-card>
 
-                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
+                <div v-if="platzhalter" class="listitem"></div>
             </div>
         </div>
 
@@ -576,6 +575,7 @@
         flex-wrap: wrap;
         justify-content: center;
         padding-top: 4em;
+        padding-left: 4em;
     }
 
     .list > * {
@@ -593,7 +593,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .listitem:hover {
