@@ -58,6 +58,7 @@
                 isLoggedIn: false,
                 content_full: [],
                 content_short: [],
+                platzhalter: false
             }
         },
         mounted() {
@@ -70,6 +71,11 @@
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.isLoggedInCheck();

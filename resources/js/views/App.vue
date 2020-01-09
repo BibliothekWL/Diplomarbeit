@@ -3,8 +3,7 @@
         <div id="app">
 
             <div id="parentx">
-                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="notExpand"
-                            color="danger" class="sidebarx" v-model="active" parent="body">
+                <vs-sidebar :reduce="reduce" color="danger" class="sidebarx" v-model="active" parent="body">
 
                     <div class="header-sidebar" slot="header" icon="book">
                         <h6 v-if="loggedIn">Hallo <br> {{username}}!</h6>
