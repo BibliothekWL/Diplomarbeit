@@ -23,10 +23,6 @@
                                 {{content_short[book.id]}}
                             </b-card-text>
                         </div>
-
-                        <div v-on:click="entfernen" class="info entfernen">
-                            Entfernen
-                        </div>
                     </div>
                 </b-card>
                 <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
@@ -62,6 +58,8 @@
             }
         },
         mounted() {
+            this.$store.commit("UserisInCart_2");
+            this.$store.commit("UserisNotInCart_2");
             if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                 window.location.href = "/login"
             } else {
@@ -139,15 +137,15 @@
         padding-left: 4em;
     }
 
+    .listitem {
+        padding: 1em;
+        margin: 2em;
+    }
+
     .list > * {
         flex-basis: 30%;
         flex-grow: 1;
         flex-shrink: 1;
-    }
-
-    .listitem {
-        padding: 1em;
-        margin: 2em;
     }
 
     .listitem:hover {
@@ -160,26 +158,14 @@
     }
 
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 0.2));
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
     }
 
     .card_flex {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
-    }
-
-    .entfernen {
-        z-index: 1000;
-        border: 1px red solid;
-        border-radius: 10px;
-        color: red;
-        width: 5em;
-        padding: 0.25em;
-        margin: 1em;
-        text-align: center;
-        cursor: pointer;
+        justify-content: space-around;
     }
 
     .bildbruh {

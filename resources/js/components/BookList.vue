@@ -479,7 +479,7 @@
                 );
             },
             reloadSite: function (status) {
-                if (status === "200") {
+                if (status === 200) {
                     window.location.reload();
                 } else {
                     console.log("error");
@@ -548,7 +548,8 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response);
+                            console.log(response.status);
+                            this.reloadSite(response.status);
                         }
                     )
             }
@@ -593,7 +594,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
     }
 
     .listitem:hover {
@@ -653,7 +654,7 @@
     }
 
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,0.2));
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,1));
     }
 
 </style>

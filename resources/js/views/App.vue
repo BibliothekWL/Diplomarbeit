@@ -1,12 +1,13 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div>
         <div id="app">
-
             <div id="parentx">
-                <vs-sidebar :reduce="reduce" color="danger" class="sidebarx" v-model="active" parent="body">
+                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="true"
+                            color="danger" class="sidebarx" spacer v-model="active" parent="body">
 
-                    <div class="header-sidebar" slot="header" icon="book">
-                        <h6 v-if="loggedIn">Hallo <br> {{username}}!</h6>
+                    <div style="cursor:pointer;" class="header-sidebar" slot="header" v-on:click="regular_navigation()">
+                        <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
+                        <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
                     </div>
                     <vs-sidebar-group open title="Navigation">
                         <vs-sidebar-item index="1" icon="home" href="/home">
@@ -26,7 +27,7 @@
                     </vs-divider>
 
                     <vs-sidebar-item index=6 icon="account_box" href="/profile">
-                        Profile
+                        Profil
                     </vs-sidebar-item>
 
                     <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" href="/login">
@@ -75,8 +76,7 @@
                 username: this.$store.state.username,
                 isAdmin: this.$store.state.isAdmin,
                 reduce: true,
-                active: true,
-                notExpand: false
+                active: true
             }
         },
         watch: {
@@ -116,6 +116,9 @@
                         }
                     )
             },
+            regular_navigation: function () {
+                this.reduce = !this.reduce;
+            }
         }
     }
 </script>
@@ -231,5 +234,19 @@
         font-weight: bold;
         background: white;
         border-style: solid;
+    }
+
+    .navigation_arrow_right {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 5em;
+    }
+
+    .navigation_arrow_left {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 18em;
     }
 </style>
