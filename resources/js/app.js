@@ -21,13 +21,21 @@ import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {faFilter} from '@fortawesome/free-solid-svg-icons';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-library.add(faPlus, faShoppingCart, faTimes, faFilter, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
+library.add(faPlus, faArrowRight, faArrowLeft, faShoppingCart, faTimes, faFilter, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
+
+import Vuesax from 'vuesax'
+
+import 'vuesax/dist/vuesax.css' //Vuesax styles
+Vue.use(Vuesax);
+import 'material-icons/iconfont/material-icons.css';
 
 import store from './store';
 

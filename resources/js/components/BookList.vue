@@ -39,7 +39,6 @@
 
             <div class="list">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        style="width: 15em;"
                         class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
@@ -69,7 +68,7 @@
                     </div>
                 </b-card>
 
-                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
+                <div v-if="platzhalter" class="listitem"></div>
             </div>
         </div>
 
@@ -480,7 +479,7 @@
                 );
             },
             reloadSite: function (status) {
-                if (status === "200") {
+                if (status === 200) {
                     window.location.reload();
                 } else {
                     console.log("error");
@@ -549,7 +548,8 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response);
+                            console.log(response.status);
+                            this.reloadSite(response.status);
                         }
                     )
             }
@@ -576,6 +576,7 @@
         flex-wrap: wrap;
         justify-content: center;
         padding-top: 4em;
+        padding-left: 4em;
     }
 
     .list > * {
@@ -654,7 +655,7 @@
     }
 
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,0.2));
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,1));
     }
 
 </style>

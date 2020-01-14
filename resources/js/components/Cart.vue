@@ -1,6 +1,6 @@
 <template>
     <div class="body">
-        <div v-if="!notFound" class="UserViewBody">
+        <div class="UserViewBody">
             <div v-if="!notFound" class="title_div">
                 <p class="title center">Einkaufswagen</p>
             </div>
@@ -9,7 +9,6 @@
 
             <div class="list" v-if="!notFound">
                 <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        style="width: 15em;"
                         class="listitem"
                         v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                         v-b-modal.BookInformation>
@@ -58,7 +57,7 @@
                 },
                 content_full: [],
                 content_short: [],
-                notFound: "",
+                notFound: false,
                 reserviert: false,
                 platzhalter: false
             }
@@ -73,8 +72,9 @@
                     id: this.$store.state.userID
                 }).then(response => {
                         console.log(response);
-                        if (response.length === 0) {
+                        if (response.data.length === 0) {
                             this.notFound = true;
+                            this.$store.commit("UserisNotInCart_2");
                         } else {
                             if (response.data.length % 2 === 0) {
                                 this.platzhalter = false;
@@ -121,15 +121,6 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-            checkout: function () {
-                axios.get('/cart/checkout')
-                    .then(
-                        response => {
-                            console.log(response);
-                            window.location.href = "/list";
-                        }
-                    )
-            },
             entfernen: function () {
                 console.log('entfernt');
             }
@@ -138,13 +129,13 @@
 </script>
 
 <style scoped>
-
     .center {
         text-align: center;
     }
 
     .notFound {
         text-align: center;
+        padding: 8em;
     }
 
     .list {
@@ -152,6 +143,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        padding-left: 4em;
     }
 
     .list > * {
@@ -174,13 +166,8 @@
         width: 20em;
     }
 
-    .notFound {
-        font-size: 3em;
-        padding: 1em 0 0 0.6em;
-    }
-
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 0.2));
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
     }
 
     .card_flex {
@@ -211,5 +198,10 @@
     .title {
         font-size: 3em;
         padding-top: 1em;
+    }
+
+    .notFound {
+        font-size: 2em;
+        padding: 10.5em;
     }
 </style>

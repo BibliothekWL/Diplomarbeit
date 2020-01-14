@@ -54,7 +54,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-image: url("../../img/library.jpg");
+        background-image: url("../../img/bg_hp.jpg");
         background-size: cover;
         height: calc(100vh);
     }

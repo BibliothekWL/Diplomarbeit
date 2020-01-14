@@ -1,27 +1,49 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div>
         <div id="app">
-            <div class="upper-bm-menu">
-                <Push class="bm-menu">
-                    <img src="../../img/logo.png" height="200" width="275">
-                    <p v-if="loggedIn">Hallo {{username}}!</p>
-                    <p v-if="!loggedIn"></p>
-                    <div class="menu">
-                        <a style="cursor: pointer; padding-bottom: 1em;" href="/list">Bücherliste</a>
-                        <a style="cursor: pointer;" href="/home">Home</a>
+            <div id="parentx">
+                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="true"
+                            color="danger" class="sidebarx" spacer v-model="active" parent="body">
+
+                    <div style="cursor:pointer;" class="header-sidebar" slot="header" v-on:click="regular_navigation()">
+                        <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
+                        <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
                     </div>
-                    <div class="menu1">
-                        <a style="cursor: pointer;" v-if="loggedIn & !isAdmin" href="/profil">Profil</a>
-                        <a style="cursor: pointer; padding-top: 1em;" v-if="!loggedIn" href="/login">Login</a>
-                        <a style="cursor: pointer; padding-top: 1em;" v-if="loggedIn" href="#" v-on:click="logout()">Logout</a>
-                    </div>
-                </Push>
+                    <vs-sidebar-group open title="Navigation">
+                        <vs-sidebar-item index="1" icon="home" href="/home">
+                            Home
+                        </vs-sidebar-item>
+                        <vs-sidebar-item index="5" icon="menu_book" href="/list">
+                            Bücherliste
+                        </vs-sidebar-item>
+
+                        <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" href="/myBooks">
+                            Meine Bücher
+                        </vs-sidebar-item>
+                    </vs-sidebar-group>
+
+                    <vs-divider icon="person" position="left">
+                        User
+                    </vs-divider>
+
+                    <vs-sidebar-item index=6 icon="account_box" href="/profile">
+                        Profil
+                    </vs-sidebar-item>
+
+                    <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" href="/login">
+                        Login
+                    </vs-sidebar-item>
+
+                    <vs-sidebar-item index="9" v-if="loggedIn" icon="exit_to_app" v-on:click="logout()">
+                        Logout
+                    </vs-sidebar-item>
+
+                </vs-sidebar>
             </div>
-            <main id="page-wrap">
-            </main>
         </div>
 
-        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb" href="/warenkorb" variant="transparent">
+        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb" href="/warenkorb"
+                  variant="transparent">
             <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
                 <i class="fa fa-circle"></i>
                 <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
@@ -31,32 +53,14 @@
         <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
             Ausborgen
         </b-button>
-
-        <!--<h4 class="site_title">Bibliothek Wiener Linien</h4>-->
-        <!---->
-        <!--</b-button>-->
-
-        <!--<b-nav-item-dropdown class="dropdownBtn" v-show="loggedIn" right>-->
-        <!--&lt;!&ndash; Using 'button-content' slot &ndash;&gt;-->
-        <!--<template v-slot:button-content>-->
-        <!--<em></em>-->
-        <!--</template>-->
-        <!--<b-dropdown-item href="#">Profil</b-dropdown-item>-->
-        <!--<b-dropdown-item href="/myBooks" v-if="!isAdmin">Meine Bücher</b-dropdown-item>-->
-        <!--<b-dropdown-item v-on:click="logout()">Logout</b-dropdown-item>-->
-        <!--</b-nav-item-dropdown>-->
         <router-view></router-view>
     </div>
 </template>
 
 <script>
     import axios from "axios";
-    import {Push} from 'vue-burger-menu';
 
     export default {
-        components: {
-            Push
-        },
         mounted() {
             axios.post('/cart/json', {
                 id: this.$store.state.userID
@@ -71,9 +75,10 @@
                 loggedIn: null,
                 username: this.$store.state.username,
                 isAdmin: this.$store.state.isAdmin,
+                reduce: true,
+                active: true
             }
         },
-        //Schaut auf die Statevariable für mögliche Änderungen
         watch: {
             '$store.state.isLoggedIn': {
                 handler() {
@@ -102,6 +107,18 @@
                         }
                     )
             },
+            checkout: function () {
+                axios.get('/cart/checkout')
+                    .then(
+                        response => {
+                            console.log(response);
+                            window.location.href = "/list";
+                        }
+                    )
+            },
+            regular_navigation: function () {
+                this.reduce = !this.reduce;
+            }
         }
     }
 </script>
@@ -112,73 +129,47 @@
         font-family: "Nunito", sans-serif;
     }
 
-    a#__BVID__9__BV_button_ {
-        color: white;
-    }
-
-    .dropdownBtn {
-        color: #ffffff;
-    }
-
-    .site_title {
-        color: white;
-        font-family: "Nunito", sans-serif;
-        margin-left: 2em;
-        position: fixed;
-    }
-
-    .link {
-        margin-left: 3em;
-    }
-
-    .link:nth-child(1) {
-        margin-left: 7em;
-    }
-
-    .bm-burger-button {
-        position: fixed;
-        width: 25px;
-        height: 25px;
-        left: 15px;
-        top: 15px;
-        cursor: pointer;
-        margin-right: 2em;
-    }
-
-    .bm-burger-bars {
-        background-color: #ffffff;
-        border: 0.7px black solid;
-    }
-
-    /*.upper-bm-menu {*/
-    /*background-color: rgba(217,83,79,0.4);*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*margin: 0.9em;*/
-    /*width: 2em;*/
-    /*height: 2em;*/
-    /*position: fixed;*/
-    /*}*/
-
-    .bm-menu {
-        height: 100vh;
-        position: fixed;
+    .warenkorb {
+        position: absolute;
         z-index: 1000;
         top: 0;
         right: 0;
-        background-color: rgba(217, 83, 79, 1);
-        overflow: hidden;
-        transition: 0.5s;
+        margin: 0.2em;
     }
 
-    .bm-menu a:hover {
-        color: white;
+    .warenkorb_checkout {
+        position: absolute;
+        z-index: 1000;
+        top: 5em;
+        right: 1.3em;
+        margin: 0.8em;
     }
 
-    .navbar_btn {
-        background-color: white;
-        color: red;
-        border-color: white;
+    .fa-circle {
+        color: #000000;
+    }
+
+    .header-sidebar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+    }
+
+    .header-sidebar > button {
+        margin-left: 10px;
+    }
+
+    .footer-sidebar > button {
+        border: 0px solid rgba(0, 0, 0, 0) !important;
+        border-left: 1px solid rgba(0, 0, 0, .07) !important;
+        border-radius: 0px !important;
+    }
+
+    .vs-sidebar--background {
+        display: none;
     }
 
     #ex4 .p1[data-count]:after {
@@ -228,56 +219,6 @@
         font-weight: bold;
     }
 
-    .menu {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 17.5em;
-    }
-
-    .menu1 {
-        display: flex;
-        flex-direction: column;
-    }
-
-    #ex1 i {
-        width: 100px;
-        text-align: center;
-        vertical-align: middle;
-        position: relative;
-    }
-
-    #ex1 .badge:after {
-        content: "100";
-        position: absolute;
-        background: rgba(0, 0, 255, 1);
-        height: 2rem;
-        top: 1rem;
-        right: 1.5rem;
-        width: 2rem;
-        text-align: center;
-        line-height: 2rem;;
-        font-size: 1rem;
-        border-radius: 50%;
-        color: white;
-        border: 1px solid blue;
-    }
-
-    .warenkorb {
-        position: absolute;
-        z-index: 1000;
-        top: 0;
-        right: 0;
-        margin: 0.2em;
-    }
-
-    .warenkorb_checkout {
-        position: absolute;
-        z-index: 1000;
-        top: 5em;
-        right: 1.3em;
-        margin: 0.8em;
-    }
-
     .fa-stack[data-count]:after {
         position: absolute;
         right: 0;
@@ -295,7 +236,17 @@
         border-style: solid;
     }
 
-    .fa-circle {
-        color: #000000;
+    .navigation_arrow_right {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 5em;
+    }
+
+    .navigation_arrow_left {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 18em;
     }
 </style>
