@@ -158,7 +158,7 @@
     }
 
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
+        background: linear-gradient(to bottom, rgba(227, 0, 19, 0.9), rgba(244, 244, 244, 1));
     }
 
     .card_flex {

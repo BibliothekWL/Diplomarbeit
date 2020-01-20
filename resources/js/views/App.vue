@@ -124,9 +124,14 @@
 </script>
 
 <style>
-    a {
+    a, h1 {
         color: white;
         font-family: "Nunito", sans-serif;
+    }
+
+    .vs-sidebar{
+        background: rgba(227, 0, 19, 1);
+        color: white;
     }
 
     .warenkorb {
@@ -181,7 +186,7 @@
         padding: .2em;
         border-radius: 50%;
         line-height: 1em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 1em;
@@ -196,7 +201,7 @@
         padding: .6em;
         border-radius: 50%;
         line-height: .8em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 1em;
@@ -212,7 +217,7 @@
         padding: .6em;
         border-radius: 999px;
         line-height: .75em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 2em;
@@ -232,7 +237,7 @@
         text-align: center;
         min-width: 2em;
         font-weight: bold;
-        background: white;
+        background: red;
         border-style: solid;
     }
 
