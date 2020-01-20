@@ -7,6 +7,7 @@ import Login from "@/js/components/Login";
 import Register from "@/js/components/Register";
 import MyBooks from "@/js/components/MyBooks";
 import Cart from "@/js/components/Cart";
+import Profil from "@/js/components/Profile";
 
 
 Vue.use(VueRouter);
@@ -48,6 +49,11 @@ const router = new VueRouter({
             path: '/warenkorb',
             name: 'warenkorb',
             component: Cart
+        },
+        {
+            path: '/profil',
+            name: 'profil',
+            component: Profil
         }
     ]
 });

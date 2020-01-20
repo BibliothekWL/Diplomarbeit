@@ -1,5 +1,5 @@
 <template>
-    <div class="body">
+    <div id="body">
         <div class="UserViewBody">
             <div v-if="!notFound" class="title_div">
                 <p class="title center">Meine Bücher</p>
@@ -65,7 +65,6 @@
             } else {
                 axios.get('/books/mybooks/json')
                     .then(response => {
-                            console.log(response);
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                             } else {
@@ -73,6 +72,10 @@
                                     this.platzhalter = false;
                                 } else {
                                     this.platzhalter = true;
+                                }
+                                if (response.data.data.length < 3) {
+                                    console.log(response.data.data.length);
+                                    document.getElementById("body").id = "bodyset";
                                 }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
@@ -157,8 +160,13 @@
         width: 20em;
     }
 
-    .body {
+    #body {
         background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
+    }
+
+    #bodyset {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
+        height: 100vh;
     }
 
     .card_flex {
