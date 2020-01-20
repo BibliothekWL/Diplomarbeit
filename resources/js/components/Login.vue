@@ -6,6 +6,7 @@
                 <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
             <div class="form_div">
+                <img src="../../img/logo.png" class="img-fluid">
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email"
                               placeholder="Enter Email"></b-form-input>
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password"

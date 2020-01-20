@@ -159,7 +159,6 @@
         font-size: 14px;
         width: 20em;
     }
-
     #body {
         background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
     }

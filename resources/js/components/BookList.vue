@@ -7,7 +7,7 @@
 
         ---------------------------------------------------------->
 
-        <h1 class="suche_title">&nbsp;</h1>
+        <!--<h1 class="suche_title">&nbsp;</h1>-->
 
         <div class="searchBox">
             <b-button v-show="!showalpha" variant="outline-white" v-on:click="showalphaChange()">
@@ -21,7 +21,7 @@
                 <b-input placeholder="Nach Büchern stöbern" type="search" class="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="outline-dark" v-on:click="ausgabe()">
+                    <b-button variant="dark" v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
@@ -706,6 +706,7 @@
         display: flex;
         justify-content: center;
         padding: 2em;
+        background-image: url("../../img/bg_hp.jpg");
     }
 
     .frei {
@@ -733,7 +734,6 @@
         width: 125px;
         height: 167px;
     }
-
     #body {
         background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
     }

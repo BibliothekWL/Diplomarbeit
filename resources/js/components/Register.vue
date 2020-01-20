@@ -9,7 +9,7 @@
                         <form>
                         <!-- NAME -->
                             <div class="form-group" :class="{ 'form-group--error': name.$error }">
-                                <b-form-input type="text" v-model.trim="$v.name.$model" placeholder="Max Mustermann"></b-form-input>
+                                <b-form-input type="text" v-model.trim="$v.name.$model" placeholder="Enter Name and Surname"></b-form-input>
                             </div>
                             <div class="error" v-if="$v.name.$error">Field is required</div>
 
@@ -42,13 +42,6 @@
                             <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Passwords must be the same</div>
                         </form>
                     </div>
-                <!--<div class="error" v-if="name.required">Field is required</div>
-                <b-form-input class="inputs" v-model="name" type="text" placeholder="Enter Name" required></b-form-input>
-                <b-form-input class="inputs" v-model="id" type="text" placeholder="Enter ID" required></b-form-input>
-                <b-form-input class="inputs" v-model="email" type="email" placeholder="Enter Email" required></b-form-input>
-                <b-form-input class="inputs" v-model="password" type="password" placeholder="Enter Password" required></b-form-input>
-                <b-form-input class="inputs" v-model="passwordRepeat" type="password" placeholder="Repeat Password" required></b-form-input>
-                -->
                 <b-button class="inputs" v-on:click="register()" :disabled="$v.$invalid">Register</b-button>
         </div>
     </div>
@@ -114,7 +107,7 @@
     .test{
         display: flex;
         align-items: center;
-        background-image: url("../../img/library.jpg");
+        background-image: url("../../img/bg_hp.jpg");
         background-size: cover;
         height: calc(100vh);
     }
@@ -127,8 +120,8 @@
         margin-right: auto;
         width: 50%;
         min-width: 40%;
-        height: 65%;
-        min-height: 415px;
+        height: 70%;
+        min-height: 435px;
         border-radius: 15px;
         align-items: center;
         flex-direction: column;
