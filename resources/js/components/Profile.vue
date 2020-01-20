@@ -8,14 +8,13 @@
                 <b-button style="width: 10em;" variant="outline-dark">Change Username</b-button>
             </div>
 
-            <div class="content_item">
-                <h4>Password: ••••••••</h4>
-                <b-button style="width: 10em;" variant="outline-dark">Change Password</b-button>
+            <div class="">
+                <h4>E-Mail: {{userdata.email}}</h4>
             </div>
 
             <div class="content_item">
-                <h4>E-Mail: {{userdata.email}}</h4>
-                <b-button style="width: 10em;" variant="outline-dark">Change E-Mail</b-button>
+                <h4>Password: ••••••••</h4>
+                <b-button style="width: 10em;" variant="outline-dark">Change Password</b-button>
             </div>
         </div>
     </div>
