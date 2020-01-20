@@ -59,6 +59,7 @@
 
 <script>
     import axios from "axios";
+
     export default {
         mounted() {
             axios.post('/cart/json', {
@@ -128,6 +129,7 @@
         color: white;
         font-family: "Nunito", sans-serif;
     }
+
     .warenkorb {
         position: absolute;
         z-index: 1000;
@@ -135,6 +137,7 @@
         right: 0;
         margin: 0.2em;
     }
+
     .warenkorb_checkout {
         position: absolute;
         z-index: 1000;
@@ -142,9 +145,11 @@
         right: 1.3em;
         margin: 0.8em;
     }
+
     .fa-circle {
         color: #000000;
     }
+
     .header-sidebar {
         display: flex;
         align-items: center;
@@ -153,17 +158,21 @@
         width: 100%;
         text-align: center;
     }
+
     .header-sidebar > button {
         margin-left: 10px;
     }
+
     .footer-sidebar > button {
         border: 0px solid rgba(0, 0, 0, 0) !important;
         border-left: 1px solid rgba(0, 0, 0, .07) !important;
         border-radius: 0px !important;
     }
+
     .vs-sidebar--background {
         display: none;
     }
+
     #ex4 .p1[data-count]:after {
         position: absolute;
         right: 10%;
@@ -178,6 +187,7 @@
         text-align: center;
         min-width: 1em;
     }
+
     #ex3 .fa-stack[data-count]:after {
         position: absolute;
         right: 0%;
@@ -193,6 +203,7 @@
         min-width: 1em;
         font-weight: bold;
     }
+
     #ex2 .fa-stack[data-count]:after {
         position: absolute;
         right: 0%;
@@ -208,6 +219,7 @@
         min-width: 2em;
         font-weight: bold;
     }
+
     .fa-stack[data-count]:after {
         position: absolute;
         right: 0;
@@ -224,12 +236,14 @@
         background: white;
         border-style: solid;
     }
+
     .navigation_arrow_right {
         position: absolute;
         z-index: 1000;
         top: 2em;
         left: 5em;
     }
+
     .navigation_arrow_left {
         position: absolute;
         z-index: 1000;

@@ -23,9 +23,9 @@
 
 <script>
     import axios from "axios";
-
     export default {
-        data() {
+        name: "Profile",
+        data(){
             return {
                 userdata: ""
             }

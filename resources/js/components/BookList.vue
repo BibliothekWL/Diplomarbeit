@@ -689,6 +689,7 @@
     .page_buttons {
         text-align: center;
         padding: 2em;
+        color: white;
     }
 
     .addButton {
