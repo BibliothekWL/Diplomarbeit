@@ -734,13 +734,5 @@
         width: 125px;
         height: 167px;
     }
-    #body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-    }
-
-    #bodyset {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-        height: 100vh;
-    }
 
 </style>

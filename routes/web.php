@@ -73,23 +73,24 @@ Route::get('/cart/checkout', 'BooksController@borrowBooks');
 Route::post('/books/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    if ($jsonarray['sortDirection']){
-        if($jsonarray['medium'] == "" && $jsonarray['systematik'] != "") {
-            return Book::orderBy('title')->where('systematik', $jsonarray['systematik'])->simplePaginate(6);
-        } elseif ($jsonarray['systematik'] == "" && $jsonarray['medium'] != "") {
-            return Book::orderBy('title')->where('medium', $jsonarray['medium'])->simplePaginate(6);
-        } else {
-            return Book::orderBy('title')->simplePaginate(6);
-        }
-    } else{
-        if($jsonarray['medium'] == "" && $jsonarray['systematik'] != "") {
-            return Book::orderBy('title', 'desc')->where('systematik', $jsonarray['systematik'])->simplePaginate(6);
-        } elseif ($jsonarray['systematik'] == "" && $jsonarray['medium'] != "") {
-            return Book::orderBy('title', 'desc')->where('medium', $jsonarray['medium'])->simplePaginate(6);
-        } else {
-            return Book::orderBy('title', 'desc')->simplePaginate(6);
-        }
-    }
+//    if ($jsonarray['sortDirection']){
+//        if($jsonarray['medium'] == "" && $jsonarray['systematik'] != "") {
+//            return Book::orderBy('title')->where('systematik', $jsonarray['systematik'])->simplePaginate(6);
+//        } elseif ($jsonarray['systematik'] == "" && $jsonarray['medium'] != "") {
+//            return Book::orderBy('title')->where('medium', $jsonarray['medium'])->simplePaginate(6);
+//        } else {
+//            return Book::orderBy('title')->simplePaginate(6);
+//        }
+//    } else{
+//        if($jsonarray['medium'] == "" && $jsonarray['systematik'] != "") {
+//            return Book::orderBy('title', 'desc')->where('systematik', $jsonarray['systematik'])->simplePaginate(6);
+//        } elseif ($jsonarray['systematik'] == "" && $jsonarray['medium'] != "") {
+//            return Book::orderBy('title', 'desc')->where('medium', $jsonarray['medium'])->simplePaginate(6);
+//        } else {
+//            return Book::orderBy('title', 'desc')->simplePaginate(6);
+//        }
+//    }
+    return DB::table('books')->paginate(6);
 });
 
 Route::resource('borrowing', 'BorrowingsController');

@@ -8,8 +8,9 @@
                 <b-button style="width: 10em;" variant="outline-dark">Change Username</b-button>
             </div>
 
-            <div class="">
+            <div class="content_item">
                 <h4>E-Mail: {{userdata.email}}</h4>
+                <div></div>
             </div>
 
             <div class="content_item">

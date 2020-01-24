@@ -9,28 +9,31 @@
                         <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
                         <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
                     </div>
-                    <vs-sidebar-group open title="">
-                        <vs-sidebar-item index="1" icon="home" href="/home">
-                            Home
-                        </vs-sidebar-item>
-                        <vs-sidebar-item index="5" icon="menu_book" href="/list">
-                            Bücherliste
-                        </vs-sidebar-item>
 
-                        <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" href="/myBooks">
-                            Meine Bücher
-                        </vs-sidebar-item>
-                    </vs-sidebar-group>
+                    <vs-divider icon="search" position="left">
+                        Search
+                    </vs-divider>
+
+                    <vs-sidebar-item index="1" icon="home" to="/home">
+                        Home
+                    </vs-sidebar-item>
+                    <vs-sidebar-item index="5" icon="menu_book" to="/list">
+                        Bücherliste
+                    </vs-sidebar-item>
+
+                    <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">
+                        Meine Bücher
+                    </vs-sidebar-item>
 
                     <vs-divider icon="person" position="left">
                         User
                     </vs-divider>
 
-                    <vs-sidebar-item index=6 icon="account_box" href="/profil">
+                    <vs-sidebar-item index=6 icon="account_box" to="/profil">
                         Profil
                     </vs-sidebar-item>
 
-                    <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" href="/login">
+                    <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" to="/login">
                         Login
                     </vs-sidebar-item>
 
@@ -130,9 +133,10 @@
         font-family: "Nunito", sans-serif;
     }
 
-    .vs-sidebar{
+    .vs-sidebar {
         background: rgba(227, 0, 19, 1);
         color: white;
+        overflow-x: hidden;
     }
 
     .warenkorb {
