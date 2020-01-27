@@ -1,7 +1,8 @@
 <template>
     <div class="body">
         <div class="searchBox">
-            <div class="page_title"><h1 style="color: white; padding: 1em">Bibliothek Wiener Linien</h1></div>
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+                Wiener Linien</h1></div>
             <b-input-group class="searchBar">
                 <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+
     export default {
         name: "Home",
         data() {
@@ -47,7 +49,7 @@
                     this.$store.state.latestSearch = this.search;
                     this.$store.commit("setSearch");
                     this.$store.commit("isFirstPage");
-                    window.location.href = "/list";
+                    router.push({ name: list});
                 }
             }
         }
@@ -81,10 +83,9 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
-        border-radius: 10px;
     }
 
-    .books{
+    .books {
         display: flex;
         flex-direction: column;
         justify-content: center;

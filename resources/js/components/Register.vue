@@ -15,7 +15,7 @@
 
                             <!-- ID -->
                             <div class="form-group" :class="{ 'form-group--error': id.$error }">
-                                <b-form-input type="text" v-model.trim="$v.id.$model" placeholder="Enter ID"></b-form-input>
+                                <b-form-input type="number" v-model.trim="$v.id.$model" placeholder="Enter ID"></b-form-input>
                             </div>
                             <div class="error" v-if="$v.id.$error">Field is required</div>
 
@@ -29,7 +29,7 @@
 
                             <!-- PW -->
                             <div class="form-group" :class="{ 'form-group--error': password.$error }">
-                                <b-form-input type="text" v-model.trim="$v.password.$model" placeholder="Enter Password"></b-form-input>
+                                <b-form-input type="password" v-model.trim="$v.password.$model" placeholder="Enter Password"></b-form-input>
                             </div>
                             <div class="error" v-if="$v.password.$error">Field is required</div>
                             <div class="error" v-if="!$v.password.minLength">Must be longer than 8 Chars</div>
@@ -37,7 +37,7 @@
 
                             <!-- PWREPEAT -->
                             <div class="form-group" :class="{ 'form-group--error': passwordRepeat.$error}">
-                                <b-form-input type="text" v-model.trim="$v.passwordRepeat.$model" placeholder="Repeat Password"></b-form-input>
+                                <b-form-input type="password" v-model.trim="$v.passwordRepeat.$model" placeholder="Repeat Password"></b-form-input>
                             </div>
                             <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Passwords must be the same</div>
                         </form>

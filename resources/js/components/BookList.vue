@@ -7,29 +7,31 @@
 
         ---------------------------------------------------------->
 
-        <!--<h1 class="suche_title">&nbsp;</h1>-->
+
+        <!--<b-button v-show="!showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
+            <!--<font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>-->
+        <!--</b-button>-->
+
+        <!--<b-button v-show="showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
+            <!--<font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>-->
+        <!--</b-button>-->
 
         <div class="searchBox">
-            <b-button v-show="!showalpha" variant="outline-white" v-on:click="showalphaChange()">
-                <font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>
-            </b-button>
-
-            <b-button v-show="showalpha" variant="outline-white" v-on:click="showalphaChange()">
-                <font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>
-            </b-button>
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+                Wiener Linien</h1></div>
             <b-input-group class="searchBar">
-                <b-input placeholder="Nach Büchern stöbern" type="search" class="search"
+                <b-inpunt-
+                <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="dark" v-on:click="ausgabe()">
+                    <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+                    <b-button>
+                        <font-awesome-icon icon="filter"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
-
-            <b-button variant="outline-white" v-b-modal.Filter>
-                <font-awesome-icon icon="filter"></font-awesome-icon>
-            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -75,7 +77,7 @@
                     </div>
                 </b-card>
 
-                <div v-if="platzhalter" class="listitem"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto;"></div>
             </div>
         </div>
 
@@ -388,7 +390,10 @@
                 axios.post('/books/json?page=' + this.page, {
                     sortDirection: this.showalpha,
                     medium: "",
-                    systematik: ""
+                    systematik: "",
+                    author: "",
+                    isBorrowed: "",
+                    isNotBorrowed: ""
                 })
                     .then(response => {
                             if (response.data.data.length === 0) {
@@ -420,14 +425,28 @@
             } else {
                 axios.post('/books/search?page=' + this.page, {
                     search: this.search,
-                    sortDirection: this.showalpha
+                    sortDirection: this.showalpha,
+                    medium: "Buch",
+                    systematik: "Kinderbuch",
+                    author: null,
+                    isBorrowed: null,
+                    isNotBorrowed: null
                 })
                     .then(response => {
+                        console.log(response)
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
+                                if (response.data.data.length < 3) {
+                                    document.getElementById("body").id = "bodyset";
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -473,7 +492,6 @@
                 this.BNR = "";
             },
             saveAdd: function (title, systematik, medium, content, BNR) {
-                console.log(systematik);
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
@@ -608,7 +626,6 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response.status);
                             this.reloadSite(response.status);
                         }
                     )
@@ -617,7 +634,6 @@
                 axios.get('/systematik/json')
                     .then(response => {
                             this.systematiken = response.data;
-                            console.log(this.systematiken[1]);
                         }
                     )
             },
@@ -704,9 +720,12 @@
 
     .searchBox {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding: 2em;
-        background-image: url("../../img/bg_hp.jpg");
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
 
     .frei {
