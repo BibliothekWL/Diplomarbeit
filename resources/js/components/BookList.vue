@@ -7,27 +7,32 @@
 
         ---------------------------------------------------------->
 
-
-        <!--<b-button v-show="!showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
-            <!--<font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>-->
-        <!--</b-button>-->
-
-        <!--<b-button v-show="showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
-            <!--<font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>-->
-        <!--</b-button>-->
-
         <div class="searchBox">
             <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
-                Wiener Linien</h1></div>
+                Wiener Linien</h1>
+            </div>
+
             <b-input-group class="searchBar">
-                <b-inpunt-
-                <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
-                         v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
+                <b-input-group-append>
+                    <b-button v-show="showalpha" v-on:click="showalphaChange()">
+                        <font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>
+                    </b-button>
+
+                    <b-button v-show="!showalpha" v-on:click="showalphaChange()">
+                        <font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>
+                    </b-button>
+                </b-input-group-append>
+
+                <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
+                         v-on:keyup.enter="ausgabe()">
+                </b-input>
+
                 <b-input-group-append>
                     <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
-                    <b-button>
+
+                    <b-button v-b-modal.Filter>
                         <font-awesome-icon icon="filter"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
@@ -47,20 +52,46 @@
             </b-button>
 
             <div class="list">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
+                <!--<b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"-->
+                <!--class="listitem"-->
+                <!--v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"-->
+                <!--v-b-modal.BookInformation>-->
+                <!--<div class="card_flex">-->
+                <!--<div class="bildbruh">&#160;</div>-->
+                <!--<div>-->
+                <!--<b-card-title>-->
+                <!--{{book.title}}-->
+                <!--</b-card-title>-->
+
+                <!--<b-card-text class="beschreibung">-->
+                <!--{{content_short[book.id]}}-->
+                <!--</b-card-text>-->
+                <!--</div>-->
+
+                <!--<div v-if="book.borrowed === 0" class="info frei">-->
+                <!--Frei-->
+                <!--</div>-->
+
+                <!--<div v-if="book.borrowed === 1" class="info borrowed">-->
+                <!--Ausgeborgt-->
+                <!--</div>-->
+
+                <!--</div>-->
+                <!--</b-card>-->
+
+                <div v-for="book in liste.data.data" class="listitem">
+
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
-                        <div>
-                            <b-card-title>
-                                {{book.title}}
-                            </b-card-title>
 
-                            <b-card-text class="beschreibung">
+                        <div>
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
                                 {{content_short[book.id]}}
-                            </b-card-text>
+                            </div>
                         </div>
 
                         <div v-if="book.borrowed === 0" class="info frei">
@@ -70,12 +101,9 @@
                         <div v-if="book.borrowed === 1" class="info borrowed">
                             Ausgeborgt
                         </div>
-
-                        <div v-if="reserviert" class="info reserved">
-                            Reserviert
-                        </div>
                     </div>
-                </b-card>
+                </div>
+
 
                 <div v-if="platzhalter" class="listitem" style="cursor: auto;"></div>
             </div>
@@ -389,9 +417,9 @@
             if (this.$store.state.search === "") {
                 axios.post('/books/json?page=' + this.page, {
                     sortDirection: this.showalpha,
-                    medium: "",
-                    systematik: "",
-                    author: "",
+                    medium: null,
+                    systematik: null,
+                    author: null,
                     isBorrowed: "",
                     isNotBorrowed: ""
                 })
@@ -426,14 +454,14 @@
                 axios.post('/books/search?page=' + this.page, {
                     search: this.search,
                     sortDirection: this.showalpha,
-                    medium: "Buch",
-                    systematik: "Kinderbuch",
+                    medium: null,
+                    systematik: null,
                     author: null,
                     isBorrowed: null,
                     isNotBorrowed: null
                 })
                     .then(response => {
-                        console.log(response)
+                            console.log(response)
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                                 this.isAnfang = true;
@@ -661,16 +689,11 @@
         padding: 8em;
     }
 
-    .suche_title {
-        text-align: center;
-        padding-top: 1em;
-    }
-
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: right;
         padding-top: 4em;
         padding-left: 4em;
     }
@@ -683,7 +706,7 @@
 
     .listitem {
         margin: 2em;
-        padding: 1em;
+        border: 1px black solid;
     }
 
     .card_flex {
@@ -715,7 +738,7 @@
 
     .searchBar {
         width: 50em;
-        vertical-align: center;
+        vertical-align: top;
     }
 
     .searchBox {
@@ -752,6 +775,11 @@
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.5em;
     }
 
 </style>

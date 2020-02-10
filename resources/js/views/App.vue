@@ -29,7 +29,7 @@
                         User
                     </vs-divider>
 
-                    <vs-sidebar-item index=6 icon="account_box" to="/profil">
+                    <vs-sidebar-item v-if="!isAdmin & loggedIn" index=6 icon="account_box" to="/profil">
                         Profil
                     </vs-sidebar-item>
 
