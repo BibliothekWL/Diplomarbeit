@@ -73,10 +73,33 @@ Route::get('/cart/checkout', 'BooksController@borrowBooks');
 Route::post('/books/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    if ($jsonarray['sortDirection']) {
-        return Book::orderBy('title')->paginate(6);
+
+    $by_medium = $jsonarray['medium'];
+    $by_systematik = $jsonarray['systematik'];
+    $conditions = array();
+
+    if (!($jsonarray['medium'] == null)) {
+        $conditions[] = "medium='$by_medium'";
+    }
+    if (!($jsonarray['systematik'] == null)) {
+        $conditions[] = "systematik='$by_systematik'";
+    }
+
+    $sql = "";
+    if (count($conditions) > 0) {
+        $sql .= htmlspecialchars(implode(' AND ', $conditions));
     } else {
-        return Book::orderBy('title', 'desc')->simplePaginate(6);
+        if($jsonarray["sortDirection"]) {
+            return DB::table('books')->orderBy('title')->select()->paginate(6);
+        } else{
+            return DB::table('books')->orderBy('title', 'desc')->select()->paginate(6);
+        }
+    }
+
+    if($jsonarray["sortDirection"]) {
+        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    } else{
+        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
     }
 });
 
@@ -107,19 +130,25 @@ Route::post('/books/search', function () {
     $by_search = $jsonarray['search'];
     $conditions = array();
 
-    if(!($jsonarray['medium'] == null)){
+    if (!($jsonarray['medium'] == null)) {
         $conditions[] = "medium='$by_medium'";
     }
-    if(!($jsonarray['systematik'] == null)){
+    if (!($jsonarray['systematik'] == null)) {
         $conditions[] = "systematik='$by_systematik'";
     }
 
     $sql = "";
     if (count($conditions) > 0) {
-        $sql .= implode(' AND ', $conditions) . "AND title LIKE '%" . $by_search . "%'";
+        $sql .= htmlspecialchars(implode(' AND ', $conditions) . "AND title LIKE '%" . $by_search . "%'");
+    } else {
+        $sql .= "title LIKE '%" . $by_search . "%'";
     }
 
-    return DB::table('books')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    if($jsonarray["sortDirection"]) {
+        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    } else{
+        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    }
 });
 
 Route::post('/cart/json', function () {
