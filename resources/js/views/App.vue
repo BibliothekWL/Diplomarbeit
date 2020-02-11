@@ -29,7 +29,7 @@
                         User
                     </vs-divider>
 
-                    <vs-sidebar-item v-if="!isAdmin & loggedIn" index=6 icon="account_box" to="/profil">
+                    <vs-sidebar-item v-if="loggedIn" index=6 icon="account_box" to="/profil">
                         Profil
                     </vs-sidebar-item>
 
@@ -45,8 +45,8 @@
             </div>
         </div>
 
-        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb" href="/warenkorb"
-                  variant="transparent">
+        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb"
+             v-on:click="towarenkorb()" to="/warenkorb" variant="transparent">
             <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
                 <i class="fa fa-circle"></i>
                 <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
@@ -122,6 +122,13 @@
             regular_navigation: function () {
                 this.reduce = !this.reduce;
 
+            },
+            towarenkorb: function () {
+                this.$router.push(
+                    {
+                        path: '/warenkorb'
+                    }
+                )
             }
         }
     }
@@ -140,6 +147,7 @@
     }
 
     .warenkorb {
+        cursor: pointer;
         position: absolute;
         z-index: 1000;
         top: 0;
@@ -182,53 +190,6 @@
         display: none;
     }
 
-    #ex4 .p1[data-count]:after {
-        position: absolute;
-        right: 10%;
-        top: 8%;
-        content: attr(data-count);
-        font-size: 40%;
-        padding: .2em;
-        border-radius: 50%;
-        line-height: 1em;
-        color: red;
-        background: rgba(255, 0, 0, .85);
-        text-align: center;
-        min-width: 1em;
-    }
-
-    #ex3 .fa-stack[data-count]:after {
-        position: absolute;
-        right: 0%;
-        top: 1%;
-        content: attr(data-count);
-        font-size: 30%;
-        padding: .6em;
-        border-radius: 50%;
-        line-height: .8em;
-        color: red;
-        background: rgba(255, 0, 0, .85);
-        text-align: center;
-        min-width: 1em;
-        font-weight: bold;
-    }
-
-    #ex2 .fa-stack[data-count]:after {
-        position: absolute;
-        right: 0%;
-        top: 1%;
-        content: attr(data-count);
-        font-size: 30%;
-        padding: .6em;
-        border-radius: 999px;
-        line-height: .75em;
-        color: red;
-        background: rgba(255, 0, 0, .85);
-        text-align: center;
-        min-width: 2em;
-        font-weight: bold;
-    }
-
     .fa-stack[data-count]:after {
         position: absolute;
         right: 0;
@@ -242,7 +203,7 @@
         text-align: center;
         min-width: 2em;
         font-weight: bold;
-        background: red;
+        background: white;
         border-style: solid;
     }
 

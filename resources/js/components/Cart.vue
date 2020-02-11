@@ -1,35 +1,40 @@
 <template>
     <div class="body">
         <div class="UserViewBody">
-            <div v-if="!notFound" class="title_div">
-                <p class="title center">Einkaufswagen</p>
+            <div class="searchBox">
+                <div class="page_title">
+                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Einkaufswagen</h1>
+                </div>
             </div>
 
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
             <div class="list" v-if="!notFound">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
+                <div v-for="book in liste.data.data" class="listitem">
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
-                        <div>
-                            <b-card-title>
-                                {{book.title}}
-                            </b-card-title>
 
-                            <b-card-text class="beschreibung">
+                        <div class="text">
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
                                 {{content_short[book.id]}}
-                            </b-card-text>
+                            </div>
                         </div>
 
-                        <div v-on:click="entfernen" class="info entfernen">
-                            Entfernen
+                        <div v-if="book.borrowed === 0" class="info frei">
+                            Frei
+                        </div>
+
+                        <div v-if="book.borrowed === 1" class="info borrowed">
+                            Ausgeborgt
                         </div>
                     </div>
-                </b-card>
-                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
+                </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
         </div>
 
@@ -129,13 +134,22 @@
 </script>
 
 <style scoped>
+    html {
+        overflow: hidden;
+    }
+
+    .UserViewBody {
+        display: flex;
+        flex-direction: column;
+    }
+
     .center {
         text-align: center;
     }
 
     .notFound {
         text-align: center;
-        padding: 8em;
+        padding-top: 6em;
     }
 
     .list {
@@ -166,10 +180,6 @@
         width: 20em;
     }
 
-    .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-    }
-
     .card_flex {
         display: flex;
         flex-direction: row;
@@ -195,13 +205,17 @@
         height: 167px;
     }
 
-    .title {
-        font-size: 3em;
-        padding-top: 1em;
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
 
     .notFound {
         font-size: 2em;
-        padding: 10.5em;
     }
 </style>

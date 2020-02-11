@@ -1,8 +1,10 @@
 <template>
     <div id="body">
         <div class="UserViewBody">
-            <div v-if="!notFound" class="title_div">
-                <p class="title center">Meine Bücher</p>
+            <div class="searchBox">
+                <div class="page_title">
+                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Meine Bücher</h1>
+                </div>
             </div>
 
             <h6 class="notFound" v-if="notFound">Sie haben noch keine Bücher ausgeborgt!</h6>
@@ -159,14 +161,6 @@
         font-size: 14px;
         width: 20em;
     }
-    #body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-    }
-
-    #bodyset {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-        height: 100vh;
-    }
 
     .card_flex {
         display: flex;
@@ -181,10 +175,16 @@
         height: 167px;
     }
 
-    .title {
-        font-size: 3em;
-        padding-top: 1em;
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
+
 
     .notFound {
         font-size: 2em;

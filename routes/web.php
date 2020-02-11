@@ -171,6 +171,10 @@ Route::get('/medium/json', function () {
     return Book::orderBy('medium')->get()->pluck('medium')->unique();
 });
 
+Route::get('/author/json', function () {
+
+});
+
 Route::post('/userdata/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
