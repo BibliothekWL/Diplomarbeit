@@ -1,6 +1,10 @@
 <template>
     <div class="body">
-        <p class="title center">Profil</p>
+        <div class="searchBox">
+            <div class="page_title">
+                <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Profil</h1>
+            </div>
+        </div>
 
         <div class="content">
             <div class="content_item">
@@ -52,16 +56,6 @@
         text-align: center;
     }
 
-    .title {
-        font-size: 3em;
-        padding-top: 1em;
-    }
-
-    .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
-        height: 100vh;
-    }
-
     .content {
         padding: 5em;
         display: flex;
@@ -75,6 +69,16 @@
         align-items: center;
         width: 47em;
         padding: 2em;
+    }
+
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
 
 </style>

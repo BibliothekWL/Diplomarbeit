@@ -1,0 +1,104 @@
+[
+   {
+      "id": "1",
+      "lfkz": "1234",
+      "baujahr": "1860",
+      "sitzplaetze": "125",
+      "flugzeugtyp": {
+         "typenId": "1",
+         "typenbezeichnung": "boing102"
+      },
+      "hersteller": {
+         "herstellerId": "1",
+         "bezeichnung": "boing",
+         "website": "boing.at"
+      },
+      "flug": {
+         "flugId": "1",
+         "flugNr": "1123",
+         "startDatum": "2019-01-01",
+         "startzeit": "12:25:00",
+         "landezeit": "13:30:12",
+         "abflughafen": "Flughafen Wien",
+         "ankunfthafen": "Flughafen Madrid",
+         "entfernung": "200",
+         "pilot": {
+            "personalNr": "626",
+            "name": {
+               "vorname": "Maria",
+               "nachname": "Matejovski"
+            },
+            "gebDat": "1990-04-12",
+            "sozVerNr": "02138920"
+         }
+      }
+   },
+   {
+      "id": "2",
+      "lfkz": "2134",
+      "baujahr": "1930",
+      "sitzplaetze": "456",
+      "flugzeugtyp": {
+         "typenId": "2",
+         "typenbezeichnung": "flugflig"
+      },
+      "hersteller": {
+         "herstellerId": "1",
+         "bezeichnung": "randomhersteller",
+         "website": "randomhersteller.at"
+      },
+      "flug": {
+         "flugId": "2",
+         "flugNr": "1323",
+         "startDatum": "2019-02-05",
+         "startzeit": "10:25:00",
+         "landezeit": "00:30:12",
+         "abflughafen": "Flughafen Wien",
+         "ankunfthafen": "Flughafen Doha",
+         "entfernung": "20000",
+         "pilot": {
+            "personalNr": "123",
+            "name": {
+               "vorname": "Maja",
+               "nachname": "Matrovski"
+            },
+            "gebDat": "1990-04-12",
+            "sozVerNr": "02138920"
+         }
+      }
+   },
+   {
+      "id": "3",
+      "lfkz": "3456",
+      "baujahr": "2001",
+      "sitzplaetze": "56",
+      "flugzeugtyp": {
+         "typenId": "4",
+         "typenbezeichnung": "Flaguflugi"
+      },
+      "hersteller": {
+         "herstellerId": "1",
+         "bezeichnung": "randomhersteller",
+         "website": "randomhersteller.at"
+      },
+      "flug": {
+         "flugId": "3",
+         "flugNr": "983",
+         "startDatum": "2020-09-10",
+         "startzeit": "01:20:12",
+         "landezeit": "06:30:09",
+         "abflughafen": "Flughafen Wien",
+         "ankunfthafen": "Flughafen London",
+         "entfernung": "300",
+         "pilot": {
+            "personalNr": "123",
+            "name": {
+               "vorname": "Labalel",
+               "nachname": "Balala"
+            },
+            "gebDat": "2001-07-03",
+            "sozVerNr": "0987654"
+         }
+      }
+   }
+]
