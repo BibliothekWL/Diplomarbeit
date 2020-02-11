@@ -20,6 +20,7 @@ Route::get('/login', 'SinglePageController@index');
 Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
+Route::get('/profil  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -69,8 +70,14 @@ Route::get('/cart/checkout', 'BooksController@borrowBooks');
  * returns all books with json
  */
 
-Route::get('/books/json', function () {
-    return DB::table('books')->paginate(6);
+Route::post('/books/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    if ($jsonarray['sortDirection']) {
+        return Book::orderBy('title')->paginate(6);
+    } else {
+        return Book::orderBy('title', 'desc')->simplePaginate(6);
+    }
 });
 
 Route::resource('borrowing', 'BorrowingsController');
@@ -94,17 +101,49 @@ Route::post('/books/{books}/edit/jsonvalidate/', 'BooksController@BookValidator'
 Route::post('/books/search', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    return DB::table('books')->where('title', 'LIKE', '%' . $jsonarray['search'] . '%')->paginate(6);
+
+    $by_medium = $jsonarray['medium'];
+    $by_systematik = $jsonarray['systematik'];
+    $by_search = $jsonarray['search'];
+    $conditions = array();
+
+    if(!($jsonarray['medium'] == null)){
+        $conditions[] = "medium='$by_medium'";
+    }
+    if(!($jsonarray['systematik'] == null)){
+        $conditions[] = "systematik='$by_systematik'";
+    }
+
+    $sql = "";
+    if (count($conditions) > 0) {
+        $sql .= implode(' AND ', $conditions) . "AND title LIKE '%" . $by_search . "%'";
+    }
+
+    return DB::table('books')->select()->whereRaw(DB::raw($sql))->paginate(6);
 });
 
 Route::post('/cart/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-    $cartArray = Cart::where('user_id',  $jsonarray['id'])->get();
+    $cartArray = Cart::where('user_id', $jsonarray['id'])->get();
     $books = array();
-    for($i=0; $i<count($cartArray); $i++) {
+    for ($i = 0; $i < count($cartArray); $i++) {
         $book = Book::findOrFail($cartArray[$i]['book_id']);
-        array_push($books,$book);
+        array_push($books, $book);
     }
     return $books;
+});
+
+Route::get('/systematik/json', function () {
+    return Book::orderBy('systematik')->get()->pluck('systematik')->unique();
+});
+
+Route::get('/medium/json', function () {
+    return Book::orderBy('medium')->get()->pluck('medium')->unique();
+});
+
+Route::post('/userdata/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+    return User::all()->where('id', $jsonarray['id'])->first();
 });

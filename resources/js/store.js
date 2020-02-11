@@ -19,7 +19,8 @@ export default new Vuex.Store({
         warenkorb: false,
         nichtwarenkorb: false,
         cart_count: 0,
-        latestCartCount: 0
+        latestCartCount: 0,
+        showalpha: false
     },
     plugins: [createPersistedState()],
     mutations: {

@@ -129,7 +129,6 @@
 </script>
 
 <style scoped>
-
     .center {
         text-align: center;
     }
@@ -167,13 +166,8 @@
         width: 20em;
     }
 
-    .notFound {
-        font-size: 3em;
-        padding: 1em 0 0 0.6em;
-    }
-
     .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 0.2));
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
     }
 
     .card_flex {

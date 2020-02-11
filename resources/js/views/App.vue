@@ -1,36 +1,39 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div>
         <div id="app">
-
             <div id="parentx">
-                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="notExpand"
-                            color="danger" class="sidebarx" v-model="active" parent="body">
+                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="true"
+                            color="danger" class="sidebarx" spacer v-model="active" parent="body">
 
-                    <div class="header-sidebar" slot="header" icon="book">
-                        <h6 v-if="loggedIn">Hallo <br> {{username}}!</h6>
+                    <div style="cursor:pointer;" class="header-sidebar" slot="header" v-on:click="regular_navigation()">
+                        <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
+                        <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
                     </div>
-                    <vs-sidebar-group open title="Navigation">
-                        <vs-sidebar-item index="1" icon="home" href="/home">
-                            Home
-                        </vs-sidebar-item>
-                        <vs-sidebar-item index="5" icon="menu_book" href="/list">
-                            Bücherliste
-                        </vs-sidebar-item>
 
-                        <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" href="/myBooks">
-                            Meine Bücher
-                        </vs-sidebar-item>
-                    </vs-sidebar-group>
+                    <vs-divider icon="search" position="left">
+                        Search
+                    </vs-divider>
+
+                    <vs-sidebar-item index="1" icon="home" to="/home">
+                        Home
+                    </vs-sidebar-item>
+                    <vs-sidebar-item index="5" icon="menu_book" to="/list">
+                        Bücherliste
+                    </vs-sidebar-item>
+
+                    <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">
+                        Meine Bücher
+                    </vs-sidebar-item>
 
                     <vs-divider icon="person" position="left">
                         User
                     </vs-divider>
 
-                    <vs-sidebar-item index=6 icon="account_box" href="/profile">
-                        Profile
+                    <vs-sidebar-item index=6 icon="account_box" to="/profil">
+                        Profil
                     </vs-sidebar-item>
 
-                    <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" href="/login">
+                    <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" to="/login">
                         Login
                     </vs-sidebar-item>
 
@@ -76,8 +79,7 @@
                 username: this.$store.state.username,
                 isAdmin: this.$store.state.isAdmin,
                 reduce: true,
-                active: true,
-                notExpand: false
+                active: true
             }
         },
         watch: {
@@ -117,14 +119,24 @@
                         }
                     )
             },
+            regular_navigation: function () {
+                this.reduce = !this.reduce;
+
+            }
         }
     }
 </script>
 
 <style>
-    a {
+    a, h1 {
         color: white;
         font-family: "Nunito", sans-serif;
+    }
+
+    .vs-sidebar {
+        background: rgba(227, 0, 19, 1);
+        color: white;
+        overflow-x: hidden;
     }
 
     .warenkorb {
@@ -179,7 +191,7 @@
         padding: .2em;
         border-radius: 50%;
         line-height: 1em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 1em;
@@ -194,7 +206,7 @@
         padding: .6em;
         border-radius: 50%;
         line-height: .8em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 1em;
@@ -210,7 +222,7 @@
         padding: .6em;
         border-radius: 999px;
         line-height: .75em;
-        color: white;
+        color: red;
         background: rgba(255, 0, 0, .85);
         text-align: center;
         min-width: 2em;
@@ -230,7 +242,21 @@
         text-align: center;
         min-width: 2em;
         font-weight: bold;
-        background: white;
+        background: red;
         border-style: solid;
+    }
+
+    .navigation_arrow_right {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 5em;
+    }
+
+    .navigation_arrow_left {
+        position: absolute;
+        z-index: 1000;
+        top: 2em;
+        left: 18em;
     }
 </style>

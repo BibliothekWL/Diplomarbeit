@@ -1,5 +1,5 @@
 <template>
-    <div class="body">
+    <div id="body">
         <div class="UserViewBody">
             <div v-if="!notFound" class="title_div">
                 <p class="title center">Meine Bücher</p>
@@ -22,10 +22,6 @@
                             <b-card-text class="beschreibung">
                                 {{content_short[book.id]}}
                             </b-card-text>
-                        </div>
-
-                        <div v-on:click="entfernen" class="info entfernen">
-                            Entfernen
                         </div>
                     </div>
                 </b-card>
@@ -58,18 +54,29 @@
                 isLoggedIn: false,
                 content_full: [],
                 content_short: [],
+                platzhalter: false
             }
         },
         mounted() {
+            this.$store.commit("UserisInCart_2");
+            this.$store.commit("UserisNotInCart_2");
             if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                 window.location.href = "/login"
             } else {
                 axios.get('/books/mybooks/json')
                     .then(response => {
-                            console.log(response);
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
+                                if (response.data.data.length < 3) {
+                                    console.log(response.data.data.length);
+                                    document.getElementById("body").id = "bodyset";
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.isLoggedInCheck();
@@ -133,15 +140,15 @@
         padding-left: 4em;
     }
 
+    .listitem {
+        padding: 1em;
+        margin: 2em;
+    }
+
     .list > * {
         flex-basis: 30%;
         flex-grow: 1;
         flex-shrink: 1;
-    }
-
-    .listitem {
-        padding: 1em;
-        margin: 2em;
     }
 
     .listitem:hover {
@@ -152,28 +159,20 @@
         font-size: 14px;
         width: 20em;
     }
+    #body {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
+    }
 
-    .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 0.2));
+    #bodyset {
+        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211, 211, 211, 1));
+        height: 100vh;
     }
 
     .card_flex {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
-    }
-
-    .entfernen {
-        z-index: 1000;
-        border: 1px red solid;
-        border-radius: 10px;
-        color: red;
-        width: 5em;
-        padding: 0.25em;
-        margin: 1em;
-        text-align: center;
-        cursor: pointer;
+        justify-content: space-around;
     }
 
     .bildbruh {

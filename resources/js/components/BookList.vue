@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="body">
+    <div id="body">
 
         <!---------------------------------------------------------
 
@@ -7,22 +7,31 @@
 
         ---------------------------------------------------------->
 
-        <h1 class="suche_title">&nbsp;</h1>
+
+        <!--<b-button v-show="!showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
+            <!--<font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>-->
+        <!--</b-button>-->
+
+        <!--<b-button v-show="showalpha" variant="outline-dark" v-on:click="showalphaChange()">-->
+            <!--<font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>-->
+        <!--</b-button>-->
 
         <div class="searchBox">
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+                Wiener Linien</h1></div>
             <b-input-group class="searchBar">
-                <b-input placeholder="Nach Büchern stöbern" type="search" class="search"
+                <b-inpunt-
+                <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="outline-dark" v-on:click="ausgabe()">
+                    <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+                    <b-button>
+                        <font-awesome-icon icon="filter"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
-
-            <b-button variant="outline-white">
-                <font-awesome-icon icon="filter"></font-awesome-icon>
-            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -68,7 +77,7 @@
                     </div>
                 </b-card>
 
-                <div v-if="platzhalter" class="listitem"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto;"></div>
             </div>
         </div>
 
@@ -126,7 +135,6 @@
                             id="name-input"
                             v-model="title"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -135,12 +143,15 @@
                         label-for="title"
                         invalid-feedback="Systematik is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
+
+                        <datalist id="systematikAdd">
+                            <option v-for="systematik in systematiken">{{ systematik }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -148,12 +159,15 @@
                         label-for="title"
                         invalid-feedback="Medium is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="medienAdd" v-model="medium"></b-form-input>
+
+                        <datalist id="medienAdd">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -165,7 +179,6 @@
                             id="name-input"
                             v-model="content_full"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-textarea>
                 </b-form-group>
 
@@ -178,7 +191,6 @@
                             id="name-input"
                             v-model="BNR"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
@@ -194,7 +206,6 @@
                             id="name-input"
                             v-model="title"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
 
@@ -203,12 +214,15 @@
                         label-for="title"
                         invalid-feedback="Systematik is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
+
+                        <datalist id="systematikEdit">
+                            <option v-for="systematik in systematiken">{{ systematik }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -216,12 +230,15 @@
                         label-for="title"
                         invalid-feedback="Medium is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="medienEdit" v-model="medium"></b-form-input>
+
+                        <datalist id="medienEdit">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -245,10 +262,35 @@
                             id="name-input"
                             v-model="BNR"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
+
+            <b-modal id="Filter" centered title="Filter"
+                     @ok="ausgabe()">
+                <b-form-group
+                        label="Systematik"
+                        label-for="title"
+                        invalid-feedback="Systematik is required"
+                >
+
+                </b-form-group>
+
+                <b-form-group
+                        label="Medium"
+                        label-for="title"
+                        invalid-feedback="Medium is required"
+                >
+                    <template>
+                        <b-form-input list="medienFilter"></b-form-input>
+
+                        <datalist id="medienFilter">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
+            </b-modal>
+
 
             <b-modal id="BookInformation" size="xl" centered title="Information">
                 <div>
@@ -332,7 +374,12 @@
                 isEnde: false,
                 show: true,
                 reserviert: false,
-                platzhalter: false
+                platzhalter: false,
+                systematiken: [],
+                medien: [],
+                showalpha: this.$store.state.showalpha,
+                filter_medium: "",
+                filter_systematik: ""
             };
         },
         mounted() {
@@ -340,7 +387,14 @@
             this.$store.commit("UserisNotInCart_2");
             this.page = this.$store.state.page;
             if (this.$store.state.search === "") {
-                axios.get('/books/json?page=' + this.page)
+                axios.post('/books/json?page=' + this.page, {
+                    sortDirection: this.showalpha,
+                    medium: "",
+                    systematik: "",
+                    author: "",
+                    isBorrowed: "",
+                    isNotBorrowed: ""
+                })
                     .then(response => {
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
@@ -352,6 +406,10 @@
                                 } else {
                                     this.platzhalter = true;
                                 }
+                                if (response.data.data.length < 3) {
+                                    console.log(response.data.data.length);
+                                    document.getElementById("body").id = "bodyset";
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -359,19 +417,36 @@
                                 this.saveContent(response.data.data);
                                 this.isAnfangfind();
                                 this.isEndefind();
+                                this.getSystematik();
+                                this.getMedium();
                             }
                         }
                     );
             } else {
                 axios.post('/books/search?page=' + this.page, {
-                    search: this.search
+                    search: this.search,
+                    sortDirection: this.showalpha,
+                    medium: "Buch",
+                    systematik: "Kinderbuch",
+                    author: null,
+                    isBorrowed: null,
+                    isNotBorrowed: null
                 })
                     .then(response => {
+                        console.log(response)
                             if (response.data.data.length === 0) {
                                 this.notFound = true;
                                 this.isAnfang = true;
                                 this.isEnde = true;
                             } else {
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
+                                } else {
+                                    this.platzhalter = true;
+                                }
+                                if (response.data.data.length < 3) {
+                                    document.getElementById("body").id = "bodyset";
+                                }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -380,6 +455,8 @@
                                 this.saveContent(response.data.data);
                                 this.isAnfangfind();
                                 this.isEndefind();
+                                this.getSystematik();
+                                this.getMedium();
                             }
                         }
                     );
@@ -390,7 +467,7 @@
                 axios.post('/books/delete/json/', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status)
                     }
                 )
             },
@@ -423,7 +500,7 @@
                     BNR: BNR,
                     authorname: 'Kevin'
                 }).then(response => {
-                        this.reloadSite(response.data.status + "");
+
                         this.id = "";
                         this.title = "";
                         this.title_1 = "";
@@ -431,6 +508,7 @@
                         this.systematik = "";
                         this.medium = "";
                         this.BNR = "";
+                        this.reloadSite(response.data.status);
                     }
                 )
             },
@@ -444,7 +522,7 @@
                     BNR: BNR
                 })
                     .then(response => {
-                            this.reloadSite(response.data.status + "")
+                            this.reloadSite(response.data.status)
                         }
                     )
             },
@@ -479,7 +557,7 @@
                 );
             },
             reloadSite: function (status) {
-                if (status === "200") {
+                if (status === 200) {
                     window.location.reload();
                 } else {
                     console.log("error");
@@ -538,7 +616,7 @@
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status)
                     }
                 )
             },
@@ -548,9 +626,28 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response);
+                            this.reloadSite(response.status);
                         }
                     )
+            },
+            getSystematik: function () {
+                axios.get('/systematik/json')
+                    .then(response => {
+                            this.systematiken = response.data;
+                        }
+                    )
+            },
+            getMedium: function () {
+                axios.get('/medium/json')
+                    .then(response => {
+                            this.medien = response.data;
+                        }
+                    )
+            },
+            showalphaChange: function () {
+                this.showalpha = !this.showalpha;
+                this.$store.state.showalpha = this.showalpha;
+                this.ausgabe();
             }
         }
     }
@@ -593,7 +690,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
     }
 
     .listitem:hover {
@@ -608,6 +705,7 @@
     .page_buttons {
         text-align: center;
         padding: 2em;
+        color: white;
     }
 
     .addButton {
@@ -622,8 +720,12 @@
 
     .searchBox {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
 
     .frei {
@@ -650,10 +752,6 @@
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
-    }
-
-    .body {
-        background: linear-gradient(to bottom, rgba(217, 83, 79, 0.9), rgba(211,211,211,0.2));
     }
 
 </style>
