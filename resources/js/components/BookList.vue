@@ -426,8 +426,8 @@
                 axios.post('/books/search?page=' + this.page, {
                     search: this.search,
                     sortDirection: this.showalpha,
-                    medium: "Buch",
-                    systematik: "Kinderbuch",
+                    medium: null,
+                    systematik: null,
                     author: null,
                     isBorrowed: null,
                     isNotBorrowed: null
