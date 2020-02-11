@@ -19,6 +19,8 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
+
 
     export default {
         name: "Landing",
@@ -40,6 +42,7 @@
                     .then(response => {
                         console.log(response);
                         if (response.data.status !== '200') {
+                            Swal.fire({title: 'Oops!',text: response.data.statusMsg, icon: 'error'});
                             console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
                         } else {
                             this.$store.state.latestUsername = response.data.username;
@@ -55,7 +58,7 @@
                             window.location.href = "/home";
                         }
                     }).catch(error => {
-                    console.log(error.message)
+                    console.log(error.message);
                 })
             }
         }

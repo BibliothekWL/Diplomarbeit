@@ -49,6 +49,7 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
     import { required, sameAs, minLength, email } from 'vuelidate/lib/validators'
 
     export default {
@@ -96,6 +97,7 @@
                             this.$router.push({ path: '/login' });
                         }).catch(error => {
                         console.log(error.message);
+                        Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})
                     })
                 }
             }

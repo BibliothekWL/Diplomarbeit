@@ -63,6 +63,7 @@
 <script>
     import axios from "axios";
 
+
     export default {
         mounted() {
             axios.post('/cart/json', {
