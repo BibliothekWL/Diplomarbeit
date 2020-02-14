@@ -6,7 +6,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        page: 1,
         lastPage: 0,
         isAdmin: false,
         isLoggedIn: false,

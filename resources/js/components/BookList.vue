@@ -78,7 +78,6 @@
                     </div>
                 </div>
 
-
                 <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
         </div>
@@ -135,7 +134,7 @@
 
             <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
                      @ok="saveAdd(title, systematik, medium, content_full, BNR)">
-                <form ref="form" >
+                <form ref="form">
                     <b-form-group
                             label="Title"
                             label-for="title"
@@ -333,7 +332,8 @@
             <b-modal
                     id="BookInformation"
                     ref="modal"
-                    centered title="Information"
+                    centered title="Buchinformationen"
+                    size="lg"
             >
 
                 <div>
@@ -391,7 +391,7 @@
         name: "BookList",
         data() {
             return {
-                page: "",
+                page: 1,
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
@@ -423,88 +423,12 @@
                 medien: [],
                 showalpha: this.$store.state.showalpha,
                 filter_medium: this.$store.state.filter_medium,
-                filter_systematik: this.$store.state.filter_systematik
+                filter_systematik: this.$store.state.filter_systematik,
+                key: 0
             };
         },
         mounted() {
-            this.$store.commit("UserisNotInCart");
-            this.$store.commit("UserisNotInCart_2");
-            this.page = this.$store.state.page;
-            if (this.$store.state.search === "") {
-                axios.post('/books/json?page=' + this.page, {
-                    sortDirection: this.showalpha,
-                    medium: this.filter_medium,
-                    systematik: this.filter_systematik,
-                    author: null,
-                    isBorrowed: null,
-                    isNotBorrowed: null
-                })
-                    .then(response => {
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
-                                this.isAnfang = true;
-                                this.isEnde = true;
-                            } else {
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    console.log(response.data.data.length);
-                                    document.getElementById("body").id = "bodyset";
-                                }
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
-                                this.isAnfangfind();
-                                this.isEndefind();
-                                this.getSystematik();
-                                this.getMedium();
-                            }
-                        }
-                    );
-            } else {
-                axios.post('/books/search?page=' + this.page, {
-                    search: this.search,
-                    sortDirection: this.showalpha,
-                    medium: this.filter_medium,
-                    systematik: this.filter_systematik,
-                    author: null,
-                    isBorrowed: null,
-                    isNotBorrowed: null
-                })
-                    .then(response => {
-                            console.log(response)
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
-                                this.isAnfang = true;
-                                this.isEnde = true;
-                            } else {
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    document.getElementById("body").id = "bodyset";
-                                }
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.$store.state.lastPage = this.lastPage;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
-                                this.isAnfangfind();
-                                this.isEndefind();
-                                this.getSystematik();
-                                this.getMedium();
-                            }
-                        }
-                    );
-            }
+            this.ausgabe();
         },
         methods: {
             deleteItem: function (id) {
@@ -525,6 +449,7 @@
                         this.systematik = response.data.systematik;
                         this.medium = response.data.medium;
                         this.BNR = response.data.BNR;
+                        this.ausgabe();
                     }
                 );
             },
@@ -552,7 +477,7 @@
                         this.systematik = "";
                         this.medium = "";
                         this.BNR = "";
-                        this.reloadSite(response.data.status);
+                        this.ausgabe();
                     }
                 )
             },
@@ -566,7 +491,7 @@
                     BNR: BNR
                 })
                     .then(response => {
-                            this.reloadSite(response.data.status)
+                            this.reloadSite(response);
                         }
                     )
             },
@@ -602,7 +527,7 @@
             },
             reloadSite: function (status) {
                 if (status === 200) {
-                    window.location.reload();
+                    this.ausgabe();
                 } else {
                     console.log("error");
                 }
@@ -610,44 +535,109 @@
             ausgabe: function () {
                 this.$store.state.latestSearch = this.search;
                 this.$store.commit("setSearch");
-                this.$store.commit("isFirstPage");
-                window.location.reload();
+                this.$store.commit("UserisNotInCart");
+                this.$store.commit("UserisNotInCart_2");
+                if (this.$store.state.search === "") {
+                    axios.post('/books/json?page=' + this.page, {
+                        sortDirection: this.showalpha,
+                        medium: this.filter_medium,
+                        systematik: this.filter_systematik,
+                        author: null,
+                        isBorrowed: null,
+                        isNotBorrowed: null
+                    })
+                        .then(response => {
+                                if (response.data.data.length === 0) {
+                                    this.page = 1;
+                                    this.notFound = true;
+                                    this.isAnfang = true;
+                                    this.isEnde = true;
+                                } else {
+                                    if (response.data.data.length % 2 === 0) {
+                                        this.platzhalter = false;
+                                    } else {
+                                        this.platzhalter = true;
+                                    }
+                                    if (response.data.data.length < 3) {
+                                        console.log(response.data.data.length);
+                                        document.getElementById("body").id = "bodyset";
+                                    }
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.getSystematik();
+                                    this.getMedium();
+                                }
+                            }
+                        );
+                } else {
+                    axios.post('/books/search?page=' + this.page, {
+                        search: this.search,
+                        sortDirection: this.showalpha,
+                        medium: this.filter_medium,
+                        systematik: this.filter_systematik,
+                        author: null,
+                        isBorrowed: null,
+                        isNotBorrowed: null
+                    })
+                        .then(response => {
+                                if (response.data.data.length === 0) {
+                                    this.notFound = true;
+                                    this.isAnfang = true;
+                                    this.isEnde = true;
+                                } else {
+                                    if (response.data.data.length % 2 === 0) {
+                                        this.platzhalter = false;
+                                    } else {
+                                        this.platzhalter = true;
+                                    }
+                                    if (response.data.data.length < 3) {
+                                        document.getElementById("body").id = "bodyset";
+                                    }
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.$store.state.lastPage = this.lastPage;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.getSystematik();
+                                    this.getMedium();
+                                }
+                            }
+                        );
+                }
             },
             isAnfangfind: function () {
-                if (this.$store.state.page === this.firstPage) {
+                if (this.page === this.firstPage) {
                     this.isAnfang = true;
                 }
             },
             isEndefind: function () {
-                if (this.$store.state.page === this.lastPage) {
+                if (this.page === this.lastPage) {
                     this.isEnde = true;
                 }
             },
             increment: function () {
-                this.$store.commit("increment");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
+                this.page++;
+                this.ausgabe();
             },
             decrement: function () {
-                this.$store.commit("decrement");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
+                this.page--;
+                this.ausgabe();
             },
             sendtoFirst: function () {
-                this.$store.commit("isFirstPage");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
-
+                this.page = 1;
+                this.ausgabe();
             },
             sendtoLast: function () {
-                this.$store.state.lastPage = this.lastPage;
-                this.$store.commit("isLastPage");
-                this.isAnfang = false;
-                this.isEnde = true;
-                window.location.reload();
+                this.page = this.$store.state.lastPage;
+                this.ausgabe();
             },
             isLoggedInCheck: function () {
                 axios.get('/session')

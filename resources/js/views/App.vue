@@ -46,11 +46,8 @@
         </div>
 
         <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb"
-             v-on:click="towarenkorb()" to="/warenkorb" variant="transparent">
-            <span class="fa-stack fa-2x has-badge" :data-count="$store.state.cart_count">
-                <i class="fa fa-circle"></i>
-                <font-awesome-icon icon="shopping-cart"></font-awesome-icon>
-            </span>
+             v-on:click="towarenkorb()" to="/warenkorb" variant="light">
+            <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon> <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
         </b-button>
 
         <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
@@ -95,11 +92,13 @@
             logout: function () {
                 axios.get('/logout/json', {})
                     .then(response => {
+                        console.log(this.$store.state.isLoggedIn);
                         this.$store.commit('UsernotLoggedIn');
+                        console.log(this.$store.state.isLoggedIn);
                         this.$store.commit('UserisnotAdmin');
                         this.$store.commit('setSearchEmpty');
                         this.$store.commit('isFirstPage');
-                        window.location.href = "/login";
+                        this.$router.push({path: '/login'});
                     }).catch(error => {
                     console.log(error.message)
                 });
@@ -116,7 +115,7 @@
                     .then(
                         response => {
                             console.log(response);
-                            window.location.href = "/list";
+                            this.$router.push({path: '/list'});
                         }
                     )
             },
@@ -125,11 +124,7 @@
 
             },
             towarenkorb: function () {
-                this.$router.push(
-                    {
-                        path: '/warenkorb'
-                    }
-                )
+                this.$router.push({path: '/warenkorb'});
             }
         }
     }
@@ -153,7 +148,7 @@
         z-index: 1000;
         top: 0;
         right: 0;
-        margin: 0.2em;
+        margin: 1em;
     }
 
     .warenkorb_checkout {
@@ -162,10 +157,6 @@
         top: 5em;
         right: 1.3em;
         margin: 0.8em;
-    }
-
-    .fa-circle {
-        color: #000000;
     }
 
     .header-sidebar {
@@ -220,5 +211,9 @@
         z-index: 1000;
         top: 2em;
         left: 18em;
+    }
+
+    .modal-backdrop {
+        background-color: rgba(0,0,0,0.5);
     }
 </style>

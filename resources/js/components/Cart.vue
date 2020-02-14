@@ -9,8 +9,10 @@
 
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
-            <div class="list" v-if="!notFound">
-                <div v-for="book in liste.data.data" class="listitem">
+            <div class="list">
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-b-modal.BookInformation>
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
 
@@ -24,12 +26,8 @@
                             </div>
                         </div>
 
-                        <div v-if="book.borrowed === 0" class="info frei">
-                            Frei
-                        </div>
-
-                        <div v-if="book.borrowed === 1" class="info borrowed">
-                            Ausgeborgt
+                        <div class="info entfernen">
+                            Entfernen
                         </div>
                     </div>
                 </div>
@@ -143,21 +141,14 @@
         flex-direction: column;
     }
 
-    .center {
-        text-align: center;
-    }
-
-    .notFound {
-        text-align: center;
-        padding-top: 6em;
-    }
-
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
-        padding-left: 4em;
+        justify-content: right;
+        padding-top: 4em;
+        padding-left: 8em;
+        padding-right: 4em;
     }
 
     .list > * {
@@ -167,12 +158,22 @@
     }
 
     .listitem {
-        padding: 1em;
         margin: 2em;
+        border: 1px black solid;
     }
 
-    .listitem:hover {
-        cursor: pointer;
+    .notFound {
+        text-align: center;
+        padding-top: 6em;
+    }
+
+    .text {
+        height: 7em;
+        width: 18em;
+        margin: 1.8em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
     }
 
     .beschreibung {

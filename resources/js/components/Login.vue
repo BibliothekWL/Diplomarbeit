@@ -30,8 +30,16 @@
                 password: ""
             }
         },
+        watch: {
+            '$store.state.isLoggedIn': {
+                handler() {
+                    this.loggedIn = this.$store.state.isLoggedIn;
+                },
+                immediate: true
+            },
+        },
         mounted() {
-
+            console.log(this.$store.state.isLoggedIn);
         },
         methods: {
             login: function () {
@@ -40,9 +48,8 @@
                     password: this.password
                 })
                     .then(response => {
-                        console.log(response);
                         if (response.data.status !== '200') {
-                            Swal.fire({title: 'Oops!',text: response.data.statusMsg, icon: 'error'});
+                            Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
                             console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
                         } else {
                             this.$store.state.latestUsername = response.data.username;
@@ -55,10 +62,14 @@
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            window.location.href = "/home";
+                            this.$forceUpdate();
+                            this.$router.push({path: '/home'}
+                            )
                         }
                     }).catch(error => {
-                    console.log(error.message);
+                    console.log();
+                    Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
+                    console.log('Status: ' + error.status + '; Error Messasge: ' + error.statusText);
                 })
             }
         }

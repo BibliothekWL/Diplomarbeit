@@ -9,25 +9,34 @@
 
             <h6 class="notFound" v-if="notFound">Sie haben noch keine Bücher ausgeborgt!</h6>
 
-            <div class="list" v-if="!notFound">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
+            <div class="list">
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-b-modal.BookInformation>
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
-                        <div>
-                            <b-card-title>
-                                {{book.title}}
-                            </b-card-title>
 
-                            <b-card-text class="beschreibung">
+                        <div class="text">
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
                                 {{content_short[book.id]}}
-                            </b-card-text>
+                            </div>
+                        </div>
+
+                        <div v-if="book.borrowed === 0" class="info frei">
+                            Frei
+                        </div>
+
+                        <div v-if="book.borrowed === 1" class="info borrowed">
+                            Ausgeborgt
                         </div>
                     </div>
-                </b-card>
-                <div v-if="platzhalter" class="listitem" style="width: 15em;"></div>
+                </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
         </div>
 
@@ -62,32 +71,27 @@
         mounted() {
             this.$store.commit("UserisInCart_2");
             this.$store.commit("UserisNotInCart_2");
-            if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
-                window.location.href = "/login"
-            } else {
-                axios.get('/books/mybooks/json')
-                    .then(response => {
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
+            axios.get('/books/mybooks/json')
+                .then(response => {
+                        if (response.data.data.length === 0) {
+                            this.notFound = true;
+                        } else {
+                            if (response.data.data.length % 2 === 0) {
+                                this.platzhalter = false;
                             } else {
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    console.log(response.data.data.length);
-                                    document.getElementById("body").id = "bodyset";
-                                }
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
+                                this.platzhalter = true;
                             }
+                            if (response.data.data.length < 3) {
+                                console.log(response.data.data.length);
+                                document.getElementById("body").id = "bodyset";
+                            }
+                            this.notFound = false;
+                            this.liste.data.data = response.data.data;
+                            this.isLoggedInCheck();
+                            this.saveContent(response.data.data);
                         }
-                    );
-
-            }
+                    }
+                );
         },
         methods: {
             isLoggedInCheck: function () {
