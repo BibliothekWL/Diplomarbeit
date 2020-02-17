@@ -3,10 +3,12 @@
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Resources\Cart as CartResource;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Author as AuthorResource;
 
 use \App\User as User;
 use \App\Cart as Cart;
 use \App\Book as Book;
+use \App\Author as Author;
 
 
 Auth::routes(['verify' => true]);

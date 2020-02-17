@@ -25,6 +25,11 @@ class AuthorController extends Controller
             $author->surname = $jsonarray['surname'];
             $author->save();
         }
+
+    }
+
+    public function destroy(){
+
     }
 
 }
