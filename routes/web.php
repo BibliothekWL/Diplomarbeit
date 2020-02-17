@@ -172,7 +172,7 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/author/json', function () {
-
+    return Author::all();
 });
 
 Route::post('/userdata/json', function () {
