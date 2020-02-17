@@ -49,8 +49,8 @@
                 })
                     .then(response => {
                         if (response.data.status !== '200') {
-                            Swal.fire({title: 'Oops!', text: "Something went wrong!", icon: 'error'});
-                            console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
+                            Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
+                            console.log(response);
                         } else {
                             this.$store.state.latestUsername = response.data.username;
                             this.$store.commit("setUsername");
@@ -69,7 +69,7 @@
                     }).catch(error => {
                     console.log();
                     Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
-                    console.log('Status: ' + error.status + '; Error Messasge: ' + error.statusText);
+                    console.log(error);
                 })
             }
         }

@@ -98,7 +98,7 @@
                         this.$store.commit('UserisnotAdmin');
                         this.$store.commit('setSearchEmpty');
                         this.$store.commit('isFirstPage');
-                        this.$router.push({path: '/login'});
+                        window.location.href="/login";
                     }).catch(error => {
                     console.log(error.message)
                 });

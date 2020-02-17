@@ -547,6 +547,7 @@
                         isNotBorrowed: null
                     })
                         .then(response => {
+                                console.log(response);
                                 if (response.data.data.length === 0) {
                                     this.page = 1;
                                     this.notFound = true;
@@ -736,7 +737,7 @@
 
     .beschreibung {
         font-size: 14px;
-        width: 16em;
+        width: 13em;
     }
 
     .page_buttons {
@@ -799,8 +800,8 @@
 
     .text {
         height: 7em;
-        width: 18em;
-        margin: 1.8em;
+        width: 14em;
+        margin: 1.5em;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
