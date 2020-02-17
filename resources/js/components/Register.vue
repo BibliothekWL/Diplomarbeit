@@ -6,43 +6,47 @@
                 <b-button class="navbar_btn">Register</b-button>
             </b-navbar>
             <div class="col-6" style="margin-top: 1em">
-                        <form>
-                        <!-- NAME -->
-                            <div class="form-group" :class="{ 'form-group--error': name.$error }">
-                                <b-form-input type="text" v-model.trim="$v.name.$model" placeholder="Enter Name and Surname"></b-form-input>
-                            </div>
-                            <div class="error" v-if="$v.name.$error">Field is required</div>
-
-                            <!-- ID -->
-                            <div class="form-group" :class="{ 'form-group--error': id.$error }">
-                                <b-form-input type="number" v-model.trim="$v.id.$model" placeholder="Enter ID"></b-form-input>
-                            </div>
-                            <div class="error" v-if="$v.id.$error">Field is required</div>
-
-                            <!-- EMAIL -->
-                            <div class="form-group" :class="{ 'form-group--error': email.$error }">
-                                <b-form-input type="text" v-model.trim="$v.email.$model" placeholder="Enter E-Mail"></b-form-input>
-                            </div>
-                            <div class="error" v-if="$v.email.$error">Field is required</div>
-                            <div class="error" v-if="!$v.email.email">Email has to be correct</div>
-
-
-                            <!-- PW -->
-                            <div class="form-group" :class="{ 'form-group--error': password.$error }">
-                                <b-form-input type="password" v-model.trim="$v.password.$model" placeholder="Enter Password"></b-form-input>
-                            </div>
-                            <div class="error" v-if="$v.password.$error">Field is required</div>
-                            <div class="error" v-if="!$v.password.minLength">Must be longer than 8 Chars</div>
-
-
-                            <!-- PWREPEAT -->
-                            <div class="form-group" :class="{ 'form-group--error': passwordRepeat.$error}">
-                                <b-form-input type="password" v-model.trim="$v.passwordRepeat.$model" placeholder="Repeat Password"></b-form-input>
-                            </div>
-                            <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Passwords must be the same</div>
-                        </form>
+                <form>
+                    <!-- NAME -->
+                    <div class="form-group" :class="{ 'form-group--error': name.$error }">
+                        <b-form-input type="text" v-model.trim="$v.name.$model"
+                                      placeholder="Enter Name and Surname"></b-form-input>
                     </div>
-                <b-button class="inputs" v-on:click="register()" :disabled="$v.$invalid">Register</b-button>
+                    <div class="error" v-if="$v.name.$error">Field is required</div>
+
+                    <!-- ID -->
+                    <div class="form-group" :class="{ 'form-group--error': id.$error }">
+                        <b-form-input type="number" v-model.trim="$v.id.$model" placeholder="Enter ID"></b-form-input>
+                    </div>
+                    <div class="error" v-if="$v.id.$error">Field is required</div>
+
+                    <!-- EMAIL -->
+                    <div class="form-group" :class="{ 'form-group--error': email.$error }">
+                        <b-form-input type="text" v-model.trim="$v.email.$model"
+                                      placeholder="Enter E-Mail"></b-form-input>
+                    </div>
+                    <div class="error" v-if="$v.email.$error">Field is required</div>
+                    <div class="error" v-if="!$v.email.email">Email has to be correct</div>
+
+
+                    <!-- PW -->
+                    <div class="form-group" :class="{ 'form-group--error': password.$error }">
+                        <b-form-input type="password" v-model.trim="$v.password.$model"
+                                      placeholder="Enter Password"></b-form-input>
+                    </div>
+                    <div class="error" v-if="$v.password.$error">Field is required</div>
+                    <div class="error" v-if="!$v.password.minLength">Must be longer than 8 Chars</div>
+
+
+                    <!-- PWREPEAT -->
+                    <div class="form-group" :class="{ 'form-group--error': passwordRepeat.$error}">
+                        <b-form-input type="password" v-model.trim="$v.passwordRepeat.$model"
+                                      placeholder="Repeat Password"></b-form-input>
+                    </div>
+                    <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Passwords must be the same</div>
+                </form>
+            </div>
+            <b-button class="inputs" v-on:click="register()" :disabled="$v.$invalid">Register</b-button>
         </div>
     </div>
 </template>
@@ -50,7 +54,7 @@
 <script>
     import axios from "axios";
     import Swal from 'sweetalert2';
-    import { required, sameAs, minLength, email } from 'vuelidate/lib/validators'
+    import {required, sameAs, minLength, email} from 'vuelidate/lib/validators'
 
     export default {
         data() {
@@ -61,17 +65,22 @@
                 password: "",
                 passwordRepeat: ""
             }
-        },
-        mounted() {
+        }, watch: {
+            '$store.state.isLoggedIn': {
+                handler() {
+                    this.loggedIn = this.$store.state.isLoggedIn;
+                },
+                immediate: true
+            },
         },
         validations: {
             name: {
                 required
             },
-            id:{
+            id: {
                 required
             },
-            email:{
+            email: {
                 required,
                 email
             },
@@ -94,7 +103,7 @@
                     })
                         .then(response => {
                             console.log(response);
-                            this.$router.push({ path: '/login' });
+                            this.$router.push({path: '/login'});
                         }).catch(error => {
                         console.log(error.message);
                         Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})
@@ -105,8 +114,8 @@
     }
 </script>
 
-<style >
-    .test{
+<style>
+    .test {
         display: flex;
         align-items: center;
         background-image: url("../../img/bg_hp.jpg");
@@ -114,7 +123,7 @@
         height: calc(100vh);
     }
 
-    .form_div{
+    .form_div {
         display: flex;
         background-color: white;
         opacity: 90%;
@@ -130,7 +139,7 @@
     }
 
 
-    .short_navbar{
+    .short_navbar {
         display: flex;
         justify-content: flex-start;
         width: 100%;
@@ -138,7 +147,7 @@
         color: #e30013;
     }
 
-    .navbar_btn{
+    .navbar_btn {
         background-color: white;
         color: red;
         border-color: white;
@@ -151,22 +160,23 @@
         margin-left: 5px;
         margin-top: -1rem;
         margin-bottom: 0.9375rem;
-        color: red;}
+        color: red;
+    }
 
     .form-group {
         border-color: red;
     }
 
-    a:hover{
+    a:hover {
         color: #666666;
         text-decoration: none;
     }
 
-    .inputs{
+    .inputs {
         margin-top: 1em;
     }
 
-    .login-btn{
+    .login-btn {
 
     }
 

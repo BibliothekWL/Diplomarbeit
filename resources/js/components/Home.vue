@@ -4,6 +4,7 @@
             <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
                 Wiener Linien</h1>
             </div>
+
             <b-input-group class="searchBar">
                 <b-input class="search" placeholder="Nach Büchern stöbern" type="search"
                          v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
