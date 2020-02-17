@@ -677,6 +677,7 @@
                                     this.isEndefind();
                                     this.getSystematik();
                                     this.getMedium();
+                                    this.getAutor();
                                 }
                             }
                         );
@@ -747,17 +748,11 @@
                         }
                     )
             },
-            getAutorVorname: function () {
-                axios.get('/autorVorname/json')
+            getAutor: function () {
+                axios.get('/author/json')
                     .then(response => {
-                            this.autorenVornamen = response.data;
-                        }
-                    )
-            },
-            getAutorNachname: function () {
-                axios.get('/medium/json')
-                    .then(response => {
-                            this.autorenNachnamen = response.data;
+                            this.autorenVornamen = response.data.firstname;
+                            this.autorenNachnamen = response.data.surname;
                         }
                     )
             },
