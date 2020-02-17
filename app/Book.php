@@ -17,6 +17,10 @@ class Book extends Model
         return $this->hasMany(Borrowing::class);
     }
 
+    public function authors(){
+        return $this->belongsToMany(Author::class);
+    }
+
     protected $fillable = [
         'title', 'systematik', 'medium', 'content', 'BNR', 'author_id'
     ];

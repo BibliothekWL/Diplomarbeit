@@ -20,7 +20,6 @@ use \App\Book;
 use \App\Author;
 
 use Illuminate\Routing\Redirector;
-use PhpParser\Builder\Class_;
 
 class BooksController extends Controller
 {
@@ -29,17 +28,6 @@ class BooksController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $books = Book::all();
-        return view('books.index', compact('books'));
-    }
-
-    public function create()
-    {
-        $user = User::findOrFail(auth()->user()->id);
-        return view('books.create', compact('user'));
-    }
 
     public function store()
     {
@@ -51,10 +39,6 @@ class BooksController extends Controller
 
     }
 
-    public function edit(Book $book)
-    {
-        return view('books.edit', compact('book'));
-    }
 
     /**
      * adds the option to update a book as an admin user
