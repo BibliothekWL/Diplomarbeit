@@ -148,34 +148,17 @@
                         ></b-form-input>
                     </b-form-group>
 
-                    <label>Autor</label>
-
                     <b-form-group
-                            label="Vorname"
+                            label="Autor"
                             label-for="title"
-                            invalid-feedback="Vorname is required"
+                            invalid-feedback="Autor is required"
                     >
 
                         <template>
-                            <b-form-input list="AutorenVornameAdd" v-model="autor"></b-form-input>
+                            <b-form-input list="AutorenAdd" v-model="autor"></b-form-input>
 
-                            <datalist id="AutorenVornameAdd">
-                                <option v-for="autorenVorname in autorenVornamen">{{ autorenvorname }}</option>
-                            </datalist>
-                        </template>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Nachname"
-                            label-for="title"
-                            invalid-feedback="Nachname is required"
-                    >
-
-                        <template>
-                            <b-form-input list="AutorenNachnameAdd" v-model="autor"></b-form-input>
-
-                            <datalist id="AutorenNachnameAdd">
-                                <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                            <datalist id="AutorenAdd">
+                                <option v-for="autor in autoren">{{ autor }}</option>
                             </datalist>
                         </template>
                     </b-form-group>
@@ -475,8 +458,7 @@
                 medium: "",
                 BNR: "",
                 autor: "",
-                autorenVornamen: [],
-                autorenNachnamen: [],
+                autoren: [],
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
@@ -601,8 +583,7 @@
                 }
             },
             ausgabe: function () {
-                this.$store.state.latestSearch = this.search;
-                this.$store.commit("setSearch");
+                this.$store.state.search = this.search;
                 this.$store.commit("UserisNotInCart");
                 this.$store.commit("UserisNotInCart_2");
                 if (this.$store.state.search === "") {
@@ -615,7 +596,7 @@
                         isNotBorrowed: null
                     })
                         .then(response => {
-                                console.log(this.lastPage = response.data.last_page);
+                                this.lastPage = response.data.last_page;
                                 if (response.data.data.length === 0) {
                                     this.page = 1;
                                     this.notFound = true;
@@ -640,6 +621,7 @@
                                     this.isEndefind();
                                     this.getSystematik();
                                     this.getMedium();
+                                    this.getAutor();
                                 }
                             }
                         );
@@ -751,8 +733,7 @@
             getAutor: function () {
                 axios.get('/author/json')
                     .then(response => {
-                            this.autorenVornamen = response.data.firstname;
-                            this.autorenNachnamen = response.data.surname;
+                            this.autoren = response.data;
                         }
                     )
             },

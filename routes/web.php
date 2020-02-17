@@ -23,6 +23,7 @@ Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
+Route::get('/authorlist  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));

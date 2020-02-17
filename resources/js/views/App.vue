@@ -17,8 +17,13 @@
                     <vs-sidebar-item index="1" icon="home" to="/home">
                         Home
                     </vs-sidebar-item>
+
                     <vs-sidebar-item index="5" icon="menu_book" to="/list">
                         Bücherliste
+                    </vs-sidebar-item>
+
+                    <vs-sidebar-item v-if="isAdmin & loggedIn" index="20" icon="supervisor_account" to="/authorlist">
+                        Autorliste
                     </vs-sidebar-item>
 
                     <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">
