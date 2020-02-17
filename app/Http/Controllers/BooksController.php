@@ -116,7 +116,7 @@ class BooksController extends Controller
                 ->where('id', $jsonarray['id'])
                 ->update([
                     'borrowed' => 0,
-                    'user_id' => null
+                    'user_id' => 0
                 ]);
 
             return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
@@ -158,7 +158,7 @@ class BooksController extends Controller
         $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
         if (sizeof($jsonarray) != 0) {
             $book = new Book();
-            $book->user_id = NULL;
+            $book->user_id = 0;
             $book->author_id = 1;
             $book->title = $jsonarray['title'];
             $book->systematik = $jsonarray['systematik'];

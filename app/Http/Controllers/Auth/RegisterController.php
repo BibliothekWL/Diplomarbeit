@@ -34,21 +34,21 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'id' => ['required', 'integer', 'max:8'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
+//    /**
+//     * Get a validator for an incoming registration request.
+//     *
+//     * @param array $data
+//     * @return \Illuminate\Validation\Validator
+//     */
+//    protected function validator(array $data)
+//    {
+//        return Validator::make($data, [
+//            'name' => ['required', 'string', 'max:255'],
+//            'id' => ['required', 'integer', 'max:8'],
+//            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+//            'password' => ['required', 'string', 'min:8', 'confirmed'],
+//        ]);
+//    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -67,7 +67,7 @@ class RegisterController extends Controller
                 $user->created_at = now();
                 $user->updated_at = now();
                 $user->save();
-                $user->sendEmailVerificationNotification();
+                var_dump(session()->all());
                 return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
             }
             return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
