@@ -1,26 +1,46 @@
 <template>
-    <div>
-        <div class="list">
-            <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                    img-left
-                    img-alt="Image"
-                    style="width: 15em;" class="listitem"
-                    v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                    v-b-modal.BookInformation>
-                <b-card-title>
-                    {{book.title}}
-                </b-card-title>
-                <b-card-text class="beschreibung">
-                    {{content_short[book.id]}}
-                </b-card-text>
-            </b-card>
+    <div class="body">
+        <div class="UserViewBody">
+            <div class="searchBox">
+                <div class="page_title">
+                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Einkaufswagen</h1>
+                </div>
+            </div>
+
+            <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
+
+            <div class="list">
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-b-modal.BookInformation>
+                    <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
+
+                        <div class="text">
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
+                                {{content_short[book.id]}}
+                            </div>
+                        </div>
+
+                        <div class="info entfernen">
+                            Entfernen
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+            </div>
         </div>
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts ausgeborgt!</h4>
-
-        <b-button v-if="!notFound" class="center" v-on:click="checkout()">
-            Ausborgen
-        </b-button>
+        <b-modal id="BookInformation" size="l" centered title="Information">
+            <div>
+                {{ content_full }}
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -38,30 +58,39 @@
                         data: ""
                     }
                 },
+                content_full: [],
                 content_short: [],
-                notFound: ""
+                notFound: false,
+                reserviert: false,
+                platzhalter: false
             }
         },
         mounted() {
+            this.$store.commit("UserisInCart");
+            this.$store.commit("UserisInCart_2");
             if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                 window.location.href = "/login"
             } else {
                 axios.post('/cart/json', {
                     id: this.$store.state.userID
-                })
-                    .then(response => {
-                            console.log(response);
-                            if (response.length === 0) {
-                                this.notFound = true;
+                }).then(response => {
+                        console.log(response);
+                        if (response.data.length === 0) {
+                            this.notFound = true;
+                            this.$store.commit("UserisNotInCart_2");
+                        } else {
+                            if (response.data.length % 2 === 0) {
+                                this.platzhalter = false;
                             } else {
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data);
+                                this.platzhalter = true;
                             }
+                            this.notFound = false;
+                            this.liste.data.data = response.data;
+                            this.isLoggedInCheck();
+                            this.saveContent(response.data);
                         }
-                    );
-
+                    }
+                );
             }
         },
         methods: {
@@ -95,35 +124,31 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-            checkout: function () {
-                axios.get('/cart/checkout')
-                    .then(
-                        response => {
-                            console.log(response);
-                            window.location.href = "/list";
-                        }
-                    )
+            entfernen: function () {
+                console.log('entfernt');
             }
         }
     }
 </script>
 
 <style scoped>
-
-    .center {
-        text-align: center;
+    html {
+        overflow: hidden;
     }
 
-    .notFound {
-        text-align: center;
+    .UserViewBody {
+        display: flex;
+        flex-direction: column;
     }
 
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: right;
         padding-top: 4em;
+        padding-left: 8em;
+        padding-right: 4em;
     }
 
     .list > * {
@@ -133,19 +158,65 @@
     }
 
     .listitem {
-        padding: 1em;
         margin: 2em;
-    }
-
-    .listitem:hover {
-        cursor: pointer;
-    }
-
-    .beschreibung {
-        font-size: 12px;
+        border: 1px black solid;
     }
 
     .notFound {
+        text-align: center;
+        padding-top: 6em;
+    }
+
+    .text {
+        height: 7em;
+        width: 18em;
+        margin: 1.8em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .beschreibung {
+        font-size: 14px;
+        width: 20em;
+    }
+
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .entfernen {
+        z-index: 1000;
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 5em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+    }
+
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .notFound {
+        font-size: 2em;
     }
 </style>

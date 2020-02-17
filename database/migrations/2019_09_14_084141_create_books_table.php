@@ -1,4 +1,4 @@
-<?php
+php artisan make:migration create_users_table<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,6 +22,7 @@ class CreateBooksTable extends Migration
             $table->text('kategorie');
             $table->integer('BNR');
             $table->tinyInteger('borrowed')->default(0);
+            $table->tinyInteger('user_id')->default(0);
             $table->timestamps();
         });
     }

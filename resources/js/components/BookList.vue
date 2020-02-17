@@ -1,11 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-
-        <!---------------------------------------------------------
-
-                                User-View
-
-        ---------------------------------------------------------->
+    <div id="body">
 
         <!---------------------------------------------------------
 
@@ -13,25 +7,36 @@
 
         ---------------------------------------------------------->
 
-        <h1 class="suche_title">Suche</h1>
-
         <div class="searchBox">
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+                Wiener Linien</h1>
+            </div>
+
             <b-input-group class="searchBar">
-                <b-input placeholder="Nach Büchern stöbern" type="text" class="search"
-                         v-model="search" v-on:keyup.enter="ausgabe()"></b-input>
                 <b-input-group-append>
-                    <b-button variant="outline-dark" v-if='search != ""' v-on:click='clearSearch()'>
-                        <font-awesome-icon icon="times"></font-awesome-icon>
+                    <b-button v-show="showalpha" v-on:click="showalphaChange()">
+                        <font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>
                     </b-button>
-                    <b-button variant="outline-dark" v-on:click="ausgabe()">
+
+                    <b-button v-show="!showalpha" v-on:click="showalphaChange()">
+                        <font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>
+                    </b-button>
+                </b-input-group-append>
+
+                <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
+                         v-on:keyup.enter="ausgabe()">
+                </b-input>
+
+                <b-input-group-append>
+                    <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
+                    </b-button>
+
+                    <b-button v-b-modal.Filter>
+                        <font-awesome-icon icon="filter"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
-
-            <b-button variant="outline-white">
-                <font-awesome-icon icon="filter"></font-awesome-icon>
-            </b-button>
         </div>
 
         <!---------------------------------------------------------
@@ -47,21 +52,20 @@
             </b-button>
 
             <div class="list">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
-                        style="width: 15em;"
-                        class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-b-modal.BookInformation>
                     <div class="card_flex">
-                        <div>
-                            <b-card-title>
+                        <div class="bildbruh">&#160;</div>
+
+                        <div class="text">
+                            <div class="book_title">
                                 {{book.title}}
-                            </b-card-title>
-                            <b-card-text class="beschreibung">
+                            </div>
+
+                            <div class="beschreibung">
                                 {{content_short[book.id]}}
-                            </b-card-text>
+                            </div>
                         </div>
 
                         <div v-if="book.borrowed === 0" class="info frei">
@@ -71,12 +75,10 @@
                         <div v-if="book.borrowed === 1" class="info borrowed">
                             Ausgeborgt
                         </div>
-
-                        <div v-if="reserviert" class="info reserved">
-                            Reserviert
-                        </div>
                     </div>
-                </b-card>
+                </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
         </div>
 
@@ -86,8 +88,10 @@
 
         ---------------------------------------------------------->
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
-            versuchen Sie es später noch einmal.</h4>
+        <h4 v-if="notFound" class="notFound">
+            Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+            versuchen Sie es später noch einmal.
+        </h4>
 
         <!---------------------------------------------------------
 
@@ -119,77 +123,129 @@
 
         ---------------------------------------------------------->
 
+
         <div>
-            <b-modal id="AddItem" centered title="Create Book"
-                     @ok="saveAdd(title, systematik, medium, content_full, BNR)">
-                <b-form-group
-                        label="Title"
-                        label-for="title"
-                        invalid-feedback="Title is required"
-                >
 
-                    <b-form-input
-                            id="name-input"
-                            v-model="title"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
-                </b-form-group>
+            <!---------------------------------------------------------
 
-                <b-form-group
-                        label="Systematik"
-                        label-for="title"
-                        invalid-feedback="Systematik is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
-                </b-form-group>
+                                      AddItem
 
-                <b-form-group
-                        label="Medium"
-                        label-for="title"
-                        invalid-feedback="Medium is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
-                </b-form-group>
+            ---------------------------------------------------------->
 
-                <b-form-group
-                        label="Content"
-                        label-for="title"
-                        invalid-feedback="Content is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="content_full"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
-                </b-form-group>
+            <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
+                     @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
+                <form ref="form">
+                    <b-form-group
+                            label="Title"
+                            label-for="title"
+                            invalid-feedback="Title is required"
+                    >
 
-                <b-form-group
-                        label="BNR"
-                        label-for="title"
-                        invalid-feedback="BNR is required"
-                >
-                    <b-form-input
-                            id="name-input"
-                            v-model="BNR"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
-                </b-form-group>
+                        <b-form-input
+                                id="name-input"
+                                v-model="title"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <label>Autor</label>
+
+                    <b-form-group
+                            label="Vorname"
+                            label-for="title"
+                            invalid-feedback="Vorname is required"
+                    >
+
+                        <template>
+                            <b-form-input list="AutorenVornameAdd" v-model="autor"></b-form-input>
+
+                            <datalist id="AutorenVornameAdd">
+                                <option v-for="autorenVorname in autorenVornamen">{{ autorenvorname }}</option>
+                            </datalist>
+                        </template>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Nachname"
+                            label-for="title"
+                            invalid-feedback="Nachname is required"
+                    >
+
+                        <template>
+                            <b-form-input list="AutorenNachnameAdd" v-model="autor"></b-form-input>
+
+                            <datalist id="AutorenNachnameAdd">
+                                <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                            </datalist>
+                        </template>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Systematik"
+                            label-for="title"
+                            invalid-feedback="Systematik is required"
+                    >
+
+                        <template>
+                            <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
+
+                            <datalist id="systematikAdd">
+                                <option v-for="systematik in systematiken">{{ systematik }}</option>
+                            </datalist>
+                        </template>
+
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Medium"
+                            label-for="title"
+                            invalid-feedback="Medium is required"
+                    >
+
+                        <template>
+                            <b-form-input list="medienAdd" v-model="medium"></b-form-input>
+
+                            <datalist id="medienAdd">
+                                <option v-for="medium in medien">{{ medium }}</option>
+                            </datalist>
+                        </template>
+
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Content"
+                            label-for="title"
+                            invalid-feedback="Content is required"
+                    >
+                        <b-form-textarea
+                                id="name-input"
+                                v-model="content_full"
+                                required
+                        ></b-form-textarea>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="BNR"
+                            label-for="title"
+                            invalid-feedback="BNR is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="BNR"
+                                type="number"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
             </b-modal>
 
-            <b-modal id="EditItem" centered title="Edit Book"
+            <!---------------------------------------------------------
+
+                                    EditItem
+
+            ---------------------------------------------------------->
+
+            <b-modal scrollable id="EditItem" centered title="Edit Book"
                      @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
                 <b-form-group
                         label="Title"
@@ -200,8 +256,39 @@
                             id="name-input"
                             v-model="title"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
+                </b-form-group>
+
+                <label>Autor</label>
+
+                <b-form-group
+                        label="Vorname"
+                        label-for="title"
+                        invalid-feedback="Vorname is required"
+                >
+
+                    <template>
+                        <b-form-input list="AutorenVornameEdit" v-model="autor"></b-form-input>
+
+                        <datalist id="AutorenVornameEdit">
+                            <option v-for="autorenVorname in autorenVornamen">{{ autorenVorname }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
+
+                <b-form-group
+                        label="Nachname"
+                        label-for="title"
+                        invalid-feedback="Nachname is required"
+                >
+
+                    <template>
+                        <b-form-input list="AutorenNachnameEdit" v-model="autor"></b-form-input>
+
+                        <datalist id="AutorenNachnameEdit">
+                            <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                        </datalist>
+                    </template>
                 </b-form-group>
 
                 <b-form-group
@@ -209,12 +296,15 @@
                         label-for="title"
                         invalid-feedback="Systematik is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="systematik"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
+
+                        <datalist id="systematikEdit">
+                            <option v-for="systematik in systematiken">{{ systematik }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -222,12 +312,15 @@
                         label-for="title"
                         invalid-feedback="Medium is required"
                 >
-                    <b-form-input
-                            id="name-input"
-                            v-model="medium"
-                            required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+
+                    <template>
+                        <b-form-input list="medienEdit" v-model="medium"></b-form-input>
+
+                        <datalist id="medienEdit">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+
                 </b-form-group>
 
                 <b-form-group
@@ -235,12 +328,11 @@
                         label-for="title"
                         invalid-feedback="Content is required"
                 >
-                    <b-form-input
+                    <b-form-textarea
                             id="name-input"
                             v-model="content_full"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
-                    ></b-form-input>
+                    ></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group
@@ -252,12 +344,62 @@
                             id="name-input"
                             v-model="BNR"
                             required
-                            v-on:keyup.enter="saveAdd(title, systematik, medium, content_full, BNR)"
                     ></b-form-input>
                 </b-form-group>
             </b-modal>
 
-            <b-modal id="BookInformation" centered title="Information">
+            <!---------------------------------------------------------
+
+                                        Filter
+
+            ---------------------------------------------------------->
+
+            <b-modal id="Filter" centered title="Filter"
+                     @ok="setFilter()">
+                <b-form-group
+                        label="Systematik"
+                        label-for="title"
+                        invalid-feedback="Systematik is required"
+                >
+                    <template>
+                        <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_systematik"
+                                      list="statistikFilter"/>
+
+                        <datalist id="statistikFilter">
+                            <option v-for="systematik in systematiken">{{ systematik }}</option>
+                        </datalist>
+                    </template>
+
+                </b-form-group>
+
+                <b-form-group
+                        label="Medium"
+                        label-for="title"
+                        invalid-feedback="Medium is required"
+                >
+                    <template>
+                        <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_medium" list="medienFilter"/>
+
+                        <datalist id="medienFilter">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
+            </b-modal>
+
+            <!---------------------------------------------------------
+
+                                 Bookinformation
+
+            ---------------------------------------------------------->
+
+            <b-modal
+                    id="BookInformation"
+                    ref="modal"
+                    centered title="Buchinformationen"
+                    size="lg"
+            >
+
                 <div>
                     {{ content_full }}
                 </div>
@@ -265,7 +407,7 @@
                 <template v-slot:modal-footer="{cancel}">
                     <div v-if="isLoggedIn">
                         <div v-if="isAdmin">
-                            <b-button size="sm" variant="success" @click="cancel()">
+                            <b-button v-show="false" size="sm" variant="success" @click="cancel()">
                                 Close
                             </b-button>
 
@@ -278,24 +420,24 @@
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
 
-                            <b-button :disabled="!isBorrowed[id]" pill v-on:click="returnBook(id)">
+                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
                                 <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
                             </b-button>
                         </div>
 
                         <div v-if="!isAdmin">
-                            <b-button size="sm" variant="success" @click="cancel()">
+                            <b-button size="sm" v-show="false" variant="success" @click="cancel()">
                                 Close
                             </b-button>
 
-                            <b-button :disabled="isBorrowed[id]" pill v-on:click="putIntoCart(id)">
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
                                 <font-awesome-icon icon="cart-plus"></font-awesome-icon>
                             </b-button>
                         </div>
                     </div>
 
                     <div v-if="!isLoggedIn">
-                        <b-button size="sm" variant="success" @click="cancel()">
+                        <b-button v-show="false" size="sm" variant="success" @click="cancel()">
                             Close
                         </b-button>
                     </div>
@@ -313,7 +455,7 @@
         name: "BookList",
         data() {
             return {
-                page: "",
+                page: 1,
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
@@ -327,10 +469,14 @@
                 lastPage: 0,
                 id: "",
                 title: "",
+                titleState: null,
                 title_1: "",
                 systematik: "",
                 medium: "",
                 BNR: "",
+                autor: "",
+                autorenVornamen: [],
+                autorenNachnamen: [],
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
@@ -338,58 +484,25 @@
                 isAnfang: false,
                 isEnde: false,
                 show: true,
-                reserviert: false
+                reserviert: false,
+                platzhalter: false,
+                systematiken: [],
+                medien: [],
+                showalpha: this.$store.state.showalpha,
+                filter_medium: this.$store.state.filter_medium,
+                filter_systematik: this.$store.state.filter_systematik,
+                key: 0
             };
         },
         mounted() {
-            this.page = this.$store.state.page;
-            if (this.$store.state.search === "") {
-                axios.get('/books/json?page=' + this.page)
-                    .then(response => {
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
-                                this.isAnfang = true;
-                                this.isEnde = true;
-                            } else {
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
-                                this.isAnfangfind();
-                                this.isEndefind();
-                            }
-                        }
-                    );
-            } else {
-                axios.post('/books/search?page=' + this.page, {
-                    search: this.search
-                })
-                    .then(response => {
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
-                                this.isAnfang = true;
-                                this.isEnde = true;
-                            } else {
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.$store.state.lastPage = this.lastPage;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
-                                this.isAnfangfind();
-                                this.isEndefind();
-                            }
-                        }
-                    );
-            }
+            this.ausgabe();
         },
         methods: {
             deleteItem: function (id) {
                 axios.post('/books/delete/json/', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status)
                     }
                 )
             },
@@ -403,6 +516,7 @@
                         this.systematik = response.data.systematik;
                         this.medium = response.data.medium;
                         this.BNR = response.data.BNR;
+                        this.ausgabe();
                     }
                 );
             },
@@ -413,16 +527,16 @@
                 this.medium = "";
                 this.BNR = "";
             },
-            saveAdd: function (title, systematik, medium, content, BNR) {
+            saveAdd: function (title, systematik, medium, content, BNR, autor) {
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
                     BNR: BNR,
-                    authorname: 'Kevin'
+                    authorname: autor
                 }).then(response => {
-                        this.reloadSite(response.data.status + "");
+
                         this.id = "";
                         this.title = "";
                         this.title_1 = "";
@@ -430,20 +544,22 @@
                         this.systematik = "";
                         this.medium = "";
                         this.BNR = "";
+                        this.ausgabe();
                     }
                 )
             },
-            saveEdit: function (id, title, systematik, medium, content, BNR) {
+            saveEdit: function (id, title, systematik, medium, content, BNR, autor) {
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
-                    BNR: BNR
+                    BNR: BNR,
+                    authorname: autor
                 })
                     .then(response => {
-                            this.reloadSite(response.data.status + "")
+                            this.reloadSite(response);
                         }
                     )
             },
@@ -451,9 +567,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 10) {
+                    if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 10; j++) {
+                        for (let j = 0; j < 8; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -478,8 +594,8 @@
                 );
             },
             reloadSite: function (status) {
-                if (status === "200") {
-                    window.location.reload();
+                if (status === 200) {
+                    this.ausgabe();
                 } else {
                     console.log("error");
                 }
@@ -487,44 +603,111 @@
             ausgabe: function () {
                 this.$store.state.latestSearch = this.search;
                 this.$store.commit("setSearch");
-                this.$store.commit("isFirstPage");
-                window.location.reload();
+                this.$store.commit("UserisNotInCart");
+                this.$store.commit("UserisNotInCart_2");
+                if (this.$store.state.search === "") {
+                    axios.post('/books/json?page=' + this.page, {
+                        sortDirection: this.showalpha,
+                        medium: this.filter_medium,
+                        systematik: this.filter_systematik,
+                        author: null,
+                        isBorrowed: null,
+                        isNotBorrowed: null
+                    })
+                        .then(response => {
+                                console.log(this.lastPage = response.data.last_page);
+                                if (response.data.data.length === 0) {
+                                    this.page = 1;
+                                    this.notFound = true;
+                                    this.isAnfang = true;
+                                    this.isEnde = true;
+                                } else {
+                                    if (response.data.data.length % 2 === 0) {
+                                        this.platzhalter = false;
+                                    } else {
+                                        this.platzhalter = true;
+                                    }
+                                    if (response.data.data.length < 3) {
+                                        console.log(response.data.data.length);
+                                        document.getElementById("body").id = "bodyset";
+                                    }
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.getSystematik();
+                                    this.getMedium();
+                                }
+                            }
+                        );
+                } else {
+                    axios.post('/books/search?page=' + this.page, {
+                        search: this.search,
+                        sortDirection: this.showalpha,
+                        medium: this.filter_medium,
+                        systematik: this.filter_systematik,
+                        author: null,
+                        isBorrowed: null,
+                        isNotBorrowed: null
+                    })
+                        .then(response => {
+                                if (response.data.data.length === 0) {
+                                    this.notFound = true;
+                                    this.isAnfang = true;
+                                    this.isEnde = true;
+                                } else {
+                                    if (response.data.data.length % 2 === 0) {
+                                        this.platzhalter = false;
+                                    } else {
+                                        this.platzhalter = true;
+                                    }
+                                    if (response.data.data.length < 3) {
+                                        document.getElementById("body").id = "bodyset";
+                                    }
+                                    this.notFound = false;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.$store.state.lastPage = this.lastPage;
+                                    this.isLoggedInCheck();
+                                    this.saveContent(response.data.data);
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                    this.getSystematik();
+                                    this.getMedium();
+                                    this.getAutor();
+                                }
+                            }
+                        );
+                }
             },
             isAnfangfind: function () {
-                if (this.$store.state.page === this.firstPage) {
+                if (this.page === this.firstPage) {
                     this.isAnfang = true;
                 }
             },
             isEndefind: function () {
-                if (this.$store.state.page === this.lastPage) {
+                if (this.page === this.lastPage) {
                     this.isEnde = true;
                 }
             },
             increment: function () {
-                this.$store.commit("increment");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
+                this.page++;
+                this.ausgabe();
             },
             decrement: function () {
-                this.$store.commit("decrement");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
+                this.page--;
+                this.ausgabe();
             },
             sendtoFirst: function () {
-                this.$store.commit("isFirstPage");
-                this.isAnfang = true;
-                this.isEnde = true;
-                window.location.reload();
-
+                this.page = 1;
+                this.ausgabe();
             },
             sendtoLast: function () {
-                this.$store.state.lastPage = this.lastPage;
-                this.$store.commit("isLastPage");
-                this.isAnfang = false;
-                this.isEnde = true;
-                window.location.reload();
+                this.page = this.lastPage;
+                this.ausgabe();
             },
             isLoggedInCheck: function () {
                 axios.get('/session')
@@ -537,7 +720,7 @@
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status + "")
+                        this.reloadSite(response.data.status)
                     }
                 )
             },
@@ -547,14 +730,42 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            console.log(response);
-                            window.location.reload();
+                            this.reloadSite(response.status);
                         }
                     )
             },
-            clearSearch: function () {
-                this.search = "";
-                this.$store.state.search = "";
+            getSystematik: function () {
+                axios.get('/systematik/json')
+                    .then(response => {
+                            this.systematiken = response.data;
+                        }
+                    )
+            },
+            getMedium: function () {
+                axios.get('/medium/json')
+                    .then(response => {
+                            this.medien = response.data;
+                        }
+                    )
+            },
+            getAutor: function () {
+                axios.get('/author/json')
+                    .then(response => {
+                            this.autorenVornamen = response.data.firstname;
+                            this.autorenNachnamen = response.data.surname;
+                        }
+                    )
+            },
+            showalphaChange: function () {
+                this.showalpha = !this.showalpha;
+                this.$store.state.showalpha = this.showalpha;
+                this.ausgabe();
+            },
+            setFilter: function () {
+                this.$store.state.latestFilterMedium = this.filter_medium;
+                this.$store.state.latestFilterSystematik = this.filter_systematik;
+                this.$store.commit("setFilterMedium");
+                this.$store.commit("setFilterSystematik");
                 this.ausgabe();
             }
         }
@@ -566,19 +777,17 @@
 
     .notFound {
         text-align: center;
-    }
-
-    .suche_title {
-        text-align: center;
-        padding-top: 1em;
+        padding: 8em;
     }
 
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: right;
         padding-top: 4em;
+        padding-left: 8em;
+        padding-right: 4em;
     }
 
     .list > * {
@@ -588,8 +797,8 @@
     }
 
     .listitem {
-        padding: 1em;
         margin: 2em;
+        border: 1px black solid;
     }
 
     .card_flex {
@@ -604,12 +813,14 @@
     }
 
     .beschreibung {
-        font-size: 12px;
+        font-size: 14px;
+        width: 13em;
     }
 
     .page_buttons {
         text-align: center;
         padding: 2em;
+        color: white;
     }
 
     .addButton {
@@ -619,20 +830,24 @@
 
     .searchBar {
         width: 50em;
-        vertical-align: center;
+        vertical-align: top;
     }
 
     .searchBox {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
     }
 
     .frei {
         border: 1px green solid;
         border-radius: 10px;
         color: green;
-        width: 4em;
+        width: 3em;
         padding: 0.25em;
         margin: 1em;
         text-align: center;
@@ -647,4 +862,26 @@
         margin: 1em;
         text-align: center;
     }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .text {
+        height: 7em;
+        width: 14em;
+        margin: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
 </style>

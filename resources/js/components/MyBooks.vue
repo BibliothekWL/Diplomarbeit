@@ -1,38 +1,49 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <div v-if="!notFound">
+<template>
+    <div id="body">
+        <div class="UserViewBody">
+            <div class="searchBox">
+                <div class="page_title">
+                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Meine Bücher</h1>
+                </div>
+            </div>
+
+            <h6 class="notFound" v-if="notFound">Sie haben noch keine Bücher ausgeborgt!</h6>
 
             <div class="list">
-                <b-card v-for="book in liste.data.data" type="light" variant="danger" v-bind:key="book.id"
-                        img-left
-                        img-alt="Image"
-                        style="width: 15em;" class="listitem"
-                        v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                        v-b-modal.BookInformation>
-                    <b-card-title>
-                        {{book.title}}
-                    </b-card-title>
-                    <b-card-text class="beschreibung">
-                        {{content_short[book.id]}}
-                    </b-card-text>
-                </b-card>
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-b-modal.BookInformation>
+                    <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
+
+                        <div class="text">
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
+                                {{content_short[book.id]}}
+                            </div>
+                        </div>
+
+                        <div v-if="book.borrowed === 0" class="info frei">
+                            Frei
+                        </div>
+
+                        <div v-if="book.borrowed === 1" class="info borrowed">
+                            Ausgeborgt
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
         </div>
 
-        <h4 class="notFound" v-if="notFound">Leider nichts gefunden! Sie haben noch nichts reserviert!</h4>
-
-        <b-modal id="BookInformation" centered title="Information">
+        <b-modal id="BookInformation" size="l" centered title="Information">
             <div>
                 {{ content_full }}
             </div>
-
-            <template v-slot:modal-footer="{cancel}">
-                <div>
-                    <b-button size="sm" variant="success" @click="cancel()">
-                        Close
-                    </b-button>
-                </div>
-            </template>
         </b-modal>
     </div>
 </template>
@@ -54,27 +65,33 @@
                 isLoggedIn: false,
                 content_full: [],
                 content_short: [],
+                platzhalter: false
             }
         },
         mounted() {
-            if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
-                window.location.href = "/login"
-            } else {
-                axios.get('/books/mybooks/json')
-                    .then(response => {
-                            console.log(response);
-                            if (response.data.data.length === 0) {
-                                this.notFound = true;
+            this.$store.commit("UserisInCart_2");
+            this.$store.commit("UserisNotInCart_2");
+            axios.get('/books/mybooks/json')
+                .then(response => {
+                        if (response.data.data.length === 0) {
+                            this.notFound = true;
+                        } else {
+                            if (response.data.data.length % 2 === 0) {
+                                this.platzhalter = false;
                             } else {
-                                this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.isLoggedInCheck();
-                                this.saveContent(response.data.data);
+                                this.platzhalter = true;
                             }
+                            if (response.data.data.length < 3) {
+                                console.log(response.data.data.length);
+                                document.getElementById("body").id = "bodyset";
+                            }
+                            this.notFound = false;
+                            this.liste.data.data = response.data.data;
+                            this.isLoggedInCheck();
+                            this.saveContent(response.data.data);
                         }
-                    );
-
-            }
+                    }
+                );
         },
         methods: {
             isLoggedInCheck: function () {
@@ -113,6 +130,10 @@
 </script>
 
 <style scoped>
+    .center {
+        text-align: center;
+    }
+
     .notFound {
         text-align: center;
     }
@@ -122,7 +143,12 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        padding-top: 4em;
+        padding-left: 4em;
+    }
+
+    .listitem {
+        padding: 1em;
+        margin: 2em;
     }
 
     .list > * {
@@ -131,16 +157,41 @@
         flex-shrink: 1;
     }
 
-    .listitem {
-        padding: 1em;
-        margin: 2em;
-    }
-
     .listitem:hover {
         cursor: pointer;
     }
 
     .beschreibung {
-        font-size: 12px;
+        font-size: 14px;
+        width: 20em;
+    }
+
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+    }
+
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
+
+    .notFound {
+        font-size: 2em;
+        padding: 10.5em;
     }
 </style>

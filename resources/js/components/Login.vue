@@ -6,9 +6,12 @@
                 <b-button class="navbar_btn" to="/register">Register</b-button>
             </b-navbar>
             <div class="form_div">
-                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email" placeholder="Enter Email"></b-form-input>
-                <b-form-input v-on:keyup.enter="login()" class="password" v-model="password" type="password" placeholder="Enter Password"></b-form-input>
-                <b-button v-on:click="login()" href>Login</b-button>
+                <img src="../../img/logo.png" class="img-fluid">
+                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="email" type="email"
+                              placeholder="Enter Email"></b-form-input>
+                <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password"
+                              placeholder="Enter Password"></b-form-input>
+                <b-button class="inputs" v-on:click="login()" href>Login</b-button>
             </div>
         </div>
     </div>
@@ -16,6 +19,8 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
+
 
     export default {
         name: "Landing",
@@ -25,8 +30,16 @@
                 password: ""
             }
         },
+        watch: {
+            '$store.state.isLoggedIn': {
+                handler() {
+                    this.loggedIn = this.$store.state.isLoggedIn;
+                },
+                immediate: true
+            },
+        },
         mounted() {
-
+            console.log(this.$store.state.isLoggedIn);
         },
         methods: {
             login: function () {
@@ -35,25 +48,28 @@
                     password: this.password
                 })
                     .then(response => {
-                        console.log(response);
-                        if(response.data.status !== '200'){
-                            console.log('Status: ' + response.data.status +'; Error Messasge: ' + response.data.statusMsg);
-                        }
-                        else {
+                        if (response.data.status !== '200') {
+                            Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
+                            console.log(response);
+                        } else {
                             this.$store.state.latestUsername = response.data.username;
                             this.$store.commit("setUsername");
                             this.$store.state.latestUserID = response.data.userID;
                             this.$store.commit("setUserID");
                             this.$store.commit('UserLoggedIn');
-                            if(response.data.isAdmin === true) {
+                            if (response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            window.location.href = "/list";
+                            this.$forceUpdate();
+                            this.$router.push({path: '/home'}
+                            )
                         }
                     }).catch(error => {
-                    console.log(error.message)
+                    console.log();
+                    Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
+                    console.log(error);
                 })
             }
         }
@@ -61,41 +77,5 @@
 </script>
 
 <style scoped>
-    .test{
-        display: flex;
-        align-items: center;
-        background-image: url("../../img/library.jpg");
-        background-size: cover;
-        height: calc(100vh - 54px);
-    }
 
-    .form_div{
-        display: flex;
-        background-color: white;
-        opacity: 90%;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-        min-width: 30%;
-        height: 60%;
-        border-radius: 15px;
-        align-items: center;
-        flex-direction: column;
-    }
-
-
-    .short_navbar{
-        display: flex;
-        justify-content: flex-start;
-        width: 100%;
-        border-radius: 15px;
-        color: #e30013;
-    }
-
-    .navbar_btn{
-        background-color: white;
-        color: red;
-        border-color: white;
-        margin-right: 0.5em;
-    }
 </style>
