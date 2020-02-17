@@ -49,7 +49,7 @@
                 })
                     .then(response => {
                         if (response.data.status !== '200') {
-                            Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
+                            Swal.fire({title: 'Oops!', text: "Something went wrong!", icon: 'error'});
                             console.log('Status: ' + response.data.status + '; Error Messasge: ' + response.data.statusMsg);
                         } else {
                             this.$store.state.latestUsername = response.data.username;
