@@ -8,20 +8,11 @@
         ---------------------------------------------------------->
 
         <div class="searchBox">
-            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
-                Wiener Linien</h1>
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">
+                Autorenliste</h1>
             </div>
 
             <b-input-group class="searchBar">
-                <b-input-group-append>
-                    <b-button v-show="showalpha" v-on:click="showalphaChange()">
-                        <font-awesome-icon icon="sort-alpha-down-alt"></font-awesome-icon>
-                    </b-button>
-
-                    <b-button v-show="!showalpha" v-on:click="showalphaChange()">
-                        <font-awesome-icon icon="sort-alpha-down"></font-awesome-icon>
-                    </b-button>
-                </b-input-group-append>
 
                 <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
                          v-on:keyup.enter="ausgabe()">
@@ -30,10 +21,6 @@
                 <b-input-group-append>
                     <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
-                    </b-button>
-
-                    <b-button v-b-modal.Filter>
-                        <font-awesome-icon icon="filter"></font-awesome-icon>
                     </b-button>
                 </b-input-group-append>
             </b-input-group>
@@ -46,34 +33,21 @@
         ---------------------------------------------------------->
 
         <div v-if="!notFound" class="UserViewBody">
-            <b-button v-if="isAdmin" type="light" variant="danger" class="addButton" pill v-b-modal.AddItem
+            <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddItem
                       v-on:click="addItem(liste.length)">
                 <font-awesome-icon icon="plus"/>
             </b-button>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                     v-b-modal.BookInformation>
+                <div v-for="author in liste.data.data" class="listitem">
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
 
                         <div class="text">
                             <div class="book_title">
-                                {{book.title}}
+                                {{author.firstname}}
+                                {{author.surname}}
                             </div>
-
-                            <div class="beschreibung">
-                                {{content_short[book.id]}}
-                            </div>
-                        </div>
-
-                        <div v-if="book.borrowed === 0" class="info frei">
-                            Frei
-                        </div>
-
-                        <div v-if="book.borrowed === 1" class="info borrowed">
-                            Ausgeborgt
                         </div>
                     </div>
                 </div>
@@ -130,7 +104,6 @@
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: this.$store.state.isLoggedIn,
-                isBorrowed: "",
                 liste: {
                     data: {
                         data: ""
@@ -138,30 +111,11 @@
                 },
                 firstPage: 1,
                 lastPage: 0,
-                id: "",
-                title: "",
-                titleState: null,
-                title_1: "",
-                systematik: "",
-                medium: "",
-                BNR: "",
                 autor: "",
-                autoren: [],
-                content_full: [],
-                content_short: [],
-                dialog_title: "",
-                search: this.$store.state.search,
+                search: "",
                 isAnfang: false,
                 isEnde: false,
-                show: true,
-                reserviert: false,
-                platzhalter: false,
-                systematiken: [],
-                medien: [],
-                showalpha: this.$store.state.showalpha,
-                filter_medium: this.$store.state.filter_medium,
-                filter_systematik: this.$store.state.filter_systematik,
-                key: 0
+                platzhalter: false
             };
         },
         mounted() {
@@ -169,90 +123,191 @@
         },
         methods: {
             ausgabe: function () {
-                this.$store.state.search = this.search;
-                if (this.$store.state.search === "") {
-                    axios.post('/author/json?page=' + this.page, {
-                        sortDirection: this.showalpha,
-                        medium: this.filter_medium,
-                        systematik: this.filter_systematik,
-                        author: null,
-                        isBorrowed: null,
-                        isNotBorrowed: null
-                    })
+                if (this.search === "") {
+                    axios.get('/author/json?page=' + this.page)
                         .then(response => {
                                 this.lastPage = response.data.last_page;
-                                if (response.data.data.length === 0) {
-                                    this.page = 1;
-                                    this.notFound = true;
-                                    this.isAnfang = true;
-                                    this.isEnde = true;
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
                                 } else {
-                                    if (response.data.data.length % 2 === 0) {
-                                        this.platzhalter = false;
-                                    } else {
-                                        this.platzhalter = true;
-                                    }
-                                    if (response.data.data.length < 3) {
-                                        console.log(response.data.data.length);
-                                        document.getElementById("body").id = "bodyset";
-                                    }
-                                    this.notFound = false;
-                                    this.liste.data.data = response.data.data;
-                                    this.lastPage = response.data.last_page;
-                                    this.isLoggedInCheck();
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                    this.getSystematik();
-                                    this.getMedium();
-                                    this.getAutor();
+                                    this.platzhalter = true;
                                 }
+                                if (response.data.data.length < 3) {
+                                    document.getElementById("body").id = "bodyset";
+                                }
+                                this.liste.data.data = response.data.data;
+                                this.lastPage = response.data.last_page;
+                                this.isAnfangfind();
+                                this.isEndefind();
                             }
                         );
                 } else {
-                    axios.post('/books/search?page=' + this.page, {
-                        search: this.search,
-                        sortDirection: this.showalpha,
-                        medium: this.filter_medium,
-                        systematik: this.filter_systematik,
-                        author: null,
-                        isBorrowed: null,
-                        isNotBorrowed: null
+                    axios.post('/author/search?page=' + this.page, {
+                        search: this.search
                     })
                         .then(response => {
-                                if (response.data.data.length === 0) {
-                                    this.notFound = true;
-                                    this.isAnfang = true;
-                                    this.isEnde = true;
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
                                 } else {
-                                    if (response.data.data.length % 2 === 0) {
-                                        this.platzhalter = false;
-                                    } else {
-                                        this.platzhalter = true;
-                                    }
-                                    if (response.data.data.length < 3) {
-                                        document.getElementById("body").id = "bodyset";
-                                    }
-                                    this.notFound = false;
-                                    this.liste.data.data = response.data.data;
-                                    this.lastPage = response.data.last_page;
-                                    this.$store.state.lastPage = this.lastPage;
-                                    this.isLoggedInCheck();
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                    this.getSystematik();
-                                    this.getMedium();
-                                    this.getAutor();
+                                    this.platzhalter = true;
                                 }
+                                if (response.data.data.length < 3) {
+                                    document.getElementById("body").id = "bodyset";
+                                }
+                                this.liste.data.data = response.data.data;
+                                this.lastPage = response.data.last_page;
+                                this.isAnfangfind();
+                                this.isEndefind();
                             }
                         );
                 }
-            }
+            },
+            isAnfangfind: function () {
+                if (this.page === 1) {
+                    this.isAnfang = true;
+                } else {
+                    this.isAnfang = false;
+                }
+            },
+            isEndefind: function () {
+                if (this.page === this.lastPage) {
+                    this.isEnde = true;
+                } else {
+                    this.isEnde = false;
+                }
+            },
+            increment: function () {
+                this.page++;
+                this.ausgabe();
+            },
+            decrement: function () {
+                this.page--;
+                this.ausgabe();
+            },
+            sendtoFirst: function () {
+                this.page = 1;
+                this.ausgabe();
+            },
+            sendtoLast: function () {
+                this.page = this.lastPage;
+                this.ausgabe();
+            },
         }
     }
 </script>
 
 <style scoped>
+    .notFound {
+        text-align: center;
+        padding: 8em;
+    }
 
+    .list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: right;
+        padding-top: 4em;
+        padding-left: 8em;
+        padding-right: 4em;
+    }
+
+    .list > * {
+        flex-basis: 30%;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+
+    .listitem {
+        margin: 2em;
+        border: 1px black solid;
+    }
+
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .listitem:hover {
+        cursor: pointer;
+    }
+
+    .beschreibung {
+        font-size: 14px;
+        width: 13em;
+    }
+
+    .page_buttons {
+        text-align: center;
+        padding: 2em;
+        color: white;
+    }
+
+    .addButton {
+        float: right;
+        margin: 1em;
+    }
+
+    .searchBar {
+        width: 50em;
+        vertical-align: top;
+    }
+
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .frei {
+        border: 1px green solid;
+        border-radius: 10px;
+        color: green;
+        width: 3em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .borrowed {
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 6em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/Author.png");
+        width: 200px;
+        height: 167px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .text {
+        display: flex;
+        height: 7em;
+        margin: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .btn {
+        background-color: midnightblue;
+    }
 </style>

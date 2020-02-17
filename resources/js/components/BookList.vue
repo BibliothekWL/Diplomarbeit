@@ -52,189 +52,95 @@
             </b-button>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                     v-b-modal.BookInformation>
-                    <div class="card_flex">
-                        <div class="bildbruh">&#160;</div>
+                <div v-for="book in liste.data.data" class="listitem" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
+                    book.BNR, book.author_id)"
+                v-b-modal.BookInformation>
+                <div class="card_flex">
+                    <div class="bildbruh">&#160;</div>
 
-                        <div class="text">
-                            <div class="book_title">
-                                {{book.title}}
-                            </div>
-
-                            <div class="beschreibung">
-                                {{content_short[book.id]}}
-                            </div>
+                    <div class="text">
+                        <div class="book_title">
+                            {{book.title}}
                         </div>
 
-                        <div v-if="book.borrowed === 0" class="info frei">
-                            Frei
-                        </div>
-
-                        <div v-if="book.borrowed === 1" class="info borrowed">
-                            Ausgeborgt
+                        <div class="beschreibung">
+                            {{content_short[book.id]}}
                         </div>
                     </div>
+
+                    <div v-if="book.borrowed === 0" class="info frei">
+                        Frei
+                    </div>
+
+                    <div v-if="book.borrowed === 1" class="info borrowed">
+                        Ausgeborgt
+                    </div>
                 </div>
-
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
             </div>
+
+            <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
         </div>
+    </div>
+
+    <!---------------------------------------------------------
+
+                            NoBooksFound
+
+    ---------------------------------------------------------->
+
+    <h4 v-if="notFound" class="notFound">
+        Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+        versuchen Sie es später noch einmal.
+    </h4>
+
+    <!---------------------------------------------------------
+
+                            Pagingbuttons
+
+    ---------------------------------------------------------->
+
+    <div class="page_buttons">
+        <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
+            <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+        </b-button>
+        <b-button v-on:click="decrement()" :disabled=isAnfang>
+            <font-awesome-icon icon="angle-left"></font-awesome-icon>
+        </b-button>
+
+        <b-button disabled>{{page}}</b-button>
+
+        <b-button v-on:click="increment()" :disabled=isEnde>
+            <font-awesome-icon icon="angle-right"></font-awesome-icon>
+        </b-button>
+        <b-button v-on:click="sendtoLast()" :disabled=isEnde>
+            <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+        </b-button>
+    </div>
+
+    <!---------------------------------------------------------
+
+                               Modals
+
+    ---------------------------------------------------------->
+
+
+    <div>
 
         <!---------------------------------------------------------
 
-                                NoBooksFound
+                                  AddItem
 
         ---------------------------------------------------------->
 
-        <h4 v-if="notFound" class="notFound">
-            Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
-            versuchen Sie es später noch einmal.
-        </h4>
-
-        <!---------------------------------------------------------
-
-                                Pagingbuttons
-
-        ---------------------------------------------------------->
-
-        <div class="page_buttons">
-            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
-                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="decrement()" :disabled=isAnfang>
-                <font-awesome-icon icon="angle-left"></font-awesome-icon>
-            </b-button>
-
-            <b-button disabled>{{page}}</b-button>
-
-            <b-button v-on:click="increment()" :disabled=isEnde>
-                <font-awesome-icon icon="angle-right"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="sendtoLast()" :disabled=isEnde>
-                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
-            </b-button>
-        </div>
-
-        <!---------------------------------------------------------
-
-                                   Modals
-
-        ---------------------------------------------------------->
-
-
-        <div>
-
-            <!---------------------------------------------------------
-
-                                      AddItem
-
-            ---------------------------------------------------------->
-
-            <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
-                <form ref="form">
-                    <b-form-group
-                            label="Title"
-                            label-for="title"
-                            invalid-feedback="Title is required"
-                    >
-
-                        <b-form-input
-                                id="name-input"
-                                v-model="title"
-                                required
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Autor"
-                            label-for="title"
-                            invalid-feedback="Autor is required"
-                    >
-
-                        <template>
-                            <b-form-input list="AutorenAdd" v-model="autor"></b-form-input>
-
-                            <datalist id="AutorenAdd">
-                                <option v-for="autor in autoren">{{ autor }}</option>
-                            </datalist>
-                        </template>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Systematik"
-                            label-for="title"
-                            invalid-feedback="Systematik is required"
-                    >
-
-                        <template>
-                            <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
-
-                            <datalist id="systematikAdd">
-                                <option v-for="systematik in systematiken">{{ systematik }}</option>
-                            </datalist>
-                        </template>
-
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Medium"
-                            label-for="title"
-                            invalid-feedback="Medium is required"
-                    >
-
-                        <template>
-                            <b-form-input list="medienAdd" v-model="medium"></b-form-input>
-
-                            <datalist id="medienAdd">
-                                <option v-for="medium in medien">{{ medium }}</option>
-                            </datalist>
-                        </template>
-
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Content"
-                            label-for="title"
-                            invalid-feedback="Content is required"
-                    >
-                        <b-form-textarea
-                                id="name-input"
-                                v-model="content_full"
-                                required
-                        ></b-form-textarea>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="BNR"
-                            label-for="title"
-                            invalid-feedback="BNR is required"
-                    >
-                        <b-form-input
-                                id="name-input"
-                                v-model="BNR"
-                                type="number"
-                                required
-                        ></b-form-input>
-                    </b-form-group>
-                </form>
-            </b-modal>
-
-            <!---------------------------------------------------------
-
-                                    EditItem
-
-            ---------------------------------------------------------->
-
-            <b-modal scrollable id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title, systematik, medium, content_full, BNR)">
+        <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
+                 @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
+            <form ref="form">
                 <b-form-group
                         label="Title"
                         label-for="title"
                         invalid-feedback="Title is required"
                 >
+
                     <b-form-input
                             id="name-input"
                             v-model="title"
@@ -242,34 +148,17 @@
                     ></b-form-input>
                 </b-form-group>
 
-                <label>Autor</label>
-
                 <b-form-group
-                        label="Vorname"
+                        label="Autor"
                         label-for="title"
-                        invalid-feedback="Vorname is required"
+                        invalid-feedback="Autor is required"
                 >
 
                     <template>
-                        <b-form-input list="AutorenVornameEdit" v-model="autor"></b-form-input>
+                        <b-form-input list="AutorenAdd" v-model="autor"></b-form-input>
 
-                        <datalist id="AutorenVornameEdit">
-                            <option v-for="autorenVorname in autorenVornamen">{{ autorenVorname }}</option>
-                        </datalist>
-                    </template>
-                </b-form-group>
-
-                <b-form-group
-                        label="Nachname"
-                        label-for="title"
-                        invalid-feedback="Nachname is required"
-                >
-
-                    <template>
-                        <b-form-input list="AutorenNachnameEdit" v-model="autor"></b-form-input>
-
-                        <datalist id="AutorenNachnameEdit">
-                            <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                        <datalist id="AutorenAdd">
+                            <option v-for="autor in autoren">{{ autor.firstname + ' ' + autor.surname }}</option>
                         </datalist>
                     </template>
                 </b-form-group>
@@ -281,9 +170,9 @@
                 >
 
                     <template>
-                        <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
+                        <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
 
-                        <datalist id="systematikEdit">
+                        <datalist id="systematikAdd">
                             <option v-for="systematik in systematiken">{{ systematik }}</option>
                         </datalist>
                     </template>
@@ -297,9 +186,9 @@
                 >
 
                     <template>
-                        <b-form-input list="medienEdit" v-model="medium"></b-form-input>
+                        <b-form-input list="medienAdd" v-model="medium"></b-form-input>
 
-                        <datalist id="medienEdit">
+                        <datalist id="medienAdd">
                             <option v-for="medium in medien">{{ medium }}</option>
                         </datalist>
                     </template>
@@ -326,107 +215,201 @@
                     <b-form-input
                             id="name-input"
                             v-model="BNR"
+                            type="number"
                             required
                     ></b-form-input>
                 </b-form-group>
-            </b-modal>
+            </form>
+        </b-modal>
 
-            <!---------------------------------------------------------
+        <!---------------------------------------------------------
 
-                                        Filter
+                                EditItem
 
-            ---------------------------------------------------------->
+        ---------------------------------------------------------->
 
-            <b-modal id="Filter" centered title="Filter"
-                     @ok="setFilter()">
-                <b-form-group
-                        label="Systematik"
-                        label-for="title"
-                        invalid-feedback="Systematik is required"
-                >
-                    <template>
-                        <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_systematik"
-                                      list="statistikFilter"/>
+        <b-modal scrollable id="EditItem" centered title="Edit Book"
+                 @ok="saveEdit(id, title, systematik, medium, content_full, BNR, autor)">
+            <b-form-group
+                    label="Title"
+                    label-for="title"
+                    invalid-feedback="Title is required"
+            >
+                <b-form-input
+                        id="name-input"
+                        v-model="title"
+                        required
+                ></b-form-input>
+            </b-form-group>
 
-                        <datalist id="statistikFilter">
-                            <option v-for="systematik in systematiken">{{ systematik }}</option>
-                        </datalist>
-                    </template>
-
-                </b-form-group>
-
-                <b-form-group
-                        label="Medium"
-                        label-for="title"
-                        invalid-feedback="Medium is required"
-                >
-                    <template>
-                        <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_medium" list="medienFilter"/>
-
-                        <datalist id="medienFilter">
-                            <option v-for="medium in medien">{{ medium }}</option>
-                        </datalist>
-                    </template>
-                </b-form-group>
-            </b-modal>
-
-            <!---------------------------------------------------------
-
-                                 Bookinformation
-
-            ---------------------------------------------------------->
-
-            <b-modal
-                    id="BookInformation"
-                    ref="modal"
-                    centered title="Buchinformationen"
-                    size="lg"
+            <b-form-group
+                    label="Autor"
+                    label-for="title"
+                    invalid-feedback="Autor is required"
             >
 
-                <div>
-                    {{ content_full }}
-                </div>
+                <template>
+                    <b-form-input list="AutorenEdit" v-model="autor"></b-form-input>
 
-                <template v-slot:modal-footer="{cancel}">
-                    <div v-if="isLoggedIn">
-                        <div v-if="isAdmin">
-                            <b-button v-show="false" size="sm" variant="success" @click="cancel()">
-                                Close
-                            </b-button>
+                    <datalist id="AutorenEdit">
+                        <option v-for="autor in autoren">{{ autor.firstname + ' ' + autor.surname }}</option>
+                    </datalist>
+                </template>
+            </b-form-group>
 
-                            <b-button pill v-on:click="deleteItem(id)">
-                                <font-awesome-icon icon="trash"></font-awesome-icon>
-                            </b-button>
+            <b-form-group
+                    label="Systematik"
+                    label-for="title"
+                    invalid-feedback="Systematik is required"
+            >
 
-                            <b-button v-b-modal.EditItem pill
-                                      v-on:click="editItem(id)">
-                                <font-awesome-icon icon="pen"></font-awesome-icon>
-                            </b-button>
+                <template>
+                    <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
 
-                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
-                                <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
-                            </b-button>
-                        </div>
+                    <datalist id="systematikEdit">
+                        <option v-for="systematik in systematiken">{{ systematik }}</option>
+                    </datalist>
+                </template>
 
-                        <div v-if="!isAdmin">
-                            <b-button size="sm" v-show="false" variant="success" @click="cancel()">
-                                Close
-                            </b-button>
+            </b-form-group>
 
-                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
-                                <font-awesome-icon icon="cart-plus"></font-awesome-icon>
-                            </b-button>
-                        </div>
-                    </div>
+            <b-form-group
+                    label="Medium"
+                    label-for="title"
+                    invalid-feedback="Medium is required"
+            >
 
-                    <div v-if="!isLoggedIn">
+                <template>
+                    <b-form-input list="medienEdit" v-model="medium"></b-form-input>
+
+                    <datalist id="medienEdit">
+                        <option v-for="medium in medien">{{ medium }}</option>
+                    </datalist>
+                </template>
+
+            </b-form-group>
+
+            <b-form-group
+                    label="Content"
+                    label-for="title"
+                    invalid-feedback="Content is required"
+            >
+                <b-form-textarea
+                        id="name-input"
+                        v-model="content_full"
+                        required
+                ></b-form-textarea>
+            </b-form-group>
+
+            <b-form-group
+                    label="BNR"
+                    label-for="title"
+                    invalid-feedback="BNR is required"
+            >
+                <b-form-input
+                        id="name-input"
+                        v-model="BNR"
+                        required
+                ></b-form-input>
+            </b-form-group>
+        </b-modal>
+
+        <!---------------------------------------------------------
+
+                                    Filter
+
+        ---------------------------------------------------------->
+
+        <b-modal id="Filter" centered title="Filter"
+                 @ok="setFilter()">
+            <b-form-group
+                    label="Systematik"
+                    label-for="title"
+                    invalid-feedback="Systematik is required"
+            >
+                <template>
+                    <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_systematik"
+                                  list="statistikFilter"/>
+
+                    <datalist id="statistikFilter">
+                        <option v-for="systematik in systematiken">{{ systematik }}</option>
+                    </datalist>
+                </template>
+
+            </b-form-group>
+
+            <b-form-group
+                    label="Medium"
+                    label-for="title"
+                    invalid-feedback="Medium is required"
+            >
+                <template>
+                    <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_medium" list="medienFilter"/>
+
+                    <datalist id="medienFilter">
+                        <option v-for="medium in medien">{{ medium }}</option>
+                    </datalist>
+                </template>
+            </b-form-group>
+        </b-modal>
+
+        <!---------------------------------------------------------
+
+                             Bookinformation
+
+        ---------------------------------------------------------->
+
+        <b-modal
+                id="BookInformation"
+                ref="modal"
+                centered title="Buchinformationen"
+                size="lg"
+        >
+
+            <div>
+                {{ content_full }}
+            </div>
+
+            <template v-slot:modal-footer="{cancel}">
+                <div v-if="isLoggedIn">
+                    <div v-if="isAdmin">
                         <b-button v-show="false" size="sm" variant="success" @click="cancel()">
                             Close
                         </b-button>
+
+                        <b-button pill v-on:click="deleteItem(id)">
+                            <font-awesome-icon icon="trash"></font-awesome-icon>
+                        </b-button>
+
+                        <b-button v-b-modal.EditItem pill
+                                  v-on:click="editItem(id)">
+                            <font-awesome-icon icon="pen"></font-awesome-icon>
+                        </b-button>
+
+                        <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
+                            <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
+                        </b-button>
                     </div>
-                </template>
-            </b-modal>
-        </div>
+
+                    <div v-if="!isAdmin">
+                        <b-button size="sm" v-show="false" variant="success" @click="cancel()">
+                            Close
+                        </b-button>
+
+                        <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
+                            <font-awesome-icon icon="cart-plus"></font-awesome-icon>
+                        </b-button>
+                    </div>
+                </div>
+
+                <div v-if="!isLoggedIn">
+                    <b-button v-show="false" size="sm" variant="success" @click="cancel()">
+                        Close
+                    </b-button>
+                </div>
+            </template>
+        </b-modal>
+    </div>
 
     </div>
 </template>
@@ -441,14 +424,13 @@
                 page: 1,
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
-                isLoggedIn: false,
+                isLoggedIn: this.$store.state.isLoggedIn,
                 isBorrowed: "",
                 liste: {
                     data: {
                         data: ""
                     }
                 },
-                firstPage: 1,
                 lastPage: 0,
                 id: "",
                 title: "",
@@ -462,18 +444,16 @@
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
-                search: this.$store.state.search,
+                search: "",
                 isAnfang: false,
                 isEnde: false,
-                show: true,
                 reserviert: false,
                 platzhalter: false,
                 systematiken: [],
                 medien: [],
                 showalpha: this.$store.state.showalpha,
                 filter_medium: this.$store.state.filter_medium,
-                filter_systematik: this.$store.state.filter_systematik,
-                key: 0
+                filter_systematik: this.$store.state.filter_systematik
             };
         },
         mounted() {
@@ -560,13 +540,14 @@
                     }
                 }
             },
-            buecherInformationen: function (id, title, systematik, medium, content, BNR) {
+            buecherInformationen: function (id, title, systematik, medium, content, BNR, author_id) {
                 this.id = id;
                 this.content_full = content;
                 this.systematik = systematik;
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
+                this.author = this.autoren[author_id - 1].firstname + " " + this.autoren[author_id - 1].surname;
 
                 axios.post('/books/borrowed', {
                     id: id
@@ -583,10 +564,9 @@
                 }
             },
             ausgabe: function () {
-                this.$store.state.search = this.search;
                 this.$store.commit("UserisNotInCart");
                 this.$store.commit("UserisNotInCart_2");
-                if (this.$store.state.search === "") {
+                if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
                         medium: this.filter_medium,
@@ -594,8 +574,7 @@
                         author: null,
                         isBorrowed: null,
                         isNotBorrowed: null
-                    })
-                        .then(response => {
+                    }).then(response => {
                                 this.lastPage = response.data.last_page;
                                 if (response.data.data.length === 0) {
                                     this.page = 1;
@@ -603,6 +582,7 @@
                                     this.isAnfang = true;
                                     this.isEnde = true;
                                 } else {
+                                    this.notFound = false;
                                     if (response.data.data.length % 2 === 0) {
                                         this.platzhalter = false;
                                     } else {
@@ -615,7 +595,6 @@
                                     this.notFound = false;
                                     this.liste.data.data = response.data.data;
                                     this.lastPage = response.data.last_page;
-                                    this.isLoggedInCheck();
                                     this.saveContent(response.data.data);
                                     this.isAnfangfind();
                                     this.isEndefind();
@@ -652,8 +631,7 @@
                                     this.notFound = false;
                                     this.liste.data.data = response.data.data;
                                     this.lastPage = response.data.last_page;
-                                    this.$store.state.lastPage = this.lastPage;
-                                    this.isLoggedInCheck();
+                                    this.isLoggedInCheck()
                                     this.saveContent(response.data.data);
                                     this.isAnfangfind();
                                     this.isEndefind();
@@ -666,13 +644,17 @@
                 }
             },
             isAnfangfind: function () {
-                if (this.page === this.firstPage) {
+                if (this.page === 1) {
                     this.isAnfang = true;
+                } else {
+                    this.isAnfang = false;
                 }
             },
             isEndefind: function () {
                 if (this.page === this.lastPage) {
                     this.isEnde = true;
+                } else {
+                    this.isEnde = false;
                 }
             },
             increment: function () {
@@ -690,13 +672,6 @@
             sendtoLast: function () {
                 this.page = this.lastPage;
                 this.ausgabe();
-            },
-            isLoggedInCheck: function () {
-                axios.get('/session')
-                    .then(response => {
-                            this.isLoggedIn = response.data;
-                        }
-                    )
             },
             returnBook: function (id) {
                 axios.post('/returnBooks', {
@@ -731,7 +706,7 @@
                     )
             },
             getAutor: function () {
-                axios.get('/author/json')
+                axios.get('/authors/json')
                     .then(response => {
                             this.autoren = response.data;
                         }
@@ -865,4 +840,7 @@
         justify-content: space-around;
     }
 
+    .btn {
+        background-color: darkred;
+    }
 </style>

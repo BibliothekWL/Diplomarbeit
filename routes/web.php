@@ -92,16 +92,16 @@ Route::post('/books/json', function () {
     if (count($conditions) > 0) {
         $sql .= htmlspecialchars(implode(' AND ', $conditions));
     } else {
-        if($jsonarray["sortDirection"]) {
+        if ($jsonarray["sortDirection"]) {
             return DB::table('books')->orderBy('title')->select()->paginate(6);
-        } else{
+        } else {
             return DB::table('books')->orderBy('title', 'desc')->select()->paginate(6);
         }
     }
 
-    if($jsonarray["sortDirection"]) {
+    if ($jsonarray["sortDirection"]) {
         return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
+    } else {
         return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
     }
 });
@@ -147,9 +147,9 @@ Route::post('/books/search', function () {
         $sql .= "title LIKE '%" . $by_search . "%'";
     }
 
-    if($jsonarray["sortDirection"]) {
+    if ($jsonarray["sortDirection"]) {
         return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
+    } else {
         return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
     }
 });
@@ -175,6 +175,17 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/author/json', function () {
+    return DB::table('authors')->orderBy('surname')->select()->paginate(6);
+});
+
+Route::post('/author/search', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('surname')->where('firstname', 'LIKE', '%' . $jsonarray['search'] . '%', 'OR', 'surname', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
+});
+
+Route::get('/authors/json', function () {
     return Author::all();
 });
 
