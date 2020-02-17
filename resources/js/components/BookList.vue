@@ -133,7 +133,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title, systematik, medium, content_full, BNR)">
+                     @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -146,6 +146,38 @@
                                 v-model="title"
                                 required
                         ></b-form-input>
+                    </b-form-group>
+
+                    <label>Autor</label>
+
+                    <b-form-group
+                            label="Vorname"
+                            label-for="title"
+                            invalid-feedback="Vorname is required"
+                    >
+
+                        <template>
+                            <b-form-input list="AutorenVornameAdd" v-model="autor"></b-form-input>
+
+                            <datalist id="AutorenVornameAdd">
+                                <option v-for="autorenVorname in autorenVornamen">{{ autorenvorname }}</option>
+                            </datalist>
+                        </template>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Nachname"
+                            label-for="title"
+                            invalid-feedback="Nachname is required"
+                    >
+
+                        <template>
+                            <b-form-input list="AutorenNachnameAdd" v-model="autor"></b-form-input>
+
+                            <datalist id="AutorenNachnameAdd">
+                                <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                            </datalist>
+                        </template>
                     </b-form-group>
 
                     <b-form-group
@@ -225,6 +257,38 @@
                             v-model="title"
                             required
                     ></b-form-input>
+                </b-form-group>
+
+                <label>Autor</label>
+
+                <b-form-group
+                        label="Vorname"
+                        label-for="title"
+                        invalid-feedback="Vorname is required"
+                >
+
+                    <template>
+                        <b-form-input list="AutorenVornameEdit" v-model="autor"></b-form-input>
+
+                        <datalist id="AutorenVornameEdit">
+                            <option v-for="autorenVorname in autorenVornamen">{{ autorenVorname }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
+
+                <b-form-group
+                        label="Nachname"
+                        label-for="title"
+                        invalid-feedback="Nachname is required"
+                >
+
+                    <template>
+                        <b-form-input list="AutorenNachnameEdit" v-model="autor"></b-form-input>
+
+                        <datalist id="AutorenNachnameEdit">
+                            <option v-for="autorenNachname in autorenNachnamen">{{ autorenNachname }}</option>
+                        </datalist>
+                    </template>
                 </b-form-group>
 
                 <b-form-group
@@ -410,6 +474,9 @@
                 systematik: "",
                 medium: "",
                 BNR: "",
+                autor: "",
+                autorenVornamen: [],
+                autorenNachnamen: [],
                 content_full: [],
                 content_short: [],
                 dialog_title: "",
@@ -460,14 +527,14 @@
                 this.medium = "";
                 this.BNR = "";
             },
-            saveAdd: function (title, systematik, medium, content, BNR) {
+            saveAdd: function (title, systematik, medium, content, BNR, autor) {
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
                     BNR: BNR,
-                    authorname: 'Kevin'
+                    authorname: autor
                 }).then(response => {
 
                         this.id = "";
@@ -481,14 +548,15 @@
                     }
                 )
             },
-            saveEdit: function (id, title, systematik, medium, content, BNR) {
+            saveEdit: function (id, title, systematik, medium, content, BNR, autor) {
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
-                    BNR: BNR
+                    BNR: BNR,
+                    authorname: autor
                 })
                     .then(response => {
                             this.reloadSite(response);
@@ -547,7 +615,7 @@
                         isNotBorrowed: null
                     })
                         .then(response => {
-                                console.log(response);
+                                console.log(this.lastPage = response.data.last_page);
                                 if (response.data.data.length === 0) {
                                     this.page = 1;
                                     this.notFound = true;
@@ -637,7 +705,7 @@
                 this.ausgabe();
             },
             sendtoLast: function () {
-                this.page = this.$store.state.lastPage;
+                this.page = this.lastPage;
                 this.ausgabe();
             },
             isLoggedInCheck: function () {
@@ -676,6 +744,20 @@
                 axios.get('/medium/json')
                     .then(response => {
                             this.medien = response.data;
+                        }
+                    )
+            },
+            getAutorVorname: function () {
+                axios.get('/autorVorname/json')
+                    .then(response => {
+                            this.autorenVornamen = response.data;
+                        }
+                    )
+            },
+            getAutorNachname: function () {
+                axios.get('/medium/json')
+                    .then(response => {
+                            this.autorenNachnamen = response.data;
                         }
                     )
             },

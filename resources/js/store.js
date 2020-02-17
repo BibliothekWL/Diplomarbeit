@@ -6,7 +6,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        lastPage: 0,
         isAdmin: false,
         isLoggedIn: false,
         search: "",
@@ -30,7 +29,6 @@ export default new Vuex.Store({
         increment: state => state.page++,
         decrement: state => state.page--,
         isFirstPage: state => state.page = 1,
-        isLastPage: state => state.page = state.lastPage,
         setSearch: state => state.search = state.latestSearch,
         setSearchEmpty: state => state.search = "",
         UserisAdmin: state => state.isAdmin = true,
