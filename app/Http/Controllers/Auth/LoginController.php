@@ -65,7 +65,7 @@ class LoginController extends Controller
                 $username_raw = User::where('email', $jsonarray['email'])->pluck('name');
                 $username = explode('"', $username_raw)[1];
                 session(['id' => $userID]);
-                return "bub";
+                return json_encode(['status' => '200', 'statusMsg' => 'Logged In', 'isAdmin' => $isAdmin, 'isLoggedIn' => session()->has('id'), 'username' => $username, 'userID' => $userID]);
             }
         }
         return json_encode(['status' => '403', 'statusMsg' => 'Email or Password is wrong', 'isLoggedIn' => session()->has('id')]);
