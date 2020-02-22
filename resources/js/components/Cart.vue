@@ -10,13 +10,13 @@
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                     v-b-modal.BookInformation>
+                <div v-for="book in liste.data.data" class="listitem">
                     <div class="card_flex">
-                        <div class="bildbruh">&#160;</div>
+                        <div class="bildbruh" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                             v-b-modal.BookInformation>&#160;</div>
 
-                        <div class="text">
+                        <div class="text" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                             v-b-modal.BookInformation>
                             <div class="book_title">
                                 {{book.title}}
                             </div>
@@ -26,7 +26,7 @@
                             </div>
                         </div>
 
-                        <div class="info entfernen">
+                        <div class="info entfernen" v-on:click="remove(book.id)">
                             Entfernen
                         </div>
                     </div>
@@ -124,8 +124,12 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-            entfernen: function () {
-                console.log('entfernt');
+            remove: function (id) {
+                axios.post("/cart/destroy/json", {
+                    id: id
+                }).then(response => {
+                    console.log(response);
+                })
             }
         }
     }
@@ -160,6 +164,7 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
+        cursor: pointer;
     }
 
     .notFound {

@@ -43,6 +43,8 @@ Route::post('/books/edit/json/', 'BooksController@BookValidator');
 
 Route::post('returnBooks', 'BooksController@returnBooks');
 
+Route::post('/cart/destroy/json','CartsController@destroy');
+
 
 Route::post('/books/borrowed', function () {
     $json = file_get_contents('php://input');
@@ -194,3 +196,4 @@ Route::post('/userdata/json', function () {
     $jsonarray = json_decode($json, true);
     return User::all()->where('id', $jsonarray['id'])->first();
 });
+
