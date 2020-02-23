@@ -45,6 +45,7 @@
             </div>
         </div>
 
+
         <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb"
              v-on:click="towarenkorb()" to="/warenkorb" variant="light">
             <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon> <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
@@ -215,5 +216,66 @@
 
     .modal-backdrop {
         background-color: rgba(0,0,0,0.5);
+    }
+
+    .test {
+        display: flex;
+        align-items: center;
+        background-image: url("../../img/bg_hp.jpg");
+        background-size: cover;
+        height: calc(100vh);
+    }
+
+    .form_div {
+        display: flex;
+        background-color: white;
+        opacity: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        min-width: 40%;
+        height: 70%;
+        min-height: 435px;
+        border-radius: 15px;
+        align-items: center;
+        flex-direction: column;
+    }
+
+
+    .short_navbar {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        border-radius: 15px;
+        color: #e30013;
+    }
+
+    .navbar_btn {
+        background-color: white;
+        color: red;
+        border-color: white;
+        margin-right: 0.5em;
+    }
+
+    .error {
+        font-size: 0.75rem;
+        line-height: 1;
+        margin-left: 5px;
+        margin-top: -1rem;
+        margin-bottom: 0.9375rem;
+        color: red;
+    }
+
+    .form-group {
+        border-color: red;
+    }
+
+    a:hover {
+        color: #666666;
+        text-decoration: none;
+    }
+
+    .inputs {
+        margin-top: 1em;
     }
 </style>

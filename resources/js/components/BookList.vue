@@ -386,6 +386,8 @@
 
 <script>
     import axios from 'axios';
+    import Swal from 'sweetalert2';
+
 
     export default {
         name: "BookList",
@@ -617,11 +619,15 @@
             isAnfangfind: function () {
                 if (this.page === this.firstPage) {
                     this.isAnfang = true;
+                }else{
+                    this.isAnfang = false;
                 }
             },
             isEndefind: function () {
                 if (this.page === this.lastPage) {
                     this.isEnde = true;
+                }else {
+                    this.isEnde = false;
                 }
             },
             increment: function () {
@@ -637,7 +643,8 @@
                 this.ausgabe();
             },
             sendtoLast: function () {
-                this.page = this.$store.state.lastPage;
+                console.log(this.isAnfang);
+                this.page = this.lastPage;
                 this.ausgabe();
             },
             isLoggedInCheck: function () {
@@ -651,7 +658,8 @@
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status)
+                    Swal.fire({title: 'Erfolg!', text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!', icon: 'success'});
+                    this.reloadSite(response.data.status)
                     }
                 )
             },
@@ -661,7 +669,8 @@
                     userID: this.$store.state.userID
                 })
                     .then(response => {
-                            this.reloadSite(response.status);
+                        Swal.fire({title: 'Erfolg!', text: 'Ihr Buch befindet sich nun im Warenkorb!', icon: 'success'});
+                        this.reloadSite(response.status);
                         }
                     )
             },
@@ -696,7 +705,7 @@
 
 </script>
 
-<style scoped>
+<style>
 
     .notFound {
         text-align: center;
@@ -722,6 +731,7 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
+        border-radius: 15px;
     }
 
     .card_flex {
@@ -790,6 +800,7 @@
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
+        border-radius: 15px;
     }
 
     .book_title {
