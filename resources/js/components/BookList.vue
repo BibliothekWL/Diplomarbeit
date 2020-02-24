@@ -516,15 +516,14 @@
                     }
                 )
             },
-            saveEdit: function (id, title, systematik, medium, content, BNR, autor) {
+            saveEdit: function (id, title, systematik, medium, content, BNR) {
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
-                    BNR: BNR,
-                    authorname: autor
+                    BNR: BNR
                 })
                     .then(response => {
                             console.log(response);
@@ -612,10 +611,6 @@
                                     this.platzhalter = false;
                                 } else {
                                     this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    console.log(response.data.data.length);
-                                    document.getElementById("body").id = "bodyset";
                                 }
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
@@ -860,7 +855,7 @@
 
     .filter {
         display: flex;
-        position: fixed;
+        position: sticky;
         justify-content: center;
         align-items: center;
         float: left;
