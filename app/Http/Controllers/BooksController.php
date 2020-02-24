@@ -104,7 +104,6 @@ class BooksController extends Controller
                     'borrowed' => 0,
                     'user_id' => 0
                 ]);
-
             return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
         }
     }
