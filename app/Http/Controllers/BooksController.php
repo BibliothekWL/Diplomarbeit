@@ -68,8 +68,10 @@ class BooksController extends Controller
         }
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
+            $counter = $book->borrowCounter;
             $book->borrowed = 1;
             $book->user_id = auth()->user()->id;
+            $book->borrowCounter = $counter++;
             $book->save();
 
             $borrowing = new Borrowing();
