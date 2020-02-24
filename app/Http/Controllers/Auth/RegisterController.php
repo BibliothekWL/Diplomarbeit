@@ -12,6 +12,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Mail\VerifyMail as VerifyMail;
+use Symfony\Component\HttpFoundation\Request;
+
+
 class RegisterController extends Controller
 {
     use RegistersUsers;
@@ -56,20 +60,29 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\User
      */
-    protected function create(){
+    protected function create()
+    {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-            if (sizeof($jsonarray) != 0) {
-                $user = new User();
-                $user->name = $jsonarray['name'];
-                $user->email = $jsonarray['email'];
-                $user->password = Hash::make($jsonarray['password']);
-                $user->created_at = now();
-                $user->updated_at = now();
-                $user->save();
-                var_dump(session()->all());
-                return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
-            }
-            return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
+        if (sizeof($jsonarray) != 0) {
+            $user = new User();
+            $user->name = $jsonarray['name'];
+            $user->email = $jsonarray['email'];
+            $user->password = Hash::make($jsonarray['password']);
+            $user->created_at = now();
+            $user->updated_at = now();
+            $user->verificationCode = sha1($jsonarray['email']);
+            $user->save();
+            $user->sendEmailVerificationNotification();
+            return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
         }
+        return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
+    }
+
+    protected function sendVerificationEmail(){
+    }
+
+
+
+
 }

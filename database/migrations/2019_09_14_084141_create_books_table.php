@@ -19,8 +19,9 @@ class CreateBooksTable extends Migration
             $table->text('systematik');
             $table->text('medium');
             $table->text('content');
-            $table->text('kategorie');
+            $table->text('category');
             $table->integer('BNR');
+            $table->integer('borrowCounter')->default(0);
             $table->tinyInteger('borrowed')->default(0);
             $table->tinyInteger('user_id')->default(0);
             $table->timestamps();
