@@ -7,23 +7,22 @@
         </div>
 
         <div class="content">
-            <div class="content_item col-8">
-                <label>Username</label>
-                <b-input class="search" placeholder="Username" v-model="userdata.name">
-            </b-input>
 
-                <b-button style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()" v-on:keyup.enter="changeCredentials()">Change Username</b-button>
+            <h4 class="col-6">E-Mail: {{userdata.email}}</h4>
+
+            <div class="content_item col-12">
+                <h4 class="col-4">Username</h4>
+                <b-input class="search col-8" placeholder="Username" v-model="userdata.name">
+                </b-input>
             </div>
 
-            <div class="content_item col-8">
-                <h4>E-Mail: {{userdata.email}}</h4>
-                <div></div>
+            <div class="content_item col-12">
+                <h4 class="col-4">Password:</h4>
+                <b-input class="search col-8" type="password" placeholder="••••••••" v-model="userdata.password">
+                </b-input>
             </div>
 
-            <div class="content_item col-8">
-                <h4>Password: ••••••••</h4>
-                <b-button style="width: 10em;" variant="outline-dark">Change Password</b-button>
-            </div>
+            <b-button class="col-2" style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()" v-on:keyup.enter="changeCredentials()">Change Credentials</b-button>
         </div>
     </div>
 </template>
@@ -70,6 +69,7 @@
     .center {
         text-align: center;
     }
+
 
     .content {
         padding: 5em;
