@@ -3,10 +3,12 @@
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Resources\Cart as CartResource;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Author as AuthorResource;
 
 use \App\User as User;
 use \App\Cart as Cart;
 use \App\Book as Book;
+use \App\Author as Author;
 
 
 Auth::routes(['verify' => true]);
@@ -15,12 +17,13 @@ Auth::routes(['verify' => true]);
  */
 Route::get('/home', 'SinglePageController@index');
 Route::get('/', 'SinglePageController@index');
+Route::get('/login', 'SinglePageController@index')->name('login');
 Route::get('/list', 'SinglePageController@index');
-Route::get('/login', 'SinglePageController@index');
 Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
+Route::get('/authorlist  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -89,16 +92,16 @@ Route::post('/books/json', function () {
     if (count($conditions) > 0) {
         $sql .= htmlspecialchars(implode(' AND ', $conditions));
     } else {
-        if($jsonarray["sortDirection"]) {
+        if ($jsonarray["sortDirection"]) {
             return DB::table('books')->orderBy('title')->select()->paginate(6);
-        } else{
+        } else {
             return DB::table('books')->orderBy('title', 'desc')->select()->paginate(6);
         }
     }
 
-    if($jsonarray["sortDirection"]) {
+    if ($jsonarray["sortDirection"]) {
         return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
+    } else {
         return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
     }
 });
@@ -144,9 +147,9 @@ Route::post('/books/search', function () {
         $sql .= "title LIKE '%" . $by_search . "%'";
     }
 
-    if($jsonarray["sortDirection"]) {
+    if ($jsonarray["sortDirection"]) {
         return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
+    } else {
         return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
     }
 });
@@ -172,7 +175,18 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/author/json', function () {
+    return DB::table('authors')->orderBy('surname')->select()->paginate(6);
+});
 
+Route::post('/author/search', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('surname')->where('firstname', 'LIKE', '%' . $jsonarray['search'] . '%', 'OR', 'surname', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
+});
+
+Route::get('/authors/json', function () {
+    return Author::all();
 });
 
 Route::post('/userdata/json', function () {
@@ -180,3 +194,5 @@ Route::post('/userdata/json', function () {
     $jsonarray = json_decode($json, true);
     return User::all()->where('id', $jsonarray['id'])->first();
 });
+//Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
+//Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);

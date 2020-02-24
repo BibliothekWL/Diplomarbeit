@@ -20,7 +20,6 @@ use \App\Book;
 use \App\Author;
 
 use Illuminate\Routing\Redirector;
-use PhpParser\Builder\Class_;
 
 class BooksController extends Controller
 {
@@ -29,17 +28,6 @@ class BooksController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $books = Book::all();
-        return view('books.index', compact('books'));
-    }
-
-    public function create()
-    {
-        $user = User::findOrFail(auth()->user()->id);
-        return view('books.create', compact('user'));
-    }
 
     public function store()
     {
@@ -51,10 +39,6 @@ class BooksController extends Controller
 
     }
 
-    public function edit(Book $book)
-    {
-        return view('books.edit', compact('book'));
-    }
 
     /**
      * adds the option to update a book as an admin user
@@ -84,8 +68,10 @@ class BooksController extends Controller
         }
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
+            $counter = $book->borrowCounter;
             $book->borrowed = 1;
             $book->user_id = auth()->user()->id;
+            $book->borrowCounter = $counter++;
             $book->save();
 
             $borrowing = new Borrowing();
@@ -116,7 +102,7 @@ class BooksController extends Controller
                 ->where('id', $jsonarray['id'])
                 ->update([
                     'borrowed' => 0,
-                    'user_id' => null
+                    'user_id' => 0
                 ]);
 
             return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
@@ -158,7 +144,7 @@ class BooksController extends Controller
         $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
         if (sizeof($jsonarray) != 0) {
             $book = new Book();
-            $book->user_id = NULL;
+            $book->user_id = 0;
             $book->author_id = 1;
             $book->title = $jsonarray['title'];
             $book->systematik = $jsonarray['systematik'];
