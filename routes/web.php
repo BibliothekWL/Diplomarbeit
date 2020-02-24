@@ -113,7 +113,7 @@ Route::resource('books', 'BooksController');
 Route::resource('cart', 'CartsController');
 //Route::resource('user', 'UserController');
 
-Route::get('/user/edit', 'UserController@view');
+Route::post('/user/edit', 'UserController@view');
 Route::patch('/user/edit', 'UserController@update');
 
 /**
