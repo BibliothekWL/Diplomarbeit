@@ -98,7 +98,7 @@
                 axios.get('/logout/json')
                     .then(response => {
                         this.$store.commit('UsernotLoggedIn');
-                        this.$store.state.isAdmin = false;
+                        this.$store.commit('UserisnotAdmin');
                         window.location.href = "/login";
                     }).catch(error => {
                     console.log(error.message)
