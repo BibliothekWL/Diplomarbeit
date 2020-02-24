@@ -8,6 +8,7 @@ use \App\Book;
 use \App\Author;
 use App\Http\Resources\User as UserResource;
 use \App\User;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -29,8 +30,18 @@ class UserController extends Controller
      */
     public function edit()
     {
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
         $user = User::findOrFail(auth()->user()->id);
-        return view('user.edit', compact('user'));
+        if ($user->password == Hash::make($jsonarray['oldPw'])){
+            $user->password = Hash::make($jsonarray['newPw']);
+            $user->name = $jsonarray['name'];
+            $user->save();
+        }
+        else{
+            return json_encode(['status' => '200', 'statusMsg' => 'Failed']);
+        }
+        return json_encode(['status' => '200', 'statusMsg' => 'Success']);
     }
 
     public function store()
@@ -54,17 +65,5 @@ class UserController extends Controller
         return view('user.edit', compact('user'));
     }
 
-    public function verify(\Symfony\Component\HttpFoundation\Request $request)
-    {
-        $user = User::where('id', $request['id'])->first();
-        $code = explode("?", $request['code']);
-        if ($request['code'] == $user->verificationCode && $code[0] == $user->id) {
-            $user->email_verified_at = now();
-            $user->save();
-            return redirect()->action(
-                'login'
-            );
-        }
 
-    }
 }

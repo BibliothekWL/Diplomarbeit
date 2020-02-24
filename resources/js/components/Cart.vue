@@ -10,13 +10,13 @@
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                     v-b-modal.BookInformation>
+                <div v-for="book in liste.data.data" class="listitem">
                     <div class="card_flex">
-                        <div class="bildbruh">&#160;</div>
+                        <div class="bildbruh" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                             v-b-modal.BookInformation>&#160;</div>
 
-                        <div class="text">
+                        <div class="text" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                             v-b-modal.BookInformation>
                             <div class="book_title">
                                 {{book.title}}
                             </div>
@@ -26,13 +26,13 @@
                             </div>
                         </div>
 
-                        <div class="info entfernen">
+                        <div class="info entfernen" v-on:click="remove(book.id)">
                             Entfernen
                         </div>
                     </div>
                 </div>
 
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
         </div>
 
@@ -66,31 +66,11 @@
             }
         },
         mounted() {
-            this.$store.commit("UserisInCart");
-            this.$store.commit("UserisInCart_2");
-            if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
-                window.location.href = "/login"
+            this.$store.state.warenkorb = false;
+            if(this.$store.state.isAdmin) {
+                this.$router.push({path: '/login'})
             } else {
-                axios.post('/cart/json', {
-                    id: this.$store.state.userID
-                }).then(response => {
-                        console.log(response);
-                        if (response.data.length === 0) {
-                            this.notFound = true;
-                            this.$store.commit("UserisNotInCart_2");
-                        } else {
-                            if (response.data.length % 2 === 0) {
-                                this.platzhalter = false;
-                            } else {
-                                this.platzhalter = true;
-                            }
-                            this.notFound = false;
-                            this.liste.data.data = response.data;
-                            this.isLoggedInCheck();
-                            this.saveContent(response.data);
-                        }
-                    }
-                );
+                this.ausgabe();
             }
         },
         methods: {
@@ -124,8 +104,33 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-            entfernen: function () {
-                console.log('entfernt');
+            remove: function (id) {
+                axios.post("/cart/destroy/json", {
+                    id: id
+                }).then(response => {
+                    console.log(response);
+                })
+            },
+            ausgabe: function () {
+                if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
+                    window.location.href = "/login"
+                } else {
+                    axios.post('/cart/json', {
+                        id: this.$store.state.userID
+                    }).then(response => {
+                            console.log(response);
+                            if (response.data.length === 0) {
+                                this.notFound = true;
+                            } else {
+                                this.platzhalter = response.data.length % 2 !== 0;
+                                this.notFound = false;
+                                this.liste.data.data = response.data;
+                                this.isLoggedInCheck();
+                                this.saveContent(response.data);
+                            }
+                        }
+                    );
+                }
             }
         }
     }
@@ -160,11 +165,13 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
+        cursor: pointer;
     }
 
     .notFound {
         text-align: center;
         padding-top: 6em;
+        font-size: 2em;
     }
 
     .text {
@@ -214,9 +221,5 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
-    }
-
-    .notFound {
-        font-size: 2em;
     }
 </style>

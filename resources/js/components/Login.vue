@@ -39,7 +39,9 @@
             },
         },
         mounted() {
-            console.log(this.$store.state.isLoggedIn);
+            if(this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/'})
+            }
         },
         methods: {
             login: function () {
@@ -52,22 +54,18 @@
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
                             console.log(response);
                         } else {
-                            this.$store.state.latestUsername = response.data.username;
-                            this.$store.commit("setUsername");
-                            this.$store.state.latestUserID = response.data.userID;
-                            this.$store.commit("setUserID");
+                            this.$store.state.username = response.data.username;
+                            this.$store.state.userID = response.data.userID;
                             this.$store.commit('UserLoggedIn');
-                            if (response.data.isAdmin === true) {
+                            if(response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            this.$forceUpdate();
-                            this.$router.push({path: '/home'}
+                            this.$router.push({path: '/'}
                             )
                         }
                     }).catch(error => {
-                    console.log();
                     Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
                     console.log(error);
                 })

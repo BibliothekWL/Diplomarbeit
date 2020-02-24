@@ -22,7 +22,9 @@
                 </b-input>
             </div>
 
-            <b-button class="col-2" style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()" v-on:keyup.enter="changeCredentials()">Change Credentials</b-button>
+            <b-button class="col-2" style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()"
+                      v-on:keyup.enter="changeCredentials()">Change Credentials
+            </b-button>
         </div>
     </div>
 </template>
@@ -30,33 +32,40 @@
 <script>
     import axios from "axios";
     import Swal from 'sweetalert2';
+
     export default {
         name: "Profile",
-        data(){
+        data() {
             return {
                 userdata: ""
             }
         },
         mounted() {
-            this.$store.commit("UserisNotInCart");
-            this.$store.commit("UserisNotInCart_2");
-            axios.post('userdata/json', {
-                id: this.$store.state.userID
-            })
-                .then(response => {
-                        console.log(response);
-                        this.userdata = response.data;
-                    }
-                );
+            this.$store.state.warenkorb = false;
+            if (!this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/login'})
+            } else {
+                this.ausgabe();
+            }
         },
         methods: {
-            changeCredentials(){
-                axios.post("http://localhost:8000/userdata/json", {
+            ausgabe: function () {
+                axios.post('userdata/json', {
+                    id: this.$store.state.userID
+                })
+                    .then(response => {
+                            console.log(response);
+                            this.userdata = response.data;
+                        }
+                    );
+            },
+            changeCredentials() {
+                axios.post("/userdata/json", {
                     name: this.userdata.name
                 })
-                    .then(response =>{
+                    .then(response => {
                         console.log(response)
-                }).catch(error =>{
+                    }).catch(error => {
                     Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
                 })
             }
