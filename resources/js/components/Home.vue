@@ -49,7 +49,7 @@
                     this.$store.state.latestSearch = this.search;
                     this.$store.commit("setSearch");
                     this.$store.commit("isFirstPage");
-                    this.$router.push({ path: "/list"});
+                    this.$router.push({path: "/list"});
                 }
             }
         }
@@ -87,9 +87,9 @@
 
     .books {
         display: flex;
+        height: 200px;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
     }
 
     .btn {

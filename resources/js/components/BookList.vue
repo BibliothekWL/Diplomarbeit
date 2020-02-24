@@ -420,6 +420,8 @@
 
 <script>
     import axios from 'axios';
+    import Swal from 'sweetalert2';
+
 
     export default {
         name: "BookList",
@@ -607,11 +609,7 @@
                                 this.isEnde = true;
                             } else {
                                 this.notFound = false;
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
+                                this.platzhalter = response.data.data.length % 2 !== 0;
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -663,79 +661,85 @@
             },
             isEndefind: function () {
                 this.isEnde = this.page === this.lastPage;
-            },
-            increment: function () {
-                this.page++;
-                this.ausgabe();
-            },
-            decrement: function () {
-                this.page--;
-                this.ausgabe();
-            },
-            sendtoFirst: function () {
-                this.page = 1;
-                this.ausgabe();
-            },
-            sendtoLast: function () {
-                this.page = this.lastPage;
-                this.ausgabe();
-            },
-            returnBook: function (id) {
-                axios.post('/returnBooks', {
-                    id: id
-                }).then(response => {
-                        this.reloadSite(response.data.status)
+            }
+        },
+        increment: function () {
+            this.page++;
+            this.ausgabe();
+        },
+        decrement: function () {
+            this.page--;
+            this.ausgabe();
+        },
+        sendtoFirst: function () {
+            this.page = 1;
+            this.ausgabe();
+        },
+        sendtoLast: function () {
+            this.page = this.lastPage;
+            this.ausgabe();
+        },
+        returnBook: function (id) {
+            axios.post('/returnBooks', {
+                id: id
+            }).then(response => {
+                    Swal.fire({
+                        title: 'Erfolg!',
+                        text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!',
+                        icon: 'success'
+                    });
+                    this.reloadSite(response.data.status)
+                }
+            )
+        },
+        putIntoCart: function (id) {
+            axios.post('/books/borrow', {
+                id: id,
+                userID: this.$store.state.userID
+            })
+                .then(response => {
+                        Swal.fire({title: 'Erfolg!', text: 'Ihr Buch befindet sich nun im Warenkorb!', icon: 'success'});
+                        this.reloadSite(response.status);
                     }
                 )
-            },
-            putIntoCart: function (id) {
-                axios.post('/books/borrow', {
-                    id: id,
-                    userID: this.$store.state.userID
-                })
-                    .then(response => {
-                            this.reloadSite(response.status);
-                        }
-                    )
-            },
-            getSystematik: function () {
-                axios.get('/systematik/json')
-                    .then(response => {
-                            this.systematiken = response.data;
-                        }
-                    )
-            },
-            getMedium: function () {
-                axios.get('/medium/json')
-                    .then(response => {
-                            this.medien = response.data;
-                        }
-                    )
-            },
-            getAutor: function () {
-                axios.get('/authors/json')
-                    .then(response => {
-                            this.autoren = response.data;
-                        }
-                    )
-            },
-            showalphaChange: function () {
-                this.showalpha = !this.showalpha;
-                this.$store.state.showalpha = this.showalpha;
-                this.ausgabe();
-            },
-            clearFilter: function () {
-                this.filter_systematik = "";
-                this.filter_medium = "";
-                this.filterListe = [];
-                this.ausgabe();
-            }
+        },
+        getSystematik: function () {
+            axios.get('/systematik/json')
+                .then(response => {
+                        this.systematiken = response.data;
+                    }
+                )
+        },
+        getMedium: function () {
+            axios.get('/medium/json')
+                .then(response => {
+                        this.medien = response.data;
+                    }
+                )
+        },
+        getAutor: function () {
+            axios.get('/authors/json')
+                .then(response => {
+                        this.autoren = response.data;
+                    }
+                )
+        },
+        showalphaChange: function () {
+            this.showalpha = !this.showalpha;
+            this.$store.state.showalpha = this.showalpha;
+            this.ausgabe();
+        },
+        clearFilter: function () {
+            this.filter_systematik = "";
+            this.filter_medium = "";
+            this.filterList = [];
+            this.ausgabe();
         }
     }
 
 </script>
 
-<style scoped>
+<style>
 
     .notFound {
         text-align: center;
@@ -761,6 +765,7 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
+        border-radius: 15px;
     }
 
     .card_flex {
@@ -829,6 +834,7 @@
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
+        border-radius: 15px;
     }
 
     .book_title {
