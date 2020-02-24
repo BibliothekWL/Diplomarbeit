@@ -139,7 +139,7 @@ class BooksController extends Controller
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-        $author_id_raw = DB::table('authors')->where('firstname', $jsonarray['authorname'])->pluck('id');
+        $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'])->pluck('id');
         $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
         if (sizeof($jsonarray) != 0) {
             $book = new Book();

@@ -223,4 +223,9 @@
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
     }
+
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
+    }
 </style>

@@ -175,9 +175,9 @@
     }
 
     .footer-sidebar > button {
-        border: 0px solid rgba(0, 0, 0, 0) !important;
+        border: 0 solid rgba(0, 0, 0, 0) !important;
         border-left: 1px solid rgba(0, 0, 0, .07) !important;
-        border-radius: 0px !important;
+        border-radius: 0 !important;
     }
 
     .vs-sidebar--background {

@@ -201,7 +201,6 @@
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
                                 console.log(response);
-                                this.lastPage = response.data.last_page;
                                 this.platzhalter = response.data.data.length % 2 !== 0;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;

@@ -176,6 +176,10 @@ Route::get('/medium/json', function () {
     return Book::orderBy('medium')->get()->pluck('medium')->unique();
 });
 
+Route::get('/authors/json', function () {
+    return Author::orderBy('name')->get()->pluck('name')->unique();
+});
+
 Route::get('/author/json', function () {
     return DB::table('authors')->orderBy('name')->select()->paginate(6);
 });
@@ -187,9 +191,6 @@ Route::post('/author/search', function () {
     return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
 });
 
-Route::get('/authors/json', function () {
-    return Author::all();
-});
 Route::post('/userdata/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
