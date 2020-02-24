@@ -17,8 +17,8 @@ Auth::routes(['verify' => true]);
  */
 Route::get('/home', 'SinglePageController@index');
 Route::get('/', 'SinglePageController@index');
+Route::get('/login', 'SinglePageController@index')->name('login');
 Route::get('/list', 'SinglePageController@index');
-Route::get('/login', 'SinglePageController@index');
 Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
@@ -197,3 +197,5 @@ Route::post('/userdata/json', function () {
     return User::all()->where('id', $jsonarray['id'])->first();
 });
 
+//Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
+//Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
