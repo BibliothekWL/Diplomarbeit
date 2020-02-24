@@ -28,14 +28,22 @@ class UserController extends Controller
      * renders the users current data
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit()
+    public function editName()
+    {
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        $user = User::findOrFail(auth()->user()->id);
+            $user->name = $jsonarray['name'];
+            $user->save();
+        return json_encode(['status' => '200', 'statusMsg' => 'Success']);
+    }
+    public function editPassword()
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         $user = User::findOrFail(auth()->user()->id);
         if ($user->password == Hash::make($jsonarray['oldPw'])){
             $user->password = Hash::make($jsonarray['newPw']);
-            $user->name = $jsonarray['name'];
             $user->save();
         }
         else{
