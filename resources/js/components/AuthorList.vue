@@ -45,8 +45,7 @@
 
                         <div class="text">
                             <div class="book_title">
-                                {{author.firstname}}
-                                {{author.surname}}
+                                {{author.name}}
                             </div>
                         </div>
 
@@ -56,7 +55,7 @@
                             </b-button>
 
                             <b-button v-b-modal.EditAuthor pill
-                                      v-on:click="editAuthor(author.firstname, author.surname)">
+                                      v-on:click="editAuthor(author.name)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -116,30 +115,17 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddAuthor" scrollable ref="modal" centered title="Autor erstellen"
-                     @ok="saveAdd(firstname, surname)">
+                     @ok="saveAdd(name)">
                 <form ref="form">
                     <b-form-group
-                            label="Vorname"
+                            label="Name"
                             label-for="title"
-                            invalid-feedback="Vorname is required"
+                            invalid-feedback="Name is required"
                     >
 
                         <b-form-input
                                 id="name-input"
-                                v-model="firstname"
-                                required
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Nachname"
-                            label-for="title"
-                            invalid-feedback="Nachname is required"
-                    >
-
-                        <b-form-input
-                                id="name-input"
-                                v-model="surname"
+                                v-model="name"
                                 required
                         ></b-form-input>
                     </b-form-group>
@@ -153,30 +139,17 @@
             ---------------------------------------------------------->
 
             <b-modal id="EditAuthor" centered title="Autor ändern"
-                     @ok="saveEdit(firstname, surname)">
+                     @ok="saveEdit(name)">
                 <form ref="form">
                     <b-form-group
-                            label="Vorname"
+                            label="Name"
                             label-for="title"
-                            invalid-feedback="Vorname is required"
+                            invalid-feedback="Name is required"
                     >
 
                         <b-form-input
                                 id="name-input"
-                                v-model="firstname"
-                                required
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Nachname"
-                            label-for="title"
-                            invalid-feedback="Nachname is required"
-                    >
-
-                        <b-form-input
-                                id="name-input"
-                                v-model="surname"
+                                v-model="name"
                                 required
                         ></b-form-input>
                     </b-form-group>
@@ -209,8 +182,7 @@
                 isAnfang: false,
                 isEnde: false,
                 platzhalter: false,
-                firstname: "",
-                surname: ""
+                name: ""
             };
         },
         mounted() {
@@ -280,26 +252,22 @@
                     console.log(response);
                 });
             },
-            editAuthor: function (firstname, surname) {
-                this.firstname = firstname;
-                this.surname = surname;
+            editAuthor: function (name) {
+                this.name = name;
             },
             addAuthor: function () {
-                this.firstname = "";
-                this.surname = "";
+                this.name = "";
             },
-            saveEdit: function (firstname, surname) {
+            saveEdit: function (name) {
                 axios.post('/author/edit/json', {
-                    firstname: firstname,
-                    surname: surname
+                    name: name,
                 }).then(response => {
                     console.log(response);
                 });
             },
-            saveAdd: function (firstname, surname) {
+            saveAdd: function (name) {
                 axios.post('/author/create/json', {
-                    firstname: firstname,
-                    surname: surname
+                    name: name
                 }).then(response => {
                     console.log(response);
                 });

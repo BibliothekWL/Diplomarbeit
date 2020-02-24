@@ -23,6 +23,7 @@ Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
+Route::get('/authorlist  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -174,9 +175,19 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/author/json', function () {
-    return Author::all();
+    return DB::table('authors')->orderBy('name')->select()->paginate(6);
 });
 
+Route::post('/author/search', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
+});
+
+Route::get('/authors/json', function () {
+    return Author::all();
+});
 Route::post('/userdata/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
