@@ -51,7 +51,7 @@
             </b-modal>
 
             <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
-                     @ok="">
+                     @ok="changeCredentials(false)">
                 <form ref="form">
                     <b-form-group
                             label="Password"
@@ -81,7 +81,8 @@
         name: "Profile",
         data() {
             return {
-                userdata: ""
+                userdata: "",
+                pw: "12341234"
             }
         },
         mounted() {
@@ -106,7 +107,7 @@
             //if true => username, else => password
             changeCredentials(type) {
                 if (type) {
-                    axios.post("/userdata/json", {
+                    axios.post("/user/editName", {
                         name: this.userdata.name
                     })
                         .then(response => {
@@ -116,8 +117,9 @@
                         Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
                     })
                 } else {
-                    axios.post("/userdata/json", {
-                        password: this.userdata.password
+                    axios.post("/user/editPassword", {
+                        oldPw: this.pw,
+                        newPw: this.userdata.password
                     })
                         .then(response => {
                             console.log(response);

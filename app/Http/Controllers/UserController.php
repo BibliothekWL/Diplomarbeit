@@ -42,12 +42,12 @@ class UserController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         $user = User::findOrFail(auth()->user()->id);
-        if ($user->password == Hash::make($jsonarray['oldPw'])){
+        if ($user->password === Hash::make($jsonarray['oldPw'])){
             $user->password = Hash::make($jsonarray['newPw']);
             $user->save();
         }
         else{
-            return json_encode(['status' => '200', 'statusMsg' => 'Failed']);
+            return json_encode(['status' => '400', 'statusMsg' => 'Failed']);
         }
         return json_encode(['status' => '200', 'statusMsg' => 'Success']);
     }
