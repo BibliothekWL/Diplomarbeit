@@ -60,7 +60,7 @@
             <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
         </b-button>
 
-        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
+        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorbCheckout & loggedIn" v-on:click="checkout()">
             Ausborgen
         </b-button>
         <router-view></router-view>

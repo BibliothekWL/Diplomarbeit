@@ -67,6 +67,7 @@
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = true;
             if(this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {

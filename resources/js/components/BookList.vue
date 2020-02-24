@@ -466,6 +466,7 @@
         },
         mounted() {
             this.$store.state.warenkorb = true;
+            this.$store.state.warenkorbCheckout = false;
             this.ausgabe();
         },
         methods: {

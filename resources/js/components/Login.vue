@@ -39,6 +39,8 @@
             },
         },
         mounted() {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if(this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/'})
             }
@@ -54,14 +56,19 @@
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
                             console.log(response);
                         } else {
-                            this.$store.state.username = response.data.username;
-                            this.$store.state.userID = response.data.userID;
                             this.$store.commit('UserLoggedIn');
                             if(response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
+
+                            axios.post('/userdata/json', {
+                                id: response.data.userID
+                            }).then(response => {
+                               this.$store.state.userdata_login = response.data;
+                               this.$store.commit('setUserdata');
+                            });
                             this.$router.push({path: '/'}
                             )
                         }
