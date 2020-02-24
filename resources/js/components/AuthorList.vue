@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div id="body">
 
         <!---------------------------------------------------------
@@ -8,7 +8,7 @@
         ---------------------------------------------------------->
 
         <div class="searchBox">
-            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">
                 Autorenliste</h1>
             </div>
 
@@ -33,8 +33,8 @@
         ---------------------------------------------------------->
 
         <div v-if="!notFound" class="UserViewBody">
-            <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddItem
-                      v-on:click="addItem(liste.length)">
+            <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddAuthor
+                      v-on:click="addAuthor(liste.length)">
                 <font-awesome-icon icon="plus"/>
             </b-button>
 
@@ -49,10 +49,21 @@
                                 {{author.surname}}
                             </div>
                         </div>
+
+                        <div class="buttons">
+                            <b-button pill v-on:click="deleteAuthor(author.id)">
+                                <font-awesome-icon icon="trash"></font-awesome-icon>
+                            </b-button>
+
+                            <b-button v-b-modal.EditAuthor pill
+                                      v-on:click="editAuthor(author.firstname, author.surname)">
+                                <font-awesome-icon icon="pen"></font-awesome-icon>
+                            </b-button>
+                        </div>
                     </div>
                 </div>
 
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
         </div>
 
@@ -90,6 +101,88 @@
                 <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
             </b-button>
         </div>
+
+        <!---------------------------------------------------------
+
+                                   Modals
+
+        ---------------------------------------------------------->
+        <div>
+
+            <!---------------------------------------------------------
+
+                                      AddAuthor
+
+            ---------------------------------------------------------->
+
+            <b-modal id="AddAuthor" scrollable ref="modal" centered title="Autor erstellen"
+                     @ok="saveAdd(firstname, surname)">
+                <form ref="form">
+                    <b-form-group
+                            label="Vorname"
+                            label-for="title"
+                            invalid-feedback="Vorname is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="firstname"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Nachname"
+                            label-for="title"
+                            invalid-feedback="Nachname is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="surname"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
+
+            <!---------------------------------------------------------
+
+                                    EditAuthor
+
+            ---------------------------------------------------------->
+
+            <b-modal id="EditAuthor" centered title="Autor ändern"
+                     @ok="saveEdit(firstname, surname)">
+                <form ref="form">
+                    <b-form-group
+                            label="Vorname"
+                            label-for="title"
+                            invalid-feedback="Vorname is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="firstname"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Nachname"
+                            label-for="title"
+                            invalid-feedback="Nachname is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="surname"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
+        </div>
     </div>
 </template>
 
@@ -115,26 +208,28 @@
                 search: "",
                 isAnfang: false,
                 isEnde: false,
-                platzhalter: false
+                platzhalter: false,
+                firstname: "",
+                surname: ""
             };
         },
         mounted() {
-            this.ausgabe();
+            this.$store.state.warenkorb = false;
+            if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/login'})
+            } else {
+                this.ausgabe();
+            }
         },
         methods: {
             ausgabe: function () {
+                console.log(this.$store.state.warenkorb);
                 if (this.search === "") {
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
+                                console.log(response);
                                 this.lastPage = response.data.last_page;
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    document.getElementById("body").id = "bodyset";
-                                }
+                                this.platzhalter = response.data.data.length % 2 !== 0;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
                                 this.isAnfangfind();
@@ -146,14 +241,7 @@
                         search: this.search
                     })
                         .then(response => {
-                                if (response.data.data.length % 2 === 0) {
-                                    this.platzhalter = false;
-                                } else {
-                                    this.platzhalter = true;
-                                }
-                                if (response.data.data.length < 3) {
-                                    document.getElementById("body").id = "bodyset";
-                                }
+                                this.platzhalter = response.data.data.length % 2 !== 0;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
                                 this.isAnfangfind();
@@ -163,18 +251,10 @@
                 }
             },
             isAnfangfind: function () {
-                if (this.page === 1) {
-                    this.isAnfang = true;
-                } else {
-                    this.isAnfang = false;
-                }
+                this.isAnfang = this.page === 1;
             },
             isEndefind: function () {
-                if (this.page === this.lastPage) {
-                    this.isEnde = true;
-                } else {
-                    this.isEnde = false;
-                }
+                this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
                 this.page++;
@@ -192,6 +272,37 @@
                 this.page = this.lastPage;
                 this.ausgabe();
             },
+            deleteAuthor: function (id) {
+                axios.post('/author/delete/json', {
+                    id: id
+                }).then(response => {
+                    console.log(response);
+                });
+            },
+            editAuthor: function (firstname, surname) {
+                this.firstname = firstname;
+                this.surname = surname;
+            },
+            addAuthor: function () {
+                this.firstname = "";
+                this.surname = "";
+            },
+            saveEdit: function (firstname, surname) {
+                axios.post('/author/edit/json', {
+                    firstname: firstname,
+                    surname: surname
+                }).then(response => {
+                    console.log(response);
+                });
+            },
+            saveAdd: function (firstname, surname) {
+                axios.post('/author/create/json', {
+                    firstname: firstname,
+                    surname: surname
+                }).then(response => {
+                    console.log(response);
+                });
+            }
         }
     }
 </script>
@@ -229,15 +340,6 @@
         align-items: center;
     }
 
-    .listitem:hover {
-        cursor: pointer;
-    }
-
-    .beschreibung {
-        font-size: 14px;
-        width: 13em;
-    }
-
     .page_buttons {
         text-align: center;
         padding: 2em;
@@ -264,29 +366,9 @@
         background-image: url('../../img/bg_hp.jpg');
     }
 
-    .frei {
-        border: 1px green solid;
-        border-radius: 10px;
-        color: green;
-        width: 3em;
-        padding: 0.25em;
-        margin: 1em;
-        text-align: center;
-    }
-
-    .borrowed {
-        border: 1px red solid;
-        border-radius: 10px;
-        color: red;
-        width: 6em;
-        padding: 0.25em;
-        margin: 1em;
-        text-align: center;
-    }
-
     .bildbruh {
         background-image: url("../../img/Author.png");
-        width: 200px;
+        width: 220px;
         height: 167px;
     }
 
@@ -300,14 +382,21 @@
         display: flex;
         height: 7em;
         margin: 1.5em;
-        display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         width: 100%;
     }
 
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        width: 10em;
+        justify-content: space-between;
+    }
+
     .btn {
-        background-color: midnightblue;
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 </style>

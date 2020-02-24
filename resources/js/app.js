@@ -47,6 +47,26 @@ Vue.use(Vuelidate);
 import BootstrapVue from 'bootstrap-vue';
 Vue.use(BootstrapVue);
 
+import vueDebounce from 'vue-debounce'
+
+Vue.use(vueDebounce);
+
+Vue.use(vueDebounce, {
+    lock: true
+});
+
+Vue.use(vueDebounce, {
+    listenTo: 'input'
+});
+
+Vue.use(vueDebounce, {
+    listenTo: ['input', 'keyup']
+});
+
+Vue.use(vueDebounce, {
+    defaultTime: '400ms'
+});
+
 const app = new Vue({
     el: '#app',
     store,

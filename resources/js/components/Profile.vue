@@ -27,26 +27,34 @@
 
 <script>
     import axios from "axios";
+
     export default {
         name: "Profile",
-        data(){
+        data() {
             return {
                 userdata: ""
             }
         },
         mounted() {
-            this.$store.commit("UserisNotInCart");
-            this.$store.commit("UserisNotInCart_2");
-            axios.post('userdata/json', {
-                id: this.$store.state.userID
-            })
-                .then(response => {
-                        console.log(response);
-                        this.userdata = response.data;
-                    }
-                );
+            this.$store.state.warenkorb = false;
+            if (!this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/login'})
+            } else {
+                this.ausgabe();
+            }
         },
-        methods: {}
+        methods: {
+            ausgabe: function () {
+                axios.post('userdata/json', {
+                    id: this.$store.state.userID
+                })
+                    .then(response => {
+                            console.log(response);
+                            this.userdata = response.data;
+                        }
+                    );
+            }
+        }
     }
 </script>
 

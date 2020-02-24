@@ -8,7 +8,7 @@
         ---------------------------------------------------------->
 
         <div class="searchBox">
-            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Bibliothek
                 Wiener Linien</h1>
             </div>
 
@@ -45,102 +45,205 @@
 
         ---------------------------------------------------------->
 
+        <div v-if="filter_show" id="filter" class="filter">
+
+            <h5 v-for="tag in filterList" class="tags">
+                <b-badge pill variant="dark">{{tag}}</b-badge>
+            </h5>
+
+            <b-button v-on:click="clearFilter">
+                <font-awesome-icon icon="trash"/>
+            </b-button>
+        </div>
+
         <div v-if="!notFound" class="UserViewBody">
-            <b-button v-if="isAdmin" type="light" variant="danger" class="addButton" pill v-b-modal.AddItem
-                      v-on:click="addItem(liste.length)">
+
+            <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddItem
+                      v-on:click="addItem()">
                 <font-awesome-icon icon="plus"/>
             </b-button>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
-                    book.BNR, book.author_id)"
-                v-b-modal.BookInformation>
-                <div class="card_flex">
-                    <div class="bildbruh">&#160;</div>
+                <div v-for="book in liste.data.data" v-b-modal.BookInformation class="listitem" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
+                    book.BNR, book.author_id)">
+                    <div class="card_flex">
+                        <div class="bildbruh">&#160;</div>
 
-                    <div class="text">
-                        <div class="book_title">
-                            {{book.title}}
+                        <div class="text">
+                            <div class="book_title">
+                                {{book.title}}
+                            </div>
+
+                            <div class="beschreibung">
+                                {{content_short[book.id]}}
+                            </div>
                         </div>
 
-                        <div class="beschreibung">
-                            {{content_short[book.id]}}
+                        <div v-if="book.borrowed === 0" class="info frei">
+                            Frei
                         </div>
-                    </div>
 
-                    <div v-if="book.borrowed === 0" class="info frei">
-                        Frei
-                    </div>
-
-                    <div v-if="book.borrowed === 1" class="info borrowed">
-                        Ausgeborgt
+                        <div v-if="book.borrowed === 1" class="info borrowed">
+                            Ausgeborgt
+                        </div>
                     </div>
                 </div>
+
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
-
-            <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
         </div>
-    </div>
-
-    <!---------------------------------------------------------
-
-                            NoBooksFound
-
-    ---------------------------------------------------------->
-
-    <h4 v-if="notFound" class="notFound">
-        Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
-        versuchen Sie es später noch einmal.
-    </h4>
-
-    <!---------------------------------------------------------
-
-                            Pagingbuttons
-
-    ---------------------------------------------------------->
-
-    <div class="page_buttons">
-        <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
-            <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
-        </b-button>
-        <b-button v-on:click="decrement()" :disabled=isAnfang>
-            <font-awesome-icon icon="angle-left"></font-awesome-icon>
-        </b-button>
-
-        <b-button disabled>{{page}}</b-button>
-
-        <b-button v-on:click="increment()" :disabled=isEnde>
-            <font-awesome-icon icon="angle-right"></font-awesome-icon>
-        </b-button>
-        <b-button v-on:click="sendtoLast()" :disabled=isEnde>
-            <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
-        </b-button>
-    </div>
-
-    <!---------------------------------------------------------
-
-                               Modals
-
-    ---------------------------------------------------------->
-
-
-    <div>
 
         <!---------------------------------------------------------
 
-                                  AddItem
+                                NoBooksFound
 
         ---------------------------------------------------------->
 
-        <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                 @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
-            <form ref="form">
+        <h4 v-if="notFound" class="notFound">
+            Leider nichts gefunden! Bitte suchen Sie einen anderen Begriff oder
+            versuchen Sie es später noch einmal.
+        </h4>
+
+        <!---------------------------------------------------------
+
+                                Pagingbuttons
+
+        ---------------------------------------------------------->
+
+        <div class="page_buttons">
+            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
+                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+            </b-button>
+            <b-button v-on:click="decrement()" :disabled=isAnfang>
+                <font-awesome-icon icon="angle-left"></font-awesome-icon>
+            </b-button>
+
+            <b-button disabled>{{page}}</b-button>
+
+            <b-button v-on:click="increment()" :disabled=isEnde>
+                <font-awesome-icon icon="angle-right"></font-awesome-icon>
+            </b-button>
+            <b-button v-on:click="sendtoLast()" :disabled=isEnde>
+                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+            </b-button>
+        </div>
+
+        <!---------------------------------------------------------
+
+                                   Modals
+
+        ---------------------------------------------------------->
+        <div>
+
+            <!---------------------------------------------------------
+
+                                      AddItem
+
+            ---------------------------------------------------------->
+
+            <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
+                     @ok="saveAdd(title, systematik, medium, content_full, BNR, autor)">
+                <form ref="form">
+                    <b-form-group
+                            label="Title"
+                            label-for="title"
+                            invalid-feedback="Title is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="title"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Autor"
+                            label-for="title"
+                            invalid-feedback="Autor is required"
+                    >
+
+                        <template>
+                            <b-form-input list="AutorenAdd" v-model="autor"></b-form-input>
+
+                            <datalist id="AutorenAdd">
+                                <option v-for="autor in autoren">{{ autor.firstname + ' ' + autor.surname }}</option>
+                            </datalist>
+                        </template>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Systematik"
+                            label-for="title"
+                            invalid-feedback="Systematik is required"
+                    >
+
+                        <template>
+                            <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
+
+                            <datalist id="systematikAdd">
+                                <option v-for="systematik in systematiken">{{ systematik }}</option>
+                            </datalist>
+                        </template>
+
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Medium"
+                            label-for="title"
+                            invalid-feedback="Medium is required"
+                    >
+
+                        <template>
+                            <b-form-input list="medienAdd" v-model="medium"></b-form-input>
+
+                            <datalist id="medienAdd">
+                                <option v-for="medium in medien">{{ medium }}</option>
+                            </datalist>
+                        </template>
+
+                    </b-form-group>
+
+                    <b-form-group
+                            label="Content"
+                            label-for="title"
+                            invalid-feedback="Content is required"
+                    >
+                        <b-form-textarea
+                                id="name-input"
+                                v-model="content_full"
+                                required
+                        ></b-form-textarea>
+                    </b-form-group>
+
+                    <b-form-group
+                            label="BNR"
+                            label-for="title"
+                            invalid-feedback="BNR is required"
+                    >
+                        <b-form-input
+                                id="name-input"
+                                v-model="BNR"
+                                type="number"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
+
+            <!---------------------------------------------------------
+
+                                    EditItem
+
+            ---------------------------------------------------------->
+
+            <b-modal scrollable id="EditItem" centered title="Buch editieren"
+                     @ok="saveEdit(id, title, systematik, medium, content_full, BNR, autor)">
                 <b-form-group
                         label="Title"
                         label-for="title"
                         invalid-feedback="Title is required"
                 >
-
                     <b-form-input
                             id="name-input"
                             v-model="title"
@@ -155,9 +258,9 @@
                 >
 
                     <template>
-                        <b-form-input list="AutorenAdd" v-model="autor"></b-form-input>
+                        <b-form-input list="AutorenEdit" v-model="autor"></b-form-input>
 
-                        <datalist id="AutorenAdd">
+                        <datalist id="AutorenEdit">
                             <option v-for="autor in autoren">{{ autor.firstname + ' ' + autor.surname }}</option>
                         </datalist>
                     </template>
@@ -170,9 +273,9 @@
                 >
 
                     <template>
-                        <b-form-input list="systematikAdd" v-model="systematik"></b-form-input>
+                        <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
 
-                        <datalist id="systematikAdd">
+                        <datalist id="systematikEdit">
                             <option v-for="systematik in systematiken">{{ systematik }}</option>
                         </datalist>
                     </template>
@@ -186,9 +289,9 @@
                 >
 
                     <template>
-                        <b-form-input list="medienAdd" v-model="medium"></b-form-input>
+                        <b-form-input list="medienEdit" v-model="medium"></b-form-input>
 
-                        <datalist id="medienAdd">
+                        <datalist id="medienEdit">
                             <option v-for="medium in medien">{{ medium }}</option>
                         </datalist>
                     </template>
@@ -215,202 +318,103 @@
                     <b-form-input
                             id="name-input"
                             v-model="BNR"
-                            type="number"
                             required
                     ></b-form-input>
                 </b-form-group>
-            </form>
-        </b-modal>
+            </b-modal>
 
-        <!---------------------------------------------------------
+            <!---------------------------------------------------------
 
-                                EditItem
+                                        Filter
 
-        ---------------------------------------------------------->
+            ---------------------------------------------------------->
 
-        <b-modal scrollable id="EditItem" centered title="Edit Book"
-                 @ok="saveEdit(id, title, systematik, medium, content_full, BNR, autor)">
-            <b-form-group
-                    label="Title"
-                    label-for="title"
-                    invalid-feedback="Title is required"
-            >
-                <b-form-input
-                        id="name-input"
-                        v-model="title"
-                        required
-                ></b-form-input>
-            </b-form-group>
+            <b-modal id="Filter" centered title="Filter"
+                     @ok="ausgabe()">
+                <b-form-group
+                        label="Systematik"
+                        label-for="title"
+                        invalid-feedback="Systematik is required">
+                    <template>
+                        <b-form-input v-model="filter_systematik" list="systematikFilter"></b-form-input>
 
-            <b-form-group
-                    label="Autor"
-                    label-for="title"
-                    invalid-feedback="Autor is required"
-            >
+                        <datalist id="systematikFilter">
+                            <option v-for="systematik in systematiken">{{ systematik }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
 
-                <template>
-                    <b-form-input list="AutorenEdit" v-model="autor"></b-form-input>
+                <b-form-group
+                        label="Medium"
+                        label-for="title"
+                        invalid-feedback="Medium is required">
+                    <template>
+                        <b-form-input v-model="filter_medium" list="medienFilter"></b-form-input>
 
-                    <datalist id="AutorenEdit">
-                        <option v-for="autor in autoren">{{ autor.firstname + ' ' + autor.surname }}</option>
-                    </datalist>
-                </template>
-            </b-form-group>
+                        <datalist id="medienFilter">
+                            <option v-for="medium in medien">{{ medium }}</option>
+                        </datalist>
+                    </template>
+                </b-form-group>
+            </b-modal>
 
-            <b-form-group
-                    label="Systematik"
-                    label-for="title"
-                    invalid-feedback="Systematik is required"
-            >
+            <!---------------------------------------------------------
 
-                <template>
-                    <b-form-input list="systematikEdit" v-model="systematik"></b-form-input>
+                                 Bookinformation
 
-                    <datalist id="systematikEdit">
-                        <option v-for="systematik in systematiken">{{ systematik }}</option>
-                    </datalist>
-                </template>
+            ---------------------------------------------------------->
 
-            </b-form-group>
-
-            <b-form-group
-                    label="Medium"
-                    label-for="title"
-                    invalid-feedback="Medium is required"
+            <b-modal
+                    id="BookInformation"
+                    ref="modal"
+                    centered title="Buchinformationen"
+                    size="lg"
             >
 
-                <template>
-                    <b-form-input list="medienEdit" v-model="medium"></b-form-input>
+                <div>
+                    {{ content_full }}
+                </div>
 
-                    <datalist id="medienEdit">
-                        <option v-for="medium in medien">{{ medium }}</option>
-                    </datalist>
-                </template>
+                <template v-slot:modal-footer="{cancel}">
+                    <div v-if="isLoggedIn">
+                        <div v-if="isAdmin">
+                            <b-button v-show="false" size="sm" variant="success" @click="cancel()">
+                                Close
+                            </b-button>
 
-            </b-form-group>
+                            <b-button pill v-on:click="deleteItem(id)">
+                                <font-awesome-icon icon="trash"></font-awesome-icon>
+                            </b-button>
 
-            <b-form-group
-                    label="Content"
-                    label-for="title"
-                    invalid-feedback="Content is required"
-            >
-                <b-form-textarea
-                        id="name-input"
-                        v-model="content_full"
-                        required
-                ></b-form-textarea>
-            </b-form-group>
+                            <b-button v-b-modal.EditItem pill
+                                      v-on:click="editItem(id)">
+                                <font-awesome-icon icon="pen"></font-awesome-icon>
+                            </b-button>
 
-            <b-form-group
-                    label="BNR"
-                    label-for="title"
-                    invalid-feedback="BNR is required"
-            >
-                <b-form-input
-                        id="name-input"
-                        v-model="BNR"
-                        required
-                ></b-form-input>
-            </b-form-group>
-        </b-modal>
+                            <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
+                                <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
+                            </b-button>
+                        </div>
 
-        <!---------------------------------------------------------
+                        <div v-if="!isAdmin">
+                            <b-button size="sm" v-show="false" variant="success" @click="cancel()">
+                                Close
+                            </b-button>
 
-                                    Filter
+                            <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
+                                <font-awesome-icon icon="cart-plus"></font-awesome-icon>
+                            </b-button>
+                        </div>
+                    </div>
 
-        ---------------------------------------------------------->
-
-        <b-modal id="Filter" centered title="Filter"
-                 @ok="setFilter()">
-            <b-form-group
-                    label="Systematik"
-                    label-for="title"
-                    invalid-feedback="Systematik is required"
-            >
-                <template>
-                    <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_systematik"
-                                  list="statistikFilter"/>
-
-                    <datalist id="statistikFilter">
-                        <option v-for="systematik in systematiken">{{ systematik }}</option>
-                    </datalist>
-                </template>
-
-            </b-form-group>
-
-            <b-form-group
-                    label="Medium"
-                    label-for="title"
-                    invalid-feedback="Medium is required"
-            >
-                <template>
-                    <b-form-input v-on:keyup.enter="setFilter()" v-model="filter_medium" list="medienFilter"/>
-
-                    <datalist id="medienFilter">
-                        <option v-for="medium in medien">{{ medium }}</option>
-                    </datalist>
-                </template>
-            </b-form-group>
-        </b-modal>
-
-        <!---------------------------------------------------------
-
-                             Bookinformation
-
-        ---------------------------------------------------------->
-
-        <b-modal
-                id="BookInformation"
-                ref="modal"
-                centered title="Buchinformationen"
-                size="lg"
-        >
-
-            <div>
-                {{ content_full }}
-            </div>
-
-            <template v-slot:modal-footer="{cancel}">
-                <div v-if="isLoggedIn">
-                    <div v-if="isAdmin">
+                    <div v-if="!isLoggedIn">
                         <b-button v-show="false" size="sm" variant="success" @click="cancel()">
                             Close
                         </b-button>
-
-                        <b-button pill v-on:click="deleteItem(id)">
-                            <font-awesome-icon icon="trash"></font-awesome-icon>
-                        </b-button>
-
-                        <b-button v-b-modal.EditItem pill
-                                  v-on:click="editItem(id)">
-                            <font-awesome-icon icon="pen"></font-awesome-icon>
-                        </b-button>
-
-                        <b-button :disabled="!isBorrowed" pill v-on:click="returnBook(id)">
-                            <font-awesome-icon icon="level-up-alt" class="fa-rotate-270"></font-awesome-icon>
-                        </b-button>
                     </div>
-
-                    <div v-if="!isAdmin">
-                        <b-button size="sm" v-show="false" variant="success" @click="cancel()">
-                            Close
-                        </b-button>
-
-                        <b-button :disabled="isBorrowed" pill v-on:click="putIntoCart(id)">
-                            <font-awesome-icon icon="cart-plus"></font-awesome-icon>
-                        </b-button>
-                    </div>
-                </div>
-
-                <div v-if="!isLoggedIn">
-                    <b-button v-show="false" size="sm" variant="success" @click="cancel()">
-                        Close
-                    </b-button>
-                </div>
-            </template>
-        </b-modal>
-    </div>
-
+                </template>
+            </b-modal>
+        </div>
     </div>
 </template>
 
@@ -452,11 +456,14 @@
                 systematiken: [],
                 medien: [],
                 showalpha: this.$store.state.showalpha,
-                filter_medium: this.$store.state.filter_medium,
-                filter_systematik: this.$store.state.filter_systematik
+                filter_medium: null,
+                filter_systematik: null,
+                filterList: [],
+                filter_show: false
             };
         },
         mounted() {
+            this.$store.state.warenkorb = true;
             this.ausgabe();
         },
         methods: {
@@ -498,7 +505,6 @@
                     BNR: BNR,
                     authorname: autor
                 }).then(response => {
-
                         this.id = "";
                         this.title = "";
                         this.title_1 = "";
@@ -521,6 +527,7 @@
                     authorname: autor
                 })
                     .then(response => {
+                            console.log(response);
                             this.reloadSite(response);
                         }
                     )
@@ -547,7 +554,6 @@
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
-                this.author = this.autoren[author_id - 1].firstname + " " + this.autoren[author_id - 1].surname;
 
                 axios.post('/books/borrowed', {
                     id: id
@@ -564,8 +570,27 @@
                 }
             },
             ausgabe: function () {
-                this.$store.commit("UserisNotInCart");
-                this.$store.commit("UserisNotInCart_2");
+
+                this.filterList = [];
+
+                switch (this.filter_systematik) {
+                    case "" || null:
+                        break;
+
+                    default:
+                        this.filterList.push(this.filter_systematik);
+                }
+
+                switch (this.filter_medium) {
+                    case "" || null:
+                        break;
+
+                    default:
+                        this.filterList.push(this.filter_medium);
+                }
+
+                this.filter_show = this.filterList.length !== 0;
+
                 if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
@@ -575,35 +600,35 @@
                         isBorrowed: null,
                         isNotBorrowed: null
                     }).then(response => {
-                                this.lastPage = response.data.last_page;
-                                if (response.data.data.length === 0) {
-                                    this.page = 1;
-                                    this.notFound = true;
-                                    this.isAnfang = true;
-                                    this.isEnde = true;
+                            this.lastPage = response.data.last_page;
+                            if (response.data.data.length === 0) {
+                                this.page = 1;
+                                this.notFound = true;
+                                this.isAnfang = true;
+                                this.isEnde = true;
+                            } else {
+                                this.notFound = false;
+                                if (response.data.data.length % 2 === 0) {
+                                    this.platzhalter = false;
                                 } else {
-                                    this.notFound = false;
-                                    if (response.data.data.length % 2 === 0) {
-                                        this.platzhalter = false;
-                                    } else {
-                                        this.platzhalter = true;
-                                    }
-                                    if (response.data.data.length < 3) {
-                                        console.log(response.data.data.length);
-                                        document.getElementById("body").id = "bodyset";
-                                    }
-                                    this.notFound = false;
-                                    this.liste.data.data = response.data.data;
-                                    this.lastPage = response.data.last_page;
-                                    this.saveContent(response.data.data);
-                                    this.isAnfangfind();
-                                    this.isEndefind();
-                                    this.getSystematik();
-                                    this.getMedium();
-                                    this.getAutor();
+                                    this.platzhalter = true;
                                 }
+                                if (response.data.data.length < 3) {
+                                    console.log(response.data.data.length);
+                                    document.getElementById("body").id = "bodyset";
+                                }
+                                this.notFound = false;
+                                this.liste.data.data = response.data.data;
+                                this.lastPage = response.data.last_page;
+                                this.saveContent(response.data.data);
+                                this.isAnfangfind();
+                                this.isEndefind();
+                                this.getSystematik();
+                                this.getMedium();
+                                this.getAutor();
                             }
-                        );
+                        }
+                    );
                 } else {
                     axios.post('/books/search?page=' + this.page, {
                         search: this.search,
@@ -620,18 +645,13 @@
                                     this.isAnfang = true;
                                     this.isEnde = true;
                                 } else {
-                                    if (response.data.data.length % 2 === 0) {
-                                        this.platzhalter = false;
-                                    } else {
-                                        this.platzhalter = true;
-                                    }
+                                    this.platzhalter = response.data.data.length % 2 !== 0;
                                     if (response.data.data.length < 3) {
                                         document.getElementById("body").id = "bodyset";
                                     }
                                     this.notFound = false;
                                     this.liste.data.data = response.data.data;
                                     this.lastPage = response.data.last_page;
-                                    this.isLoggedInCheck()
                                     this.saveContent(response.data.data);
                                     this.isAnfangfind();
                                     this.isEndefind();
@@ -644,18 +664,10 @@
                 }
             },
             isAnfangfind: function () {
-                if (this.page === 1) {
-                    this.isAnfang = true;
-                } else {
-                    this.isAnfang = false;
-                }
+                this.isAnfang = this.page === 1;
             },
             isEndefind: function () {
-                if (this.page === this.lastPage) {
-                    this.isEnde = true;
-                } else {
-                    this.isEnde = false;
-                }
+                this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
                 this.page++;
@@ -717,11 +729,10 @@
                 this.$store.state.showalpha = this.showalpha;
                 this.ausgabe();
             },
-            setFilter: function () {
-                this.$store.state.latestFilterMedium = this.filter_medium;
-                this.$store.state.latestFilterSystematik = this.filter_systematik;
-                this.$store.commit("setFilterMedium");
-                this.$store.commit("setFilterSystematik");
+            clearFilter: function () {
+                this.filter_systematik = "";
+                this.filter_medium = "";
+                this.filterListe = [];
                 this.ausgabe();
             }
         }
@@ -741,7 +752,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
-        padding-top: 4em;
+        padding-top: 6em;
         padding-left: 8em;
         padding-right: 4em;
     }
@@ -841,6 +852,22 @@
     }
 
     .btn {
-        background-color: darkred;
+        color: white;
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
+        box-shadow: none;
+    }
+
+    .filter {
+        display: flex;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        margin: 1em 0 0 10em;
+    }
+
+    .tags {
+        margin-right: 1em;
     }
 </style>

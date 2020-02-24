@@ -32,7 +32,7 @@
                     </div>
                 </div>
 
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
         </div>
 
@@ -66,31 +66,11 @@
             }
         },
         mounted() {
-            this.$store.commit("UserisInCart");
-            this.$store.commit("UserisInCart_2");
-            if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
-                window.location.href = "/login"
+            this.$store.state.warenkorb = false;
+            if(this.$store.state.isAdmin) {
+                this.$router.push({path: '/login'})
             } else {
-                axios.post('/cart/json', {
-                    id: this.$store.state.userID
-                }).then(response => {
-                        console.log(response);
-                        if (response.data.length === 0) {
-                            this.notFound = true;
-                            this.$store.commit("UserisNotInCart_2");
-                        } else {
-                            if (response.data.length % 2 === 0) {
-                                this.platzhalter = false;
-                            } else {
-                                this.platzhalter = true;
-                            }
-                            this.notFound = false;
-                            this.liste.data.data = response.data;
-                            this.isLoggedInCheck();
-                            this.saveContent(response.data);
-                        }
-                    }
-                );
+                this.ausgabe();
             }
         },
         methods: {
@@ -130,6 +110,27 @@
                 }).then(response => {
                     console.log(response);
                 })
+            },
+            ausgabe: function () {
+                if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
+                    window.location.href = "/login"
+                } else {
+                    axios.post('/cart/json', {
+                        id: this.$store.state.userID
+                    }).then(response => {
+                            console.log(response);
+                            if (response.data.length === 0) {
+                                this.notFound = true;
+                            } else {
+                                this.platzhalter = response.data.length % 2 !== 0;
+                                this.notFound = false;
+                                this.liste.data.data = response.data;
+                                this.isLoggedInCheck();
+                                this.saveContent(response.data);
+                            }
+                        }
+                    );
+                }
             }
         }
     }
@@ -170,6 +171,7 @@
     .notFound {
         text-align: center;
         padding-top: 6em;
+        font-size: 2em;
     }
 
     .text {
@@ -219,9 +221,5 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
-    }
-
-    .notFound {
-        font-size: 2em;
     }
 </style>

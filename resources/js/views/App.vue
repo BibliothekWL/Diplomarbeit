@@ -10,37 +10,41 @@
                         <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
                     </div>
 
-                    <vs-divider icon="search" position="left">
-                        Search
-                    </vs-divider>
-
                     <vs-sidebar-item index="1" icon="home" to="/home">
                         Home
                     </vs-sidebar-item>
+
+                    <br>
 
                     <vs-sidebar-item index="5" icon="menu_book" to="/list">
                         Bücherliste
                     </vs-sidebar-item>
 
+                    <br v-if="isAdmin & loggedIn">
+
                     <vs-sidebar-item v-if="isAdmin & loggedIn" index="20" icon="supervisor_account" to="/authorlist">
                         Autorliste
                     </vs-sidebar-item>
+
+                    <br v-if="!isAdmin & loggedIn">
 
                     <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">
                         Meine Bücher
                     </vs-sidebar-item>
 
-                    <vs-divider icon="person" position="left">
-                        User
-                    </vs-divider>
+                    <br v-if="loggedIn">
 
                     <vs-sidebar-item v-if="loggedIn" index=6 icon="account_box" to="/profil">
                         Profil
                     </vs-sidebar-item>
 
+                    <br v-if="!loggedIn">
+
                     <vs-sidebar-item index="7" v-if="!loggedIn" icon="person_add" to="/login">
                         Login
                     </vs-sidebar-item>
+
+                    <br v-if="loggedIn">
 
                     <vs-sidebar-item index="9" v-if="loggedIn" icon="exit_to_app" v-on:click="logout()">
                         Logout
@@ -50,13 +54,10 @@
             </div>
         </div>
 
-        <b-button class="warenkorb" v-if="loggedIn & !isAdmin & $store.state.nichtwarenkorb"
-             v-on:click="towarenkorb()" to="/warenkorb" variant="light">
-            <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon> <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
-        </b-button>
-
-        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
-            Ausborgen
+        <b-button class="warenkorb" v-if="loggedIn && !isAdmin && $store.state.warenkorb"
+                  to="/warenkorb" variant="light">
+            <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon>
+            <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
         </b-button>
         <router-view></router-view>
     </div>
@@ -94,15 +95,11 @@
         },
         methods: {
             logout: function () {
-                axios.get('/logout/json', {})
+                axios.get('/logout/json')
                     .then(response => {
-                        console.log(this.$store.state.isLoggedIn);
                         this.$store.commit('UsernotLoggedIn');
-                        console.log(this.$store.state.isLoggedIn);
-                        this.$store.commit('UserisnotAdmin');
-                        this.$store.commit('setSearchEmpty');
-                        this.$store.commit('isFirstPage');
-                        window.location.href="/login";
+                        this.$store.state.isAdmin = false;
+                        window.location.href = "/login";
                     }).catch(error => {
                     console.log(error.message)
                 });
@@ -126,9 +123,6 @@
             regular_navigation: function () {
                 this.reduce = !this.reduce;
 
-            },
-            towarenkorb: function () {
-                this.$router.push({path: '/warenkorb'});
             }
         }
     }
@@ -218,6 +212,6 @@
     }
 
     .modal-backdrop {
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0, 0, 0, 0.5);
     }
 </style>
