@@ -20,5 +20,7 @@ export default new Vuex.Store({
     mutations: {
         UsernotLoggedIn: state => state.isLoggedIn = false,
         UserLoggedIn: state => state.isLoggedIn = true,
+        UserisAdmin: state => state.isAdmin = true,
+        UserisnotAdmin: state => state.isAdmin = false,
     }
 });

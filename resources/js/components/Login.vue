@@ -57,7 +57,11 @@
                             this.$store.state.username = response.data.username;
                             this.$store.state.userID = response.data.userID;
                             this.$store.commit('UserLoggedIn');
-                            this.$store.state.isAdmin = response.data.isAdmin === true;
+                            if(response.data.isAdmin === true) {
+                                this.$store.commit('UserisAdmin');
+                            } else {
+                                this.$store.commit('UserisnotAdmin');
+                            }
                             this.$router.push({path: '/'}
                             )
                         }

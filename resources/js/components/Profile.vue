@@ -7,26 +7,31 @@
         </div>
 
         <div class="content">
-            <div class="content_item">
-                <h4>Username: {{userdata.name}}</h4>
-                <b-button style="width: 10em;" variant="outline-dark">Change Username</b-button>
+
+            <h4 class="col-6">E-Mail: {{userdata.email}}</h4>
+
+            <div class="content_item col-12">
+                <h4 class="col-4">Username</h4>
+                <b-input class="search col-8" placeholder="Username" v-model="userdata.name">
+                </b-input>
             </div>
 
-            <div class="content_item">
-                <h4>E-Mail: {{userdata.email}}</h4>
-                <div></div>
+            <div class="content_item col-12">
+                <h4 class="col-4">Password:</h4>
+                <b-input class="search col-8" type="password" placeholder="••••••••" v-model="userdata.password">
+                </b-input>
             </div>
 
-            <div class="content_item">
-                <h4>Password: ••••••••</h4>
-                <b-button style="width: 10em;" variant="outline-dark">Change Password</b-button>
-            </div>
+            <b-button class="col-2" style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()"
+                      v-on:keyup.enter="changeCredentials()">Change Credentials
+            </b-button>
         </div>
     </div>
 </template>
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
 
     export default {
         name: "Profile",
@@ -53,6 +58,16 @@
                             this.userdata = response.data;
                         }
                     );
+            },
+            changeCredentials() {
+                axios.post("/userdata/json", {
+                    name: this.userdata.name
+                })
+                    .then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                    Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
+                })
             }
         }
     }
@@ -63,6 +78,7 @@
     .center {
         text-align: center;
     }
+
 
     .content {
         padding: 5em;
