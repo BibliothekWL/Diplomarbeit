@@ -95,6 +95,7 @@
         methods: {
             register: function () {
                 if (this.password === this.passwordRepeat) {
+                    Swal.showLoading();
                     axios.post('http://localhost:8000/user/register', {
                         name: this.name,
                         id: this.id,
@@ -104,6 +105,8 @@
                         .then(response => {
                             console.log(response);
                             this.$router.push({path: '/login'});
+                            Swal.close()
+                            Swal.fire({title: 'User successfully created!', icon: 'success'})
                         }).catch(error => {
                         console.log(error.message);
                         Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})

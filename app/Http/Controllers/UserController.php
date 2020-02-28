@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Hashing\BcryptHasher;
 use Illuminate\Http\Request;
 
 use \App\Book;
