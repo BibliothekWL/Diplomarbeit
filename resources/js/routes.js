@@ -8,6 +8,7 @@ import Register from "@/js/components/Register";
 import MyBooks from "@/js/components/MyBooks";
 import Cart from "@/js/components/Cart";
 import Profil from "@/js/components/Profile";
+import AuthorList from "@/js/components/AuthorList";
 
 
 Vue.use(VueRouter);
@@ -54,6 +55,11 @@ const router = new VueRouter({
             path: '/profil',
             name: 'profil',
             component: Profil
+        },
+        {
+            path: '/authorlist',
+            name: 'authorlist',
+            component: AuthorList
         }
     ]
 });

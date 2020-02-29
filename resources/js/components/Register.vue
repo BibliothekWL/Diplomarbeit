@@ -65,6 +65,13 @@
                 password: "",
                 passwordRepeat: ""
             }
+        },
+        mounted() {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            if (this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/'})
+            }
         }, watch: {
             '$store.state.isLoggedIn': {
                 handler() {
@@ -95,6 +102,7 @@
         methods: {
             register: function () {
                 if (this.password === this.passwordRepeat) {
+                    Swal.showLoading();
                     axios.post('http://localhost:8000/user/register', {
                         name: this.name,
                         id: this.id,
@@ -104,6 +112,8 @@
                         .then(response => {
                             console.log(response);
                             this.$router.push({path: '/login'});
+                            Swal.close()
+                            Swal.fire({title: 'User successfully created!', icon: 'success'})
                         }).catch(error => {
                         console.log(error.message);
                         Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})
@@ -114,70 +124,6 @@
     }
 </script>
 
-<style>
-    .test {
-        display: flex;
-        align-items: center;
-        background-image: url("../../img/bg_hp.jpg");
-        background-size: cover;
-        height: calc(100vh);
-    }
-
-    .form_div {
-        display: flex;
-        background-color: white;
-        opacity: 90%;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-        min-width: 40%;
-        height: 70%;
-        min-height: 435px;
-        border-radius: 15px;
-        align-items: center;
-        flex-direction: column;
-    }
-
-
-    .short_navbar {
-        display: flex;
-        justify-content: flex-start;
-        width: 100%;
-        border-radius: 15px;
-        color: #e30013;
-    }
-
-    .navbar_btn {
-        background-color: white;
-        color: red;
-        border-color: white;
-        margin-right: 0.5em;
-    }
-
-    .error {
-        font-size: 0.75rem;
-        line-height: 1;
-        margin-left: 5px;
-        margin-top: -1rem;
-        margin-bottom: 0.9375rem;
-        color: red;
-    }
-
-    .form-group {
-        border-color: red;
-    }
-
-    a:hover {
-        color: #666666;
-        text-decoration: none;
-    }
-
-    .inputs {
-        margin-top: 1em;
-    }
-
-    .login-btn {
-
-    }
+<style scoped>
 
 </style>

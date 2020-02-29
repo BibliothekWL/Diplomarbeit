@@ -36,7 +36,10 @@ class CartsController extends Controller
     }
 
     public function destroy(Cart $cart){
-        $cart->delete();
-        return redirect('/cart');
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+        $id = Cart::where('book_id',$jsonarray['id'])->first()->id;
+        Cart::destroy($id);
+        return json_encode(['status' => 200, 'statusMessage' => 'cart was deleted successfully']);
     }
 }

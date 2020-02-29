@@ -39,11 +39,15 @@
             },
         },
         mounted() {
-            console.log(this.$store.state.isLoggedIn);
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            if (this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/'})
+            }
         },
         methods: {
             login: function () {
-                axios.post('http://localhost:8000/login/json', {
+                axios.post('/login/json', {
                     email: this.email,
                     password: this.password
                 })
@@ -52,23 +56,29 @@
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
                             console.log(response);
                         } else {
-                            this.$store.state.latestUsername = response.data.username;
-                            this.$store.commit("setUsername");
-                            this.$store.state.latestUserID = response.data.userID;
-                            this.$store.commit("setUserID");
                             this.$store.commit('UserLoggedIn');
+                            console.log(response.data.isAdmin);
                             if (response.data.isAdmin === true) {
                                 this.$store.commit('UserisAdmin');
                             } else {
                                 this.$store.commit('UserisnotAdmin');
                             }
-                            this.$forceUpdate();
-                            this.$router.push({path: '/home'}
+
+                            axios.post('/userdata/json', {
+                                id: response.data.userID
+                            }).then(response => {
+                                this.$store.state.userdata_login = response.data;
+                                this.$store.commit('setUserdata');
+                            });
+                            this.$router.push({path: '/'}
                             )
                         }
                     }).catch(error => {
-                    console.log();
-                    Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: 'Something went wrong, try to refresh the site or try it later!',
+                        icon: 'error'
+                    });
                     console.log(error);
                 })
             }

@@ -1,17 +1,22 @@
 <template>
     <div id="body">
-        <div class="UserViewBody">
-            <div class="searchBox">
-                <div class="page_title">
-                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Meine Bücher</h1>
-                </div>
-            </div>
 
-            <h6 class="notFound" v-if="notFound">Sie haben noch keine Bücher ausgeborgt!</h6>
+        <div class="searchBox">
+            <div class="page_title">
+                <h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Meine Bücher</h1>
+            </div>
+        </div>
+
+        <div v-if="!notFound" class="UserViewBody">
+
+            <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddItem
+                      v-on:click="addItem(liste.length)">
+                <font-awesome-icon icon="plus"/>
+            </b-button>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                <div v-for="book in liste.data.data" class="listitem" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
+                    book.BNR, book.author_id)"
                      v-b-modal.BookInformation>
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
@@ -25,20 +30,16 @@
                                 {{content_short[book.id]}}
                             </div>
                         </div>
-
-                        <div v-if="book.borrowed === 0" class="info frei">
-                            Frei
-                        </div>
-
-                        <div v-if="book.borrowed === 1" class="info borrowed">
-                            Ausgeborgt
-                        </div>
                     </div>
                 </div>
 
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
         </div>
+
+        <h4 v-if="notFound" class="notFound">
+            Sie haben keine Bücher ausgeborgt!
+        </h4>
 
         <b-modal id="BookInformation" size="l" centered title="Information">
             <div>
@@ -69,38 +70,15 @@
             }
         },
         mounted() {
-            this.$store.commit("UserisInCart_2");
-            this.$store.commit("UserisNotInCart_2");
-            axios.get('/books/mybooks/json')
-                .then(response => {
-                        if (response.data.data.length === 0) {
-                            this.notFound = true;
-                        } else {
-                            if (response.data.data.length % 2 === 0) {
-                                this.platzhalter = false;
-                            } else {
-                                this.platzhalter = true;
-                            }
-                            if (response.data.data.length < 3) {
-                                console.log(response.data.data.length);
-                                document.getElementById("body").id = "bodyset";
-                            }
-                            this.notFound = false;
-                            this.liste.data.data = response.data.data;
-                            this.isLoggedInCheck();
-                            this.saveContent(response.data.data);
-                        }
-                    }
-                );
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            if (this.$store.state.isAdmin) {
+                this.$router.push({path: '/login'})
+            } else {
+                this.ausgabe();
+            }
         },
         methods: {
-            isLoggedInCheck: function () {
-                axios.get('/session')
-                    .then(response => {
-                            this.isLoggedIn = response.data;
-                        }
-                    )
-            },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
                     this.content_full[content[i].id] = content[i].content;
@@ -124,31 +102,40 @@
                 this.content = content;
                 this.BNR = BNR;
             },
-
+            ausgabe: function () {
+                axios.get('/books/mybooks/json')
+                    .then(response => {
+                            if (response.data.data.length === 0) {
+                                this.notFound = true;
+                            } else {
+                                this.platzhalter = response.data.data.length % 2 !== 0;
+                                this.notFound = false;
+                                this.liste.data.data = response.data.data;
+                                this.saveContent(response.data.data);
+                            }
+                        }
+                    );
+            }
         }
     }
 </script>
 
 <style scoped>
-    .center {
-        text-align: center;
-    }
 
     .notFound {
         text-align: center;
+        padding: 6em;
+        font-size: 2em;
     }
 
     .list {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
-        padding-left: 4em;
-    }
-
-    .listitem {
-        padding: 1em;
-        margin: 2em;
+        justify-content: right;
+        padding-top: 6em;
+        padding-left: 8em;
+        padding-right: 4em;
     }
 
     .list > * {
@@ -157,26 +144,51 @@
         flex-shrink: 1;
     }
 
-    .listitem:hover {
-        cursor: pointer;
-    }
-
-    .beschreibung {
-        font-size: 14px;
-        width: 20em;
+    .listitem {
+        margin: 2em;
+        border: 1px black solid;
     }
 
     .card_flex {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
+    }
+
+    .listitem:hover {
+        cursor: pointer;
+    }
+
+    .beschreibung {
+        font-size: 14px;
+        width: 17em;
+    }
+
+    .addButton {
+        float: right;
+        margin: 1em;
     }
 
     .bildbruh {
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .text {
+        height: 7em;
+        width: 20em;
+        margin: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
     }
 
     .searchBox {
@@ -189,9 +201,8 @@
         background-image: url('../../img/bg_hp.jpg');
     }
 
-
-    .notFound {
-        font-size: 2em;
-        padding: 10.5em;
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 </style>

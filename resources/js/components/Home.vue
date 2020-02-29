@@ -1,7 +1,7 @@
 <template>
     <div class="body">
         <div class="searchBox">
-            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Bibliothek
+            <div class="page_title"><h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Bibliothek
                 Wiener Linien</h1>
             </div>
 
@@ -18,6 +18,7 @@
                 </b-input-group-append>
             </b-input-group>
         </div>
+
         <div class="books">
             <div>
                 <h2>Top-Bücher</h2>
@@ -39,19 +40,17 @@
             }
         },
         mounted() {
-            this.$store.commit("UserisNotInCart_2");
-            this.$store.commit("UserisInCart_2");
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             this.search = "";
         },
         methods: {
             ausgabe: function () {
-                if (this.search === "") {
-
-                } else {
+                if (this.search !== "") {
                     this.$store.state.latestSearch = this.search;
                     this.$store.commit("setSearch");
                     this.$store.commit("isFirstPage");
-                    router.push({ name: list});
+                    this.$router.push({path: "/list"});
                 }
             }
         }
@@ -89,8 +88,13 @@
 
     .books {
         display: flex;
+        height: 200px;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+    }
+
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 </style>

@@ -15,12 +15,14 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('author_id');
             $table->text('title');
             $table->text('systematik');
+            $table->text('systematik_long');
             $table->text('medium');
             $table->text('content');
+            $table->text('category');
             $table->integer('BNR');
+            $table->integer('borrowCounter')->default(0);
             $table->tinyInteger('borrowed')->default(0);
             $table->tinyInteger('user_id')->default(0);
             $table->timestamps();

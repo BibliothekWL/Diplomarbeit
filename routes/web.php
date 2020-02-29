@@ -3,10 +3,12 @@
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Resources\Cart as CartResource;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Author as AuthorResource;
 
 use \App\User as User;
 use \App\Cart as Cart;
 use \App\Book as Book;
+use \App\Author as Author;
 
 
 Auth::routes(['verify' => true]);
@@ -21,6 +23,7 @@ Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
+Route::get('/authorlist  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -108,7 +111,9 @@ Route::resource('books', 'BooksController');
 Route::resource('cart', 'CartsController');
 //Route::resource('user', 'UserController');
 
-Route::get('/user/edit', 'UserController@view');
+Route::post('/user/editName', 'UserController@editName');
+Route::post('/user/editPassword', 'UserController@editPassword');
+
 Route::patch('/user/edit', 'UserController@update');
 
 /**
@@ -171,8 +176,19 @@ Route::get('/medium/json', function () {
     return Book::orderBy('medium')->get()->pluck('medium')->unique();
 });
 
-Route::get('/author/json', function () {
+Route::get('/authors/json', function () {
+    return Author::orderBy('name')->get()->pluck('name')->unique();
+});
 
+Route::get('/author/json', function () {
+    return DB::table('authors')->orderBy('name')->select()->paginate(6);
+});
+
+Route::post('/author/search', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
 });
 
 Route::post('/userdata/json', function () {
@@ -180,3 +196,6 @@ Route::post('/userdata/json', function () {
     $jsonarray = json_decode($json, true);
     return User::all()->where('id', $jsonarray['id'])->first();
 });
+
+//Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
+//Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
