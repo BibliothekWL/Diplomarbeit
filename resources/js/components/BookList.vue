@@ -429,7 +429,6 @@
                         data: ""
                     }
                 },
-                firstPage: 1,
                 lastPage: 0,
                 id: "",
                 title: "",
@@ -624,25 +623,32 @@
                 }
             },
             isAnfangfind: function () {
-                this.isAnfang = this.page === this.firstPage;
+                this.isAnfang = this.page === 1;
             },
             isEndefind: function () {
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = 1;
                 this.ausgabe();
             },
             sendtoLast: function () {
-                console.log(this.isAnfang);
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = this.lastPage;
                 this.ausgabe();
             },

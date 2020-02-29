@@ -229,18 +229,26 @@
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = 1;
                 this.ausgabe();
             },
             sendtoLast: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = this.lastPage;
                 this.ausgabe();
             },
