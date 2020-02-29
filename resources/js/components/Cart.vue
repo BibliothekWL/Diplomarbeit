@@ -67,6 +67,7 @@
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = true;
             if(this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -221,5 +222,10 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 </style>

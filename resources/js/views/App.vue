@@ -60,7 +60,7 @@
             <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
         </b-button>
 
-        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorb & loggedIn" v-on:click="checkout()">
+        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorbCheckout & loggedIn" v-on:click="checkout()">
             Ausborgen
         </b-button>
         <router-view></router-view>
@@ -175,9 +175,9 @@
     }
 
     .footer-sidebar > button {
-        border: 0px solid rgba(0, 0, 0, 0) !important;
+        border: 0 solid rgba(0, 0, 0, 0) !important;
         border-left: 1px solid rgba(0, 0, 0, .07) !important;
-        border-radius: 0px !important;
+        border-radius: 0 !important;
     }
 
     .vs-sidebar--background {

@@ -41,6 +41,7 @@
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             this.search = "";
         },
         methods: {

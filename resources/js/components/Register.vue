@@ -65,6 +65,13 @@
                 password: "",
                 passwordRepeat: ""
             }
+        },
+        mounted() {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            if (this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/'})
+            }
         }, watch: {
             '$store.state.isLoggedIn': {
                 handler() {

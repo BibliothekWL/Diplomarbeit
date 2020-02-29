@@ -2,7 +2,7 @@
     <div class="body">
         <div class="searchBox">
             <div class="page_title">
-                <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Profil</h1>
+                <h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Profil</h1>
             </div>
         </div>
 
@@ -14,17 +14,61 @@
                 <h4 class="col-4">Username</h4>
                 <b-input class="search col-8" placeholder="Username" v-model="userdata.name">
                 </b-input>
+                <b-button class="col-2" style="width: 10em;" v-b-modal.ChangeUsername variant="outline-dark">
+                    Change Credentials
+                </b-button>
             </div>
 
             <div class="content_item col-12">
                 <h4 class="col-4">Password:</h4>
                 <b-input class="search col-8" type="password" placeholder="••••••••" v-model="userdata.password">
                 </b-input>
+
+                <b-button class="col-2" style="width: 10em;" v-b-modal.ChangePassword variant="outline-dark">
+                    Change Credentials
+                </b-button>
             </div>
 
-            <b-button class="col-2" style="width: 10em;" variant="outline-dark" v-on:click="changeCredentials()"
-                      v-on:keyup.enter="changeCredentials()">Change Credentials
-            </b-button>
+
+            <!-- Username Change Modal (Popup) -->
+
+            <b-modal id="ChangeUsername" scrollable ref="modal" centered title="Benutzername ändern"
+                     @ok="changeCredentials(true)">
+                <form ref="form">
+                    <b-form-group
+                            label="Username"
+                            label-for="title"
+                            invalid-feedback="Vorname is required"
+                    >
+
+                        <b-form-input
+                                id="name-input"
+                                v-model="userdata.name"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
+
+            <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
+                     @ok="changeCredentials(false)">
+                <form ref="form">
+                    <b-form-group
+                            label="Password"
+                            label-for="title"
+                            invalid-feedback="Password is required"
+                    >
+
+                        <b-form-input
+                                id="pw-input"
+                                v-model="userdata.password"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
+
+
         </div>
     </div>
 </template>
@@ -37,11 +81,13 @@
         name: "Profile",
         data() {
             return {
-                userdata: ""
+                userdata: "",
+                pw: "12341234"
             }
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -59,26 +105,36 @@
                         }
                     );
             },
-            changeCredentials() {
-                axios.post("/userdata/json", {
-                    name: this.userdata.name
-                })
-                    .then(response => {
-                        console.log(response)
-                    }).catch(error => {
-                    Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
-                })
+            //if true => username, else => password
+            changeCredentials(type) {
+                if (type) {
+                    axios.post("/user/editName", {
+                        name: this.userdata.name
+                    })
+                        .then(response => {
+                            console.log(response);
+                            Swal.fire({title: 'Success!', text: 'Username successfully changed!', icon: 'success'})
+                        }).catch(error => {
+                        Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
+                    })
+                } else {
+                    axios.post("/user/editPassword", {
+                        oldPw: this.pw,
+                        newPw: this.userdata.password
+                    })
+                        .then(response => {
+                            console.log(response);
+                            Swal.fire({title: 'Success!', text: 'Password successfully changed!', icon: 'success'})
+                        }).catch(error => {
+                        console.log('error pw');
+                    })
+                }
             }
         }
     }
 </script>
 
 <style scoped>
-
-    .center {
-        text-align: center;
-    }
-
 
     .content {
         padding: 5em;
@@ -103,6 +159,11 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 
 </style>
