@@ -17,6 +17,7 @@ class CreateBooksTable extends Migration
             $table->bigIncrements('id');
             $table->text('title');
             $table->text('systematik');
+            $table->text('systematik_long');
             $table->text('medium');
             $table->text('content');
             $table->text('category');
