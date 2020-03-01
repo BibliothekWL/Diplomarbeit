@@ -12,20 +12,20 @@
 
             <div class="content_item col-12">
                 <h4 class="col-4">Username</h4>
-                <b-input class="search col-8" placeholder="Username" v-model="userdata.name">
+                <b-input class="search col-8" v-bind:value="userdata.name" disabled>
                 </b-input>
                 <b-button class="col-2" style="width: 10em;" v-b-modal.ChangeUsername variant="outline-dark">
-                    Change Credentials
+                    Username Ändern
                 </b-button>
             </div>
 
             <div class="content_item col-12">
                 <h4 class="col-4">Password:</h4>
-                <b-input class="search col-8" type="password" placeholder="••••••••" v-model="userdata.password">
+                <b-input class="search col-8" type="password" placeholder="••••••••" disabled>
                 </b-input>
 
                 <b-button class="col-2" style="width: 10em;" v-b-modal.ChangePassword variant="outline-dark">
-                    Change Credentials
+                    Passwort Ändern
                 </b-button>
             </div>
 
@@ -42,11 +42,13 @@
                     >
 
                         <b-form-input
+                                value="userdata.name"
                                 id="name-input"
                                 v-model="userdata.name"
                                 required
                         ></b-form-input>
                     </b-form-group>
+
                 </form>
             </b-modal>
 
@@ -54,13 +56,25 @@
                      @ok="changeCredentials(false)">
                 <form ref="form">
                     <b-form-group
-                            label="Password"
+                            label="Aktuelles Password"
                             label-for="title"
-                            invalid-feedback="Password is required"
+                            invalid-feedback="Passwort muss angegeben werden"
                     >
 
                         <b-form-input
-                                id="pw-input"
+                                id="pwold-input"
+                                v-model="pw"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                            label="Neues Password"
+                            label-for="title"
+                            invalid-feedback="Passwort muss angegeben werden"
+                    >
+
+                        <b-form-input
+                                id="pwnew-input"
                                 v-model="userdata.password"
                                 required
                         ></b-form-input>
@@ -82,7 +96,7 @@
         data() {
             return {
                 userdata: "",
-                pw: "12341234"
+                pw: ""
             }
         },
         mounted() {
@@ -101,7 +115,7 @@
             //if true => username, else => password
             changeCredentials(type) {
                 if (type) {
-                    axios.post("/user/editName", {
+                    axios.post('/user/editName', {
                         name: this.userdata.name
                     })
                         .then(response => {
@@ -111,13 +125,17 @@
                         Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
                     })
                 } else {
-                    axios.post("/user/editPassword", {
+                    axios.post('/user/editPassword', {
                         oldPw: this.pw,
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            console.log(response);
-                            Swal.fire({title: 'Success!', text: 'Password successfully changed!', icon: 'success'})
+                            if(response.status === '400'){
+                                Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
+                                this.$router.push({path: '/logout'});
+                            }else{
+                                Swal.fire({title: 'Fehler!', text: 'Eingabe stimmt nicht mit dem Passwort überein!', icon: 'error'})
+                            }
                         }).catch(error => {
                         console.log('error pw');
                     })
