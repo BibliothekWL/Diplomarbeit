@@ -59,8 +59,11 @@
                             this.$store.commit('UserLoggedIn');
                             console.log(response.data.isAdmin);
                             if (response.data.isAdmin === true) {
+                                console.log("sadas");
+                                this.$store.state.isAdmin = true;
                                 this.$store.commit('UserisAdmin');
                             } else {
+                                this.$store.state.isAdmin = false;
                                 this.$store.commit('UserisnotAdmin');
                             }
 

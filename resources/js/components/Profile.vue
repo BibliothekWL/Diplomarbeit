@@ -96,14 +96,7 @@
         },
         methods: {
             ausgabe: function () {
-                axios.post('userdata/json', {
-                    id: this.$store.state.userID
-                })
-                    .then(response => {
-                            console.log(response);
-                            this.userdata = response.data;
-                        }
-                    );
+                this.userdata = this.$store.state.userdata;
             },
             //if true => username, else => password
             changeCredentials(type) {

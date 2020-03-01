@@ -61,7 +61,7 @@
 
                         <div class="text">
                             <div class="book_title">
-                                {{book.title}}
+                                {{title_short[book.id]}}
                             </div>
 
                             <div class="beschreibung">
@@ -134,7 +134,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title, systematik, medium, content_full, BNR, name)">
+                     @ok="saveAdd(title, systematik, medium, content, BNR, name)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -204,7 +204,7 @@
                     >
                         <b-form-textarea
                                 id="name-input"
-                                v-model="content_full"
+                                v-model="content"
                                 required
                         ></b-form-textarea>
                     </b-form-group>
@@ -231,7 +231,7 @@
             ---------------------------------------------------------->
 
             <b-modal scrollable id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title, systematik, medium, content_full, BNR, name)">
+                     @ok="saveEdit(id, title, systematik, medium, content, BNR, name)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -299,7 +299,7 @@
                 >
                     <b-form-textarea
                             id="name-input"
-                            v-model="content_full"
+                            v-model="content"
                             required
                     ></b-form-textarea>
                 </b-form-group>
@@ -371,7 +371,7 @@
             >
 
                 <div>
-                    {{ content_full }}
+                    {{ content }}
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -432,10 +432,11 @@
                 lastPage: 0,
                 id: "",
                 title: "",
+                title_short: "",
                 systematik: "",
                 medium: "",
                 BNR: "",
-                content_full: [],
+                content: [],
                 content_short: [],
                 dialog_title: "",
                 search: "",
@@ -454,6 +455,8 @@
             };
         },
         mounted() {
+            this.isAnfang = true;
+            this.isEnde = true;
             this.$store.state.warenkorb = true;
             this.$store.state.warenkorbCheckout = false;
             this.ausgabe();
@@ -473,7 +476,7 @@
                     id: id
                 }).then(response => {
                         this.title = response.data.title;
-                        this.content_full = response.data.content;
+                        this.content = response.data.content;
                         this.systematik = response.data.systematik;
                         this.medium = response.data.medium;
                         this.BNR = response.data.BNR;
@@ -483,7 +486,7 @@
             },
             addItem: function () {
                 this.title = "";
-                this.content_full = "";
+                this.content = "";
                 this.systematik = "";
                 this.medium = "";
                 this.BNR = "";
@@ -498,11 +501,9 @@
                     BNR: BNR,
                     authorname: name
                 }).then(response => {
-
                         this.id = "";
                         this.title = "";
-                        this.title_1 = "";
-                        this.content_full = "";
+                        this.content = "";
                         this.systematik = "";
                         this.medium = "";
                         this.BNR = "";
@@ -527,7 +528,7 @@
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
-                    this.content_full[content[i].id] = content[i].content;
+                    this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
@@ -540,9 +541,25 @@
                     }
                 }
             },
+            saveTitle: function (title) {
+                console.log(title.length);
+                for (let i = 0; i < title.length; i++) {
+                    this.title[title[i].id] = title[i].title;
+                    let title_words = title[i].title.split(" ");
+                    if (title_words.length >= 8) {
+                        this.title_short[title[i].id] = "";
+                        for (let j = 0; j < 8; j++) {
+                            this.title_short[title[i].id] += title_words[j] + " ";
+                        }
+                        this.title_short[title[i].id] += "...";
+                    } else {
+                        this.title_short[title[i].id] = title[i].title;
+                    }
+                }
+            },
             buecherInformationen: function (id, title, systematik, medium, content, BNR) {
                 this.id = id;
-                this.content_full = content;
+                this.content = content;
                 this.systematik = systematik;
                 this.medium = medium;
                 this.content = content;
@@ -576,7 +593,6 @@
                         isNotBorrowed: null
                     })
                         .then(response => {
-                                console.log(response);
                                 if (response.data.data.length === 0) {
                                     this.page = 1;
                                     this.notFound = true;
@@ -588,6 +604,7 @@
                                     this.liste.data.data = response.data.data;
                                     this.lastPage = response.data.last_page;
                                     this.saveContent(response.data.data);
+                                    this.saveTitle(response.data.data);
                                     this.isAnfangfind();
                                     this.isEndefind();
                                 }
@@ -604,10 +621,9 @@
                         isNotBorrowed: null
                     })
                         .then(response => {
+                                this.page = 1;
                                 if (response.data.data.length === 0) {
                                     this.notFound = true;
-                                    this.isAnfang = true;
-                                    this.isEnde = true;
                                 } else {
                                     this.platzhalter = response.data.data.length % 2 !== 0;
                                     this.notFound = false;
@@ -615,6 +631,7 @@
                                     this.lastPage = response.data.last_page;
                                     this.$store.state.lastPage = this.lastPage;
                                     this.saveContent(response.data.data);
+                                    this.saveTitle(response.data.data);
                                     this.isAnfangfind();
                                     this.isEndefind();
                                 }
@@ -629,15 +646,15 @@
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.page++;
                 this.isAnfang = true;
                 this.isEnde = true;
-                this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.page--;
                 this.isAnfang = true;
                 this.isEnde = true;
-                this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {

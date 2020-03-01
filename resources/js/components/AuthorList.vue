@@ -186,6 +186,8 @@
             };
         },
         mounted() {
+            this.isAnfang = true;
+            this.isEnde = true;
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
@@ -196,7 +198,6 @@
         },
         methods: {
             ausgabe: function () {
-                console.log(this.$store.state.warenkorb);
                 if (this.search === "") {
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
