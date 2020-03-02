@@ -64,13 +64,14 @@
                 },
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
-                content_full: [],
+                content: [],
                 content_short: [],
                 platzhalter: false
             }
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -80,7 +81,7 @@
         methods: {
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
-                    this.content_full[content[i].id] = content[i].content;
+                    this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
@@ -198,5 +199,10 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
     }
 </style>

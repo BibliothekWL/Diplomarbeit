@@ -40,13 +40,15 @@
             },
         },
         mounted() {
-            if(this.$store.state.isLoggedIn) {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            if (this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/'})
             }
         },
         methods: {
             login: function () {
-                axios.post('http://localhost:8000/login/json', {
+                axios.post('/login/json', {
                     email: this.email,
                     password: this.password
                 })
@@ -55,19 +57,32 @@
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
                             console.log(response);
                         } else {
-                            this.$store.state.username = response.data.username;
-                            this.$store.state.userID = response.data.userID;
                             this.$store.commit('UserLoggedIn');
-                            if(response.data.isAdmin === true) {
+                            console.log(response.data.isAdmin);
+                            if (response.data.isAdmin === true) {
+                                console.log("sadas");
+                                this.$store.state.isAdmin = true;
                                 this.$store.commit('UserisAdmin');
                             } else {
+                                this.$store.state.isAdmin = false;
                                 this.$store.commit('UserisnotAdmin');
                             }
+
+                            axios.post('/userdata/json', {
+                                id: response.data.userID
+                            }).then(response => {
+                                this.$store.state.userdata_login = response.data;
+                                this.$store.commit('setUserdata');
+                            });
                             this.$router.push({path: '/'}
                             )
                         }
                     }).catch(error => {
-                    Swal.fire({title: 'Oops!', text: 'Something went wrong, try to refresh the site or try it later!', icon: 'error'});
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: 'Something went wrong, try to refresh the site or try it later!',
+                        icon: 'error'
+                    });
                     console.log(error);
                 })
             }

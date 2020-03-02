@@ -14,21 +14,38 @@ class AuthorController extends Controller
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-
-        if (Author::where('surname', $jsonarray['surname'])
-                ->where('firstname', $jsonarray['firstname'])
-                ->first()->count() > 0) {
+        $author = Author::where('name', $jsonarray['name'])
+            ->first();
+        if ($author !== null) {
             return json_encode(['status' => 400, 'statusMessage' => 'Author already exists']);
         } else {
             $author = new Author();
-            $author->firstname = $jsonarray['firstname'];
-            $author->surname = $jsonarray['surname'];
+            $author->name = $jsonarray['name'];
             $author->save();
+            return json_encode(['status' => 200, 'statusMessage' => 'creation successful']);
+
         }
+    }
+
+    public function edit(){
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
+
+        $author = Author::findOrFail($jsonarray['id']);
+        $author->name = $jsonarray['name'];
+        $author->save();
+
+        return json_encode(['status' => 200, 'statusMessage' => 'edit successful']);
 
     }
 
     public function destroy(){
-    }
+        $json = file_get_contents('php://input');
+        $jsonarray = json_decode($json, true);
 
+        $author = Author::findOrFail($jsonarray['id']);
+        $author->delete();
+
+        return json_encode(['status' => 200, 'statusMessage' => 'delete successful']);
+    }
 }

@@ -45,8 +45,7 @@
 
                         <div class="text">
                             <div class="book_title">
-                                {{author.firstname}}
-                                {{author.surname}}
+                                {{author.name}}
                             </div>
                         </div>
 
@@ -56,7 +55,7 @@
                             </b-button>
 
                             <b-button v-b-modal.EditAuthor pill
-                                      v-on:click="editAuthor(author.firstname, author.surname)">
+                                      v-on:click="editAuthor(author.name, author.id)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -116,31 +115,19 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddAuthor" scrollable ref="modal" centered title="Autor erstellen"
-                     @ok="saveAdd(firstname, surname)">
+                     @ok="saveAdd(name)">
                 <form ref="form">
                     <b-form-group
-                            label="Vorname"
+                            label="Name"
                             label-for="title"
-                            invalid-feedback="Vorname is required"
+                            invalid-feedback="Name is required"
                     >
 
                         <b-form-input
                                 id="name-input"
-                                v-model="firstname"
+                                v-model="name"
                                 required
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Nachname"
-                            label-for="title"
-                            invalid-feedback="Nachname is required"
-                    >
-
-                        <b-form-input
-                                id="name-input"
-                                v-model="surname"
-                                required
+                                v-on:keyup.enter="saveAdd(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>
@@ -153,31 +140,19 @@
             ---------------------------------------------------------->
 
             <b-modal id="EditAuthor" centered title="Autor ändern"
-                     @ok="saveEdit(firstname, surname)">
+                     @ok="saveEdit(name)">
                 <form ref="form">
                     <b-form-group
-                            label="Vorname"
+                            label="Name"
                             label-for="title"
-                            invalid-feedback="Vorname is required"
+                            invalid-feedback="Name is required"
                     >
 
                         <b-form-input
                                 id="name-input"
-                                v-model="firstname"
+                                v-model="name"
                                 required
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            label="Nachname"
-                            label-for="title"
-                            invalid-feedback="Nachname is required"
-                    >
-
-                        <b-form-input
-                                id="name-input"
-                                v-model="surname"
-                                required
+                                v-on:keyup.enter="saveEdit(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>
@@ -209,12 +184,15 @@
                 isAnfang: false,
                 isEnde: false,
                 platzhalter: false,
-                firstname: "",
-                surname: ""
+                name: "",
+                id: null
             };
         },
         mounted() {
+            this.isAnfang = true;
+            this.isEnde = true;
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -223,12 +201,10 @@
         },
         methods: {
             ausgabe: function () {
-                console.log(this.$store.state.warenkorb);
                 if (this.search === "") {
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
                                 console.log(response);
-                                this.lastPage = response.data.last_page;
                                 this.platzhalter = response.data.data.length % 2 !== 0;
                                 this.liste.data.data = response.data.data;
                                 this.lastPage = response.data.last_page;
@@ -257,48 +233,54 @@
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = 1;
                 this.ausgabe();
             },
             sendtoLast: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = this.lastPage;
                 this.ausgabe();
             },
             deleteAuthor: function (id) {
-                axios.post('/author/delete/json', {
+                axios.post('/author/delete', {
                     id: id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
-            editAuthor: function (firstname, surname) {
-                this.firstname = firstname;
-                this.surname = surname;
+            editAuthor: function (name, id) {
+                this.name = name;
+                this.id = id;
             },
             addAuthor: function () {
-                this.firstname = "";
-                this.surname = "";
+                this.name = "";
             },
-            saveEdit: function (firstname, surname) {
-                axios.post('/author/edit/json', {
-                    firstname: firstname,
-                    surname: surname
+            saveEdit: function (name) {
+                axios.post('/author/edit', {
+                    name: name,
+                    id: this.id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
-            saveAdd: function (firstname, surname) {
-                axios.post('/author/create/json', {
-                    firstname: firstname,
-                    surname: surname
+            saveAdd: function (name) {
+                axios.post('/author/create', {
+                    name: name
                 }).then(response => {
                     console.log(response);
                 });

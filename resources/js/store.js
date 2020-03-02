@@ -10,9 +10,10 @@ export default new Vuex.Store({
         isLoggedIn: false,
         search: "",
         searchAuthor: "",
-        username: "",
-        userID: 0,
+        userdata_login: [],
+        userdata: [],
         warenkorb: false,
+        warenkorbCheckout: false,
         cart_count: 0,
         showalpha: true,
     },
@@ -22,5 +23,6 @@ export default new Vuex.Store({
         UserLoggedIn: state => state.isLoggedIn = true,
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
+        setUserdata: state => state.userdata = state.userdata_login
     }
 });

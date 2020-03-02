@@ -23,6 +23,7 @@ Route::get('/register', 'SinglePageController@index');
 Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
+Route::get('/authorlist  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -175,8 +176,19 @@ Route::get('/medium/json', function () {
     return Book::orderBy('medium')->get()->pluck('medium')->unique();
 });
 
+Route::get('/authors/json', function () {
+    return Author::orderBy('name')->get()->pluck('name')->unique();
+});
+
 Route::get('/author/json', function () {
-    return Author::all();
+    return DB::table('authors')->orderBy('name')->select()->paginate(6);
+});
+
+Route::post('/author/search', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
 });
 
 Route::post('/userdata/json', function () {
@@ -184,3 +196,10 @@ Route::post('/userdata/json', function () {
     $jsonarray = json_decode($json, true);
     return User::all()->where('id', $jsonarray['id'])->first();
 });
+
+//Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
+//Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
+
+Route::post('/author/edit/', 'AuthorController@edit');
+Route::post('/author/create/', 'AuthorController@create');
+Route::post('/author/delete/', 'AuthorController@destroy');

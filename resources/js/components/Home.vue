@@ -110,6 +110,7 @@
         },
         mounted() {
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             this.search = "";
             this.topbooks = [{id:1, title:"Test1"},
                 {id:2, title:"Test2"}]
