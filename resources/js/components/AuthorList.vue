@@ -127,6 +127,7 @@
                                 id="name-input"
                                 v-model="name"
                                 required
+                                v-on:keyup.enter="saveAdd(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>
@@ -151,6 +152,7 @@
                                 id="name-input"
                                 v-model="name"
                                 required
+                                v-on:keyup.enter="saveEdit(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>

@@ -73,7 +73,7 @@ class BooksController extends Controller
             $book->user_id = auth()->user()->id;
             $book->borrowCounter = $counter++;
             $book->save();
-
+ 
             $borrowing = new Borrowing();
             $borrowing->user_id = auth()->user()->id;
             $borrowing->book_id = $item->id;
