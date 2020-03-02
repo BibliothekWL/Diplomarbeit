@@ -473,6 +473,18 @@
             this.ausgabe();
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if(response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             deleteItem: function (id) {
                 axios.post('/books/delete/json/', {
                     id: id
@@ -596,6 +608,7 @@
                 this.getSystematik();
                 this.getMedium();
                 this.getAuthor();
+                this.isLoggedInCheck();
                 if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
