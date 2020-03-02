@@ -14,7 +14,7 @@
 
             <b-input-group class="searchBar">
 
-                <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
+                <b-input class="search" placeholder="Nach Autoren suchen" type="search" v-model="search"
                          v-on:keyup.enter="ausgabe()">
                 </b-input>
 
@@ -204,12 +204,16 @@
                 if (this.search === "") {
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
-                                console.log(response);
-                                this.platzhalter = response.data.data.length % 2 !== 0;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isAnfangfind();
-                                this.isEndefind();
+                                if (response.data.length === 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.platzhalter = response.data.data.length % 2 !== 0;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
                             }
                         );
                 } else {
@@ -217,11 +221,16 @@
                         search: this.search
                     })
                         .then(response => {
-                                this.platzhalter = response.data.data.length % 2 !== 0;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isAnfangfind();
-                                this.isEndefind();
+                                if (response.data.length !== 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.platzhalter = response.data.data.length % 2 !== 0;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
                             }
                         );
                 }

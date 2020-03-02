@@ -23,7 +23,7 @@
                     </b-button>
                 </b-input-group-append>
 
-                <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
+                <b-input class="search" placeholder="Nach Büchern suchen" type="search" v-model="search"
                          v-on:keyup.enter="ausgabe()">
                 </b-input>
 
