@@ -125,6 +125,10 @@
             }
         },
         mounted() {
+            axios.post('books/top')
+                .then(response => {
+                    console.log(response);
+                });
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
