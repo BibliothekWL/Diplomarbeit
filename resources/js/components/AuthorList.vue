@@ -55,7 +55,7 @@
                             </b-button>
 
                             <b-button v-b-modal.EditAuthor pill
-                                      v-on:click="editAuthor(author.name)">
+                                      v-on:click="editAuthor(author.name, author.id)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -182,7 +182,8 @@
                 isAnfang: false,
                 isEnde: false,
                 platzhalter: false,
-                name: ""
+                name: "",
+                id: null
             };
         },
         mounted() {
@@ -254,27 +255,29 @@
                 this.ausgabe();
             },
             deleteAuthor: function (id) {
-                axios.post('/author/delete/json', {
+                axios.post('/author/delete', {
                     id: id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
-            editAuthor: function (name) {
+            editAuthor: function (name, id) {
                 this.name = name;
+                this.id = id;
             },
             addAuthor: function () {
                 this.name = "";
             },
             saveEdit: function (name) {
-                axios.post('/author/edit/json', {
+                axios.post('/author/edit', {
                     name: name,
+                    id: this.id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
             saveAdd: function (name) {
-                axios.post('/author/create/json', {
+                axios.post('/author/create', {
                     name: name
                 }).then(response => {
                     console.log(response);
