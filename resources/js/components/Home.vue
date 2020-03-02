@@ -99,6 +99,7 @@
 </template>
 
 <script>
+    import axios from "axios";
 
     export default {
         name: "Home",
@@ -113,7 +114,9 @@
             this.$store.state.warenkorbCheckout = false;
             this.search = "";
             this.topbooks = [{id:1, title:"Test1"},
-                {id:2, title:"Test2"}]
+                {id:2, title:"Test2"}];
+            newestbooks();
+
         },
         methods: {
             ausgabe: function () {
@@ -123,6 +126,16 @@
                     this.$store.commit("isFirstPage");
                     this.$router.push({path: "/list"});
                 }
+            },
+            topbooks: function () {
+                axios.post('/books/newest').then(response =>{
+                    console.log(response);
+                })
+            },
+            newestbooks: function () {
+                axios.post('/books/top').then(response =>{
+                    console.log(response);
+                })
             }
         }
     }

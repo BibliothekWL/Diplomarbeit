@@ -122,6 +122,10 @@
             }
         },
         mounted() {
+            axios.post('books/top')
+                .then(response => {
+                    console.log(response);
+                });
             this.$store.state.warenkorb = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
@@ -166,7 +170,7 @@
                                 })
                             }
                         }).catch(error => {
-                        console.log('error pw');
+                        console.log('Error in PW');
                     })
                 }
             },
