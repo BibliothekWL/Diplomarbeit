@@ -171,6 +171,9 @@
                 }
             },
             hideModal() {
+                this.userdata.password = "";
+                this.pw = "";
+                this.pwRepeat = "";
                 this.$refs['modal'].hide()
             }
         }

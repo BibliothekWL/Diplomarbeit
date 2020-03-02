@@ -167,9 +167,4 @@
         min-height: 200px;
         width: 100%;
     }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
 </style>

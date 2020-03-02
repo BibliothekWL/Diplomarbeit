@@ -114,7 +114,7 @@
                 <font-awesome-icon icon="angle-right"></font-awesome-icon>
             </b-button>
             <b-button v-on:click="sendtoLast()" :disabled=isEnde>
-                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
             </b-button>
         </div>
 
@@ -847,15 +847,4 @@
         flex-direction: column;
         justify-content: space-around;
     }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
-
-    .btn-secondary {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
-
 </style>
