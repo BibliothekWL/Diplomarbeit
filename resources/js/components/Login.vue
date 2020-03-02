@@ -11,6 +11,7 @@
                               placeholder="Enter Email"></b-form-input>
                 <b-form-input v-on:keyup.enter="login()" class="inputs" v-model="password" type="password"
                               placeholder="Enter Password"></b-form-input>
+                <a class="hyperlink" v-on:click="">Passwort vergessen?</a>
                 <b-button class="inputs" v-on:click="login()" href>Login</b-button>
             </div>
         </div>
@@ -90,5 +91,10 @@
 </script>
 
 <style scoped>
+    .hyperlink{
+        color: rgba(63,142,191,1);
+        text-decoration: none;
+        font-size: 11pt;
+    }
 
 </style>

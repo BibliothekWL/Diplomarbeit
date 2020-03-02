@@ -19,15 +19,83 @@
             </b-input-group>
         </div>
 
-        <div class="books">
-            <div>
+        <div class="homepage_content">
+            <div class="books col-12" style="border: black solid 1px">
                 <h2>Top-Bücher</h2>
+                <div class="list">
+                    <div class="listitem">
+                        <div class="card_flex">
+                            <div class="bildbruh">&#160;</div>
+
+                            <div class="text">
+                                <div class="book_title">
+                                    {{topbooks[0].title}}
+                                </div>
+
+                                <div class="beschreibung">
+                                    {{topbooks[0].id}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listitem">
+                        <div class="card_flex">
+                            <div class="bildbruh">&#160;</div>
+
+                            <div class="text">
+                                <div class="book_title">
+                                    {{topbooks[1].title}}
+                                </div>
+
+                                <div class="beschreibung">
+                                    {{topbooks[1].id}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="border: black solid 1px">
+            <div class="books col-12" style="border: black solid 1px">
                 <h2>Neuerscheinungen</h2>
+                <div class="list">
+                    <div class="listitem">
+                        <div class="card_flex">
+                            <div class="bildbruh">&#160;</div>
+
+                            <div class="text">
+                                <div class="book_title">
+                                    {{topbooks[0].title}}
+                                </div>
+
+                                <div class="beschreibung">
+                                    {{topbooks[0].id}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listitem">
+                        <div class="card_flex">
+                            <div class="bildbruh">&#160;</div>
+
+                            <div class="text">
+                                <div class="book_title">
+                                    {{topbooks[1].title}}
+                                </div>
+
+                                <div class="beschreibung">
+                                    {{topbooks[1].id}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -37,12 +105,15 @@
         data() {
             return {
                 search: this.$store.state.search,
+                topbooks: []
             }
         },
         mounted() {
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             this.search = "";
+            this.topbooks = [{id:1, title:"Test1"},
+                {id:2, title:"Test2"}]
         },
         methods: {
             ausgabe: function () {
@@ -61,7 +132,6 @@
     html {
         overflow: hidden;
     }
-
     .body {
         display: flex;
         align-items: flex-start;
@@ -86,11 +156,16 @@
         background-image: url('../../img/bg_hp.jpg');
     }
 
-    .books {
+    .homepage_content {
         display: flex;
-        height: 200px;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+    }
+
+    .books{
+        height: 300px;
+        min-height: 200px;
+        width: 100%;
     }
 
     .btn {
