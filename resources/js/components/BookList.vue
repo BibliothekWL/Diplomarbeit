@@ -686,16 +686,18 @@
                 axios.post('/books/borrow', {
                     id: id,
                     userID: this.$store.state.userID
-                })
-                    .then(response => {
+                }).then(response => {
+                        if (response.data.status === 200) {
+                            this.$store.state.latestCartCount++;
+                            this.$store.commit('setCartCount');
                             Swal.fire({
                                 title: 'Erfolg!',
                                 text: 'Ihr Buch befindet sich nun im Warenkorb!',
                                 icon: 'success'
                             });
-                            this.reloadSite(response.status);
                         }
-                    )
+                    }
+                )
             },
             getSystematik: function () {
                 axios.get('/systematik/json')
