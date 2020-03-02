@@ -157,7 +157,7 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
+                            if (response.data.status === '200') {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',

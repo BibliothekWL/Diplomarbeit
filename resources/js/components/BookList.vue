@@ -23,8 +23,8 @@
                     </b-button>
                 </b-input-group-append>
 
-                <b-input class="search" placeholder="Nach Büchern suchen" type="search" v-model="search"
-                         v-on:keyup.enter="ausgabe()">
+                <b-input class="search" placeholder="Nach Büchern suchen" type="search" v-model="search" debounce="20"
+                         v-on:keyup="ausgabe()">
                 </b-input>
 
                 <b-input-group-append>
@@ -108,6 +108,14 @@
                 <font-awesome-icon icon="angle-left"></font-awesome-icon>
             </b-button>
 
+            <b-dropdown id="dropdown-dropup" v-model="item_size" dropup :text="item_size">
+                <b-dropdown-item v-on:click="setItemSize(6)">6</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(12)">12</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(18)">18</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(24)">24</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(30)">30</b-dropdown-item>
+            </b-dropdown>
+
             <b-button disabled>{{page}}</b-button>
 
             <b-button v-on:click="increment()" :disabled=isEnde>
@@ -134,7 +142,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title, systematik, medium, content, BNR, name)">
+                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, name)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -144,7 +152,7 @@
 
                         <b-form-input
                                 id="name-input"
-                                v-model="title"
+                                v-model="title_string"
                                 required
                         ></b-form-input>
                     </b-form-group>
@@ -204,7 +212,7 @@
                     >
                         <b-form-textarea
                                 id="name-input"
-                                v-model="content"
+                                v-model="content_string"
                                 required
                         ></b-form-textarea>
                     </b-form-group>
@@ -231,7 +239,7 @@
             ---------------------------------------------------------->
 
             <b-modal scrollable id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title, systematik, medium, content, BNR, name)">
+                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, name)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -239,7 +247,7 @@
                 >
                     <b-form-input
                             id="name-input"
-                            v-model="title"
+                            v-model="title_string"
                             required
                     ></b-form-input>
                 </b-form-group>
@@ -299,7 +307,7 @@
                 >
                     <b-form-textarea
                             id="name-input"
-                            v-model="content"
+                            v-model="content_string"
                             required
                     ></b-form-textarea>
                 </b-form-group>
@@ -366,12 +374,13 @@
             <b-modal
                     id="BookInformation"
                     ref="modal"
-                    centered title="Buchinformationen"
+                    centered
+                    :title=title_string
                     size="lg"
             >
 
                 <div>
-                    {{ content }}
+                    {{ content_string }}
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -431,11 +440,13 @@
                 },
                 lastPage: 0,
                 id: "",
+                title_string: "",
                 title: [],
                 title_short: [],
                 systematik: "",
                 medium: "",
                 BNR: "",
+                content_string: "",
                 content: [],
                 content_short: [],
                 dialog_title: "",
@@ -451,7 +462,8 @@
                 showalpha: this.$store.state.showalpha,
                 filter_medium: this.$store.state.filter_medium,
                 filter_systematik: this.$store.state.filter_systematik,
-                name: ""
+                name: "",
+                item_size: '6'
             };
         },
         mounted() {
@@ -475,8 +487,8 @@
                 axios.post('/getBook', {
                     id: id
                 }).then(response => {
-                        this.title = response.data.title;
-                        this.content = response.data.content;
+                        this.title_string = response.data.title;
+                        this.content_string = response.data.content;
                         this.systematik = response.data.systematik;
                         this.medium = response.data.medium;
                         this.BNR = response.data.BNR;
@@ -485,12 +497,11 @@
                 );
             },
             addItem: function () {
-                this.title = "";
-                this.content = "";
+                this.title_string = "";
+                this.content_string = "";
                 this.systematik = "";
                 this.medium = "";
                 this.BNR = "";
-                console.log(this.autoren);
             },
             saveAdd: function (title, systematik, medium, content, BNR, name) {
                 axios.post('/books/create/json/', {
@@ -502,8 +513,8 @@
                     authorname: name
                 }).then(response => {
                         this.id = "";
-                        this.title = "";
-                        this.content = "";
+                        this.title_string = "";
+                        this.content_string = "";
                         this.systematik = "";
                         this.medium = "";
                         this.BNR = "";
@@ -530,9 +541,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 8) {
+                    if (content_words.length >= 7) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 8; j++) {
+                        for (let j = 0; j < 7; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -542,13 +553,12 @@
                 }
             },
             saveTitle: function (title) {
-                console.log(title.length);
                 for (let i = 0; i < title.length; i++) {
                     this.title[title[i].id] = title[i].title;
                     let title_words = title[i].title.split(" ");
-                    if (title_words.length >= 8) {
+                    if (title_words.length >= 6) {
                         this.title_short[title[i].id] = "";
-                        for (let j = 0; j < 8; j++) {
+                        for (let j = 0; j < 6; j++) {
                             this.title_short[title[i].id] += title_words[j] + " ";
                         }
                         this.title_short[title[i].id] += "...";
@@ -559,10 +569,10 @@
             },
             buecherInformationen: function (id, title, systematik, medium, content, BNR) {
                 this.id = id;
-                this.content = content;
+                this.title_string = title;
+                this.content_string = content;
                 this.systematik = systematik;
                 this.medium = medium;
-                this.content = content;
                 this.BNR = BNR;
 
                 axios.post('/books/borrowed', {
@@ -590,7 +600,8 @@
                         systematik: this.filter_systematik,
                         author: null,
                         isBorrowed: null,
-                        isNotBorrowed: null
+                        isNotBorrowed: null,
+                        item_size: this.item_size
                     })
                         .then(response => {
                                 if (response.data.data.length === 0) {
@@ -618,7 +629,8 @@
                         systematik: this.filter_systematik,
                         author: null,
                         isBorrowed: null,
-                        isNotBorrowed: null
+                        isNotBorrowed: null,
+                        item_size: this.item_size
                     })
                         .then(response => {
                                 this.page = 1;
@@ -730,6 +742,10 @@
                 this.$store.state.latestFilterSystematik = this.filter_systematik;
                 this.$store.commit("setFilterMedium");
                 this.$store.commit("setFilterSystematik");
+                this.ausgabe();
+            },
+            setItemSize: function (size) {
+                this.item_size = size;
                 this.ausgabe();
             }
         }
@@ -858,6 +874,10 @@
     .btn-secondary {
         background-color: rgb(30, 30, 133);
         border-color: rgb(30, 30, 133);
+    }
+
+    .paging_input {
+        width: 4em;
     }
 
 </style>

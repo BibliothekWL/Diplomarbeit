@@ -75,7 +75,6 @@
             axios.post('/cart/json', {
                 id: this.$store.state.userdata.id
             }).then(response => {
-                    console.log(response);
                     this.cart_count = response.data.length;
                     this.$store.state.latestCartCount = this.cart_count;
                     this.$store.commit('setCartCount');

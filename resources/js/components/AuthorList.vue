@@ -91,6 +91,14 @@
                 <font-awesome-icon icon="angle-left"></font-awesome-icon>
             </b-button>
 
+            <b-dropdown id="dropdown-dropup" v-model="item_size" dropup :text="item_size">
+                <b-dropdown-item v-on:click="setItemSize(6)">6</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(12)">12</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(18)">18</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(24)">24</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(30)">30</b-dropdown-item>
+            </b-dropdown>
+
             <b-button disabled>{{page}}</b-button>
 
             <b-button v-on:click="increment()" :disabled=isEnde>
@@ -185,7 +193,8 @@
                 isEnde: false,
                 platzhalter: false,
                 name: "",
-                id: null
+                id: null,
+                item_size: 6
             };
         },
         mounted() {
@@ -202,7 +211,9 @@
         methods: {
             ausgabe: function () {
                 if (this.search === "") {
-                    axios.get('/author/json?page=' + this.page)
+                    axios.post('/author/json?page=' + this.page, {
+                        item_size: this.item_size
+                    })
                         .then(response => {
                                 if (response.data.length === 0) {
                                     this.notFound = true;
@@ -218,7 +229,8 @@
                         );
                 } else {
                     axios.post('/author/search?page=' + this.page, {
-                        search: this.search
+                        search: this.search,
+                        item_size: this.item_size
                     })
                         .then(response => {
                                 if (response.data.length !== 0) {
@@ -293,6 +305,10 @@
                 }).then(response => {
                     console.log(response);
                 });
+            },
+            setItemSize: function (size) {
+                this.item_size = size;
+                this.ausgabe();
             }
         }
     }
