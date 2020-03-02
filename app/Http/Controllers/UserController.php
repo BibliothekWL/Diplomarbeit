@@ -46,11 +46,11 @@ class UserController extends Controller
         if ($user->password === Hash::make($jsonarray['oldPw'])){
             $user->password = Hash::make($jsonarray['newPw']);
             $user->save();
+            return json_encode(['status' => '200', 'statusMsg' => 'Success']);
         }
         else{
             return json_encode(['status' => '400', 'statusMsg' => 'Failed']);
         }
-        return json_encode(['status' => '200', 'statusMsg' => 'Success']);
     }
 
     public function store()
