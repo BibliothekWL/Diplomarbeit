@@ -41,6 +41,8 @@ Route::post('/books/delete/json/', 'BooksController@deleteBookValidator');
 
 Route::post('/books/edit/json/', 'BooksController@BookValidator');
 
+Route::post('/cart/delete', 'CartsController@destroy');
+
 Route::post('returnBooks', 'BooksController@returnBooks');
 
 
