@@ -129,7 +129,7 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if(response.status === '400'){
+                            if(response.status !== '400'){
                                 Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
                                 this.$router.push({path: '/logout'});
                             }else{

@@ -14,9 +14,9 @@ class AuthorController extends Controller
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-
-        if (Author::where('name', $jsonarray['name'])
-                ->first()->count() > 0) {
+        $author = Author::where('name', $jsonarray['name'])
+            ->first();
+        if ($author !== null) {
             return json_encode(['status' => 400, 'statusMessage' => 'Author already exists']);
         } else {
             $author = new Author();
