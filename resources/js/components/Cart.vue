@@ -106,7 +106,7 @@
                 this.BNR = BNR;
             },
             remove: function (id) {
-                axios.post("/cart/destroy/json", {
+                axios.post("/cart/delete", {
                     id: id
                 }).then(response => {
                     console.log(response);

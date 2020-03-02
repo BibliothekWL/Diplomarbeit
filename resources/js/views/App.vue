@@ -76,7 +76,9 @@
             axios.post('/cart/json', {
                 id: this.$store.state.userID
             }).then(response => {
-                    this.cart_count = response.data.length;
+                    this.$store.state.latestCartCount = this.response.data.length;
+                    this.$store.commit('setCartCount');
+                    this.cart_count = this.$store.state.cart_count;
                 }
             );
         },
@@ -99,6 +101,12 @@
             '$store.state.isAdmin': {
                 handler() {
                     this.isAdmin = this.$store.state.isAdmin;
+                },
+                immediate: true
+            },
+            '$store.state.cart_count': {
+                handler() {
+                    this.isAdmin = this.$store.state.cart_count;
                 },
                 immediate: true
             }
