@@ -100,8 +100,6 @@
                         </b-button>
                         <b-button variant="danger" @click="hideModal()">Cancel</b-button>
                     </div>
-                    =======
-                    >>>>>>> ab2edf8963014ee3d94c7e1915559e4c4d43cd2c
                 </form>
             </b-modal>
 
@@ -172,9 +170,15 @@
                                 })
                             }
                         }).catch(error => {
-                        console.log('error pw');
+                        console.log('Error in PW');
                     })
                 }
+            },
+            hideModal() {
+                this.userdata.password = "";
+                this.pw = "";
+                this.pwRepeat = "";
+                this.$refs['modal'].hide()
             }
         }
     }

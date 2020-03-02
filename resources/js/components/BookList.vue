@@ -122,7 +122,7 @@
                 <font-awesome-icon icon="angle-right"></font-awesome-icon>
             </b-button>
             <b-button v-on:click="sendtoLast()" :disabled=isEnde>
-                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
             </b-button>
         </div>
 
@@ -373,8 +373,7 @@
 
             <b-modal
                     id="BookInformation"
-                    ref="modal"
-                    centered
+                    ref="BookInformation"
                     :title=title_string
                     size="lg"
             >
@@ -533,9 +532,13 @@
                     authorname: name
                 })
                     .then(response => {
-                            this.reloadSite(response);
+                        if (response.data.status === 200) {
+                            this.$refs['BookInformation'].hide();
+                            this.ausgabe();
+                        } else {
+                            this.$refs['BookInformation'].hide();
                         }
-                    )
+                    })
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
@@ -685,12 +688,21 @@
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                        Swal.fire({
-                            title: 'Erfolg!',
-                            text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!',
-                            icon: 'success'
-                        });
-                        this.reloadSite(response.data.status)
+                        if (response.data.status === 200) {
+                            Swal.fire({
+                                title: 'Erfolg!',
+                                text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!',
+                                icon: 'success'
+                            });
+                            this.$refs['BookInformation'].hide();
+                            this.ausgabe();
+                        } else {
+                            Swal.fire({
+                                title: 'Fehler!',
+                                text: 'Versuchen Sie es später nochmal!',
+                                icon: 'error'
+                            });
+                        }
                     }
                 )
             },
@@ -706,6 +718,14 @@
                                 title: 'Erfolg!',
                                 text: 'Ihr Buch befindet sich nun im Warenkorb!',
                                 icon: 'success'
+                            });
+                            this.$refs['BookInformation'].hide();
+                        } else {
+                            console.log(response);
+                            Swal.fire({
+                                title: 'Fehler!',
+                                text: response.data.statusMessage,
+                                icon: 'error'
                             });
                         }
                     }
@@ -745,7 +765,8 @@
                 this.ausgabe();
             },
             setItemSize: function (size) {
-                this.item_size = size;
+                this.item_size = size + '';
+                this.page = 1;
                 this.ausgabe();
             }
         }
@@ -865,19 +886,4 @@
         flex-direction: column;
         justify-content: space-around;
     }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
-
-    .btn-secondary {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
-
-    .paging_input {
-        width: 4em;
-    }
-
 </style>

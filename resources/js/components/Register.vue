@@ -103,7 +103,7 @@
             register: function () {
                 if (this.password === this.passwordRepeat) {
                     Swal.showLoading();
-                    axios.post('http://localhost:8000/user/register', {
+                    axios.post('user/register', {
                         name: this.name,
                         id: this.id,
                         email: this.email,

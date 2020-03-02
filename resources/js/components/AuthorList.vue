@@ -308,6 +308,7 @@
             },
             setItemSize: function (size) {
                 this.item_size = size;
+                this.page = 1;
                 this.ausgabe();
             }
         }
