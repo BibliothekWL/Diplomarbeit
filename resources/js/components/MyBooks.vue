@@ -64,7 +64,7 @@
                 },
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: false,
-                content_full: [],
+                content: [],
                 content_short: [],
                 platzhalter: false
             }
@@ -81,7 +81,7 @@
         methods: {
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
-                    this.content_full[content[i].id] = content[i].content;
+                    this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";

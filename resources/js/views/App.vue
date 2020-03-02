@@ -96,6 +96,12 @@
                 },
                 immediate: true
             },
+            '$store.state.isAdmin': {
+                handler() {
+                    this.isAdmin = this.$store.state.isAdmin;
+                },
+                immediate: true
+            }
         },
         methods: {
             logout: function () {

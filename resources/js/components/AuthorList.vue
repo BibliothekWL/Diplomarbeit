@@ -186,6 +186,8 @@
             };
         },
         mounted() {
+            this.isAnfang = true;
+            this.isEnde = true;
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
@@ -196,7 +198,6 @@
         },
         methods: {
             ausgabe: function () {
-                console.log(this.$store.state.warenkorb);
                 if (this.search === "") {
                     axios.get('/author/json?page=' + this.page)
                         .then(response => {
@@ -229,18 +230,26 @@
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = 1;
                 this.ausgabe();
             },
             sendtoLast: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = this.lastPage;
                 this.ausgabe();
             },
