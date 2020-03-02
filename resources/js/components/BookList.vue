@@ -79,7 +79,7 @@
                     </div>
                 </div>
 
-                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0px black solid"></div>
+                <div v-if="platzhalter" class="listitem" style="cursor: auto; border: 0 black solid"></div>
             </div>
         </div>
 
@@ -422,7 +422,7 @@
                 page: 1,
                 notFound: false,
                 isAdmin: this.$store.state.isAdmin,
-                isLoggedIn: false,
+                isLoggedIn: this.$store.state.isLoggedIn,
                 isBorrowed: "",
                 liste: {
                     data: {
@@ -431,8 +431,8 @@
                 },
                 lastPage: 0,
                 id: "",
-                title: "",
-                title_short: "",
+                title: [],
+                title_short: [],
                 systematik: "",
                 medium: "",
                 BNR: "",
