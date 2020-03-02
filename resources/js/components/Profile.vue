@@ -2,7 +2,7 @@
     <div class="body">
         <div class="searchBox">
             <div class="page_title">
-                <h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Profil</h1>
+                <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Profil</h1>
             </div>
         </div>
 
@@ -101,7 +101,6 @@
         },
         mounted() {
             this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -147,6 +146,11 @@
 
 <style scoped>
 
+    .center {
+        text-align: center;
+    }
+
+
     .content {
         padding: 5em;
         display: flex;
@@ -170,11 +174,6 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
-    }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
     }
 
 </style>
