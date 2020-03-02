@@ -100,6 +100,10 @@
             }
         },
         mounted() {
+            axios.post('books/top')
+                .then(response => {
+                    console.log(response);
+                });
             this.$store.state.warenkorb = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
@@ -129,7 +133,7 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if(response.status !== '400'){
+                            if(response.status === '400'){
                                 Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
                                 this.$router.push({path: '/logout'});
                             }else{

@@ -70,6 +70,7 @@ class BooksController extends Controller
             $book = Book::findorFail($item->id);
             $counter = $book->borrowCounter;
             $book->borrowed = 1;
+            $book->borrowCounter++;
             $book->user_id = auth()->user()->id;
             $book->borrowCounter = $counter++;
             $book->save();
