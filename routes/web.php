@@ -199,3 +199,7 @@ Route::post('/userdata/json', function () {
 
 //Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
 //Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
+
+Route::post('/author/edit/', 'AuthorController@edit');
+Route::post('/author/create/', 'AuthorController@create');
+Route::post('/author/delete/', 'AuthorController@destroy');
