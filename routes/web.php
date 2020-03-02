@@ -45,6 +45,15 @@ Route::post('/cart/delete', 'CartsController@destroy');
 
 Route::post('returnBooks', 'BooksController@returnBooks');
 
+Route::post('/books/newest', function (){
+    $newest = DB::table('books')->orderBy('created_at', 'desc')->first();
+    return json_encode($newest);
+});
+
+Route::post('/books/top', function (){
+    $top = DB::table('books')->orderBy('borrowCounter','desc')->first();
+    return json_encode($top);
+});
 
 Route::post('/books/borrowed', function () {
     $json = file_get_contents('php://input');

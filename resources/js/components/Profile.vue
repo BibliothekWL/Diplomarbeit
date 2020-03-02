@@ -53,7 +53,7 @@
             </b-modal>
 
             <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
-                     hide-footer>
+                     @ok="changeCredentials(false)">
                 <form ref="form">
                     <b-form-group
                             label="Aktuelles Password"
@@ -64,12 +64,9 @@
                         <b-form-input
                                 id="pwold-input"
                                 v-model="pw"
-                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
-
-                    <!-- Password 2x -->
                     <b-form-group
                             label="Neues Password"
                             label-for="title"
@@ -79,27 +76,9 @@
                         <b-form-input
                                 id="pwnew-input"
                                 v-model="userdata.password"
-                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
-                    <b-form-group
-                            label="Neues Password wiederholen"
-                            label-for="title"
-                            invalid-feedback="Passwörter müssen übereinstimmen"
-                    >
-
-                        <b-form-input
-                                id="pwnew-input"
-                                v-model="pwRepeat"
-                                type="password"
-                                required
-                        ></b-form-input>
-                    </b-form-group>
-                    <div>
-                        <b-button :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8" @click="changeCredentials(false) ">Passwort ändern</b-button>
-                        <b-button variant="danger" @click="hideModal()">Cancel</b-button>
-                    </div>
                 </form>
             </b-modal>
 
@@ -117,11 +96,14 @@
         data() {
             return {
                 userdata: "",
-                pw: "",
-                pwRepeat: ""
+                pw: ""
             }
         },
         mounted() {
+            axios.post('books/top')
+                .then(response => {
+                    console.log(response);
+                });
             this.$store.state.warenkorb = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
@@ -151,27 +133,16 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
-                                Swal.fire({
-                                    title: 'Erfolg!',
-                                    text: 'Passwort wurde erfolgreich aktualisiert!',
-                                    icon: 'success'
-                                })
+                            if(response.status === '400'){
+                                Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
                                 this.$router.push({path: '/logout'});
-                            } else {
-                                Swal.fire({
-                                    title: 'Fehler!',
-                                    text: 'Passwort konnte nicht geändert werden! Bitte versuchen Sie es erneut!',
-                                    icon: 'error'
-                                })
+                            }else{
+                                Swal.fire({title: 'Fehler!', text: 'Eingabe stimmt nicht mit dem Passwort überein!', icon: 'error'})
                             }
                         }).catch(error => {
                         console.log('error pw');
                     })
                 }
-            },
-            hideModal() {
-                this.$refs['modal'].hide()
             }
         }
     }
