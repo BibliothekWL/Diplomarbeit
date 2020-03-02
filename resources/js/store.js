@@ -14,6 +14,7 @@ export default new Vuex.Store({
         userdata: [],
         warenkorb: false,
         warenkorbCheckout: false,
+        latestCartCount: 0,
         cart_count: 0,
         showalpha: true,
     },
@@ -23,6 +24,7 @@ export default new Vuex.Store({
         UserLoggedIn: state => state.isLoggedIn = true,
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
-        setUserdata: state => state.userdata = state.userdata_login
+        setUserdata: state => state.userdata = state.userdata_login,
+        setCartCount: state => state.cart_count = state.latestCartCount
     }
 });
