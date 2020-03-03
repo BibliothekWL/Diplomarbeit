@@ -469,6 +469,7 @@
             this.isAnfang = true;
             this.isEnde = true;
             this.$store.state.warenkorb = true;
+            this.isLoggedInCheck();
             this.$store.state.warenkorbCheckout = false;
             this.ausgabe();
         },
@@ -476,6 +477,7 @@
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
+                        console.log(response);
                             this.$store.state.isLoggedIn = response.data;
                             if(response.data) {
                                 this.$store.commit('UserLoggedIn');
@@ -608,7 +610,6 @@
                 this.getSystematik();
                 this.getMedium();
                 this.getAuthor();
-                this.isLoggedInCheck();
                 if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
