@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use \App\Author as Author;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +28,13 @@ Route::post('/books/edit/json','BooksController@BookValidator');
 
 Route::post('books/delete/json','BooksController@deleteBookValidator');
 
+Route::post('books/author/json', function (){
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
 
+    $result = DB::table('authors')->join('authors_books','authors.id','=','authors_books.author_id')
+                                        ->join('authors_books',$jsonarray['id'], '=','authors_books.book_id')
+                                        ->select('authors.*')
+                                        ->get();
+    return $result;
+});
