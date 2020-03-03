@@ -53,7 +53,7 @@
             </b-modal>
 
             <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
-                     hide-footer>
+                     @ok="changeCredentials(false)">
                 <form ref="form">
                     <b-form-group
                             label="Aktuelles Password"
@@ -64,12 +64,9 @@
                         <b-form-input
                                 id="pwold-input"
                                 v-model="pw"
-                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
-
-                    <!-- Password 2x -->
                     <b-form-group
                             label="Neues Password"
                             label-for="title"
@@ -79,10 +76,10 @@
                         <b-form-input
                                 id="pwnew-input"
                                 v-model="userdata.password"
-                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
+                    <<<<<<< HEAD
                     <b-form-group
                             label="Neues Password wiederholen"
                             label-for="title"
@@ -97,7 +94,10 @@
                         ></b-form-input>
                     </b-form-group>
                     <div>
-                        <b-button :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8" @click="changeCredentials(false) ">Passwort ändern</b-button>
+                        <b-button
+                                :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8"
+                                @click="changeCredentials(false) ">Passwort ändern
+                        </b-button>
                         <b-button variant="danger" @click="hideModal()">Cancel</b-button>
                     </div>
                 </form>
@@ -117,8 +117,7 @@
         data() {
             return {
                 userdata: "",
-                pw: "",
-                pwRepeat: ""
+                pw: ""
             }
         },
         mounted() {
@@ -156,17 +155,17 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
+                            if (response.data.status === '200') {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
-                                })
+                                });
                                 this.$router.push({path: '/logout'});
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',
-                                    text: 'Passwort konnte nicht geändert werden! Bitte versuchen Sie es erneut!',
+                                    text: 'Eingabe stimmt nicht mit dem Passwort überein!',
                                     icon: 'error'
                                 })
                             }

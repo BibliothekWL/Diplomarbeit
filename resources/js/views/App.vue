@@ -2,12 +2,11 @@
     <div>
         <div id="app">
             <div id="parentx">
-                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="false"
-                            color="danger" class="sidebarx" spacer v-model="active" :parent="body">
+                <vs-sidebar :reduce="reduce" reduce-not-rebound color="danger" class="sidebarx" spacer v-model="active"
+                            parent="body">
 
-                    <div style="cursor:pointer;" class="header-sidebar" slot="header" v-on:click="regular_navigation()">
-                        <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
-                        <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
+                    <div class="header-sidebar" slot="header">
+                        <img src="../../img/logo.png" class="img-fluid">
                     </div>
 
                     <vs-sidebar-item index="1" icon="home" to="/home">
@@ -57,7 +56,7 @@
         <b-button class="warenkorb" v-if="loggedIn && !isAdmin && $store.state.warenkorb"
                   to="/warenkorb" variant="light">
             <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon>
-            <b-badge variant="transparent">{{$store.state.cart_count}}</b-badge>
+            <b-badge variant="transparent">{{cart_count}}</b-badge>
         </b-button>
 
         <b-button class="warenkorb_checkout" v-if="$store.state.warenkorbCheckout & loggedIn" v-on:click="checkout()">
@@ -74,9 +73,11 @@
     export default {
         mounted() {
             axios.post('/cart/json', {
-                id: this.$store.state.userID
+                id: this.$store.state.userdata.id
             }).then(response => {
                     this.cart_count = response.data.length;
+                    this.$store.state.latestCartCount = this.cart_count;
+                    this.$store.commit('setCartCount');
                 }
             );
         },
@@ -86,7 +87,8 @@
                 username: this.$store.state.username,
                 isAdmin: this.$store.state.isAdmin,
                 reduce: true,
-                active: true
+                active: true,
+                cart_count: 0
             }
         },
         watch: {
@@ -99,6 +101,12 @@
             '$store.state.isAdmin': {
                 handler() {
                     this.isAdmin = this.$store.state.isAdmin;
+                },
+                immediate: true
+            },
+            '$store.state.cart_count': {
+                handler() {
+                    this.cart_count = this.$store.state.cart_count;
                 },
                 immediate: true
             }
@@ -125,14 +133,13 @@
                 axios.get('/cart/checkout')
                     .then(
                         response => {
-                            console.log(response);
-                            this.$router.push({path: '/list'});
+                            if (response.data.status === 200) {
+                                this.$store.state.latestCartCount = 0;
+                                this.$store.commit('setCartCount');
+                                this.$router.push({path: '/list'});
+                            }
                         }
                     )
-            },
-            regular_navigation: function () {
-                this.reduce = !this.reduce;
-
             }
         }
     }
