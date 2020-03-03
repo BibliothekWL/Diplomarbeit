@@ -402,9 +402,4 @@
         width: 10em;
         justify-content: space-between;
     }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
 </style>

@@ -479,9 +479,9 @@
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
-                        console.log(response);
+                            console.log(response);
                             this.$store.state.isLoggedIn = response.data;
-                            if(response.data) {
+                            if (response.data) {
                                 this.$store.commit('UserLoggedIn');
                             } else {
                                 this.$store.commit('UsernotLoggedIn');
@@ -493,7 +493,22 @@
                 axios.post('/books/delete/json/', {
                     id: id
                 }).then(response => {
-                        this.reloadSite(response.data.status)
+                        if (response.data.status === 200) {
+                            Swal.fire({
+                                title: 'Erfolg!',
+                                text: 'Das ausgewählte Buch wurde erfolgreich gelöscht!',
+                                icon: 'success'
+                            });
+                            this.$refs['BookInformation'].hide();
+                            this.ausgabe();
+                        } else {
+                            this.$refs['BookInformation'].hide();
+                            Swal.fire({
+                                title: 'Fehler!',
+                                text: 'Das ausgewählte Buch konnte nicht gelöscht werden!',
+                                icon: 'error'
+                            });
+                        }
                     }
                 )
             },
@@ -607,7 +622,7 @@
                     id: id
                 }).then(response => {
                     console.log(response);
-                    this.autor = response.data;
+                    this.name = response.data;
                 });
 
                 axios.post('/books/borrowed', {
