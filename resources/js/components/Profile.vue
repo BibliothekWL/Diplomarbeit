@@ -127,6 +127,7 @@
                     console.log(response);
                 });
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {

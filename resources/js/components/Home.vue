@@ -20,82 +20,53 @@
         </div>
 
         <div class="homepage_content">
-            <div class="books col-12" style="border: black solid 1px">
+            <div v-if="topBooks != null" class="books col-12" style="border: black solid 1px">
                 <h2>Top-Bücher</h2>
                 <div class="list">
-                    <div class="listitem">
-                        <div class="card_flex">
-                            <div class="bildbruh">&#160;</div>
+                    <div v-for="book in topBooks" class="listitem">
+                        <div class="listitem">
+                            <div class="card_flex">
+                                <div class="bildbruh">&#160;</div>
 
-                            <div class="text">
-                                <div class="book_title">
-                                    {{topbooks[0].title}}
-                                </div>
+                                <div class="text">
+                                    <div class="book_title">
+                                            {{book.id}}
+                                    </div>
 
-                                <div class="beschreibung">
-                                    {{topbooks[0].id}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="listitem">
-                        <div class="card_flex">
-                            <div class="bildbruh">&#160;</div>
-
-                            <div class="text">
-                                <div class="book_title">
-                                    {{topbooks[1].title}}
-                                </div>
-
-                                <div class="beschreibung">
-                                    {{topbooks[1].id}}
+                                    <div class="beschreibung">
+                                            {{book.title}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="books col-12" style="border: black solid 1px">
-                <h2>Neuerscheinungen</h2>
+
+            <div v-if="newestBooks != null" class="books col-12" style="border: black solid 1px">
+                        <h2>Neuerscheinungen</h2>
                 <div class="list">
-                    <div class="listitem">
-                        <div class="card_flex">
-                            <div class="bildbruh">&#160;</div>
+                    <div v-for="book in newestBooks" class="listitem">
+                        <div class="listitem">
+                            <div class="card_flex">
+                                <div class="bildbruh">&#160;</div>
 
-                            <div class="text">
-                                <div class="book_title">
-                                    {{topbooks[0].title}}
-                                </div>
+                                <div class="text">
+                                    <div class="book_title">
+                                        {{book.id}}
+                                    </div>
 
-                                <div class="beschreibung">
-                                    {{topbooks[0].id}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="listitem">
-                        <div class="card_flex">
-                            <div class="bildbruh">&#160;</div>
-
-                            <div class="text">
-                                <div class="book_title">
-                                    {{topbooks[1].title}}
-                                </div>
-
-                                <div class="beschreibung">
-                                    {{topbooks[1].id}}
+                                    <div class="beschreibung">
+                                        {{book.title}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -106,17 +77,9 @@
         data() {
             return {
                 search: this.$store.state.search,
-                topbooks: []
+                topBooks: [],
+                newestBooks: []
             }
-        },
-        mounted() {
-            this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = false;
-            this.search = "";
-            this.topbooks = [{id:1, title:"Test1"},
-                {id:2, title:"Test2"}];
-            newestbooks();
-
         },
         methods: {
             ausgabe: function () {
@@ -130,13 +93,23 @@
             topbooks: function () {
                 axios.post('/books/newest').then(response =>{
                     console.log(response);
+                    this.topBooks = response.data;
+                    console.log(this.topBooks.id);
                 })
             },
             newestbooks: function () {
                 axios.post('/books/top').then(response =>{
                     console.log(response);
+                    this.newestBooks = response.data;
                 })
             }
+        },
+        mounted() {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            this.search = "";
+            this.newestbooks();
+            this.topbooks();
         }
     }
 </script>
