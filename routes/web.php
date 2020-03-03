@@ -41,8 +41,19 @@ Route::post('/books/delete/json/', 'BooksController@deleteBookValidator');
 
 Route::post('/books/edit/json/', 'BooksController@BookValidator');
 
+Route::post('/cart/delete', 'CartsController@destroy');
+
 Route::post('returnBooks', 'BooksController@returnBooks');
 
+Route::post('/books/newest', function () {
+    $newest = DB::table('books')->orderBy('created_at', 'desc')->first();
+    return json_encode($newest);
+});
+
+Route::post('/books/top', function () {
+    $top = DB::table('books')->orderBy('borrowCounter', 'desc')->first();
+    return json_encode($top);
+});
 
 Route::post('/books/borrowed', function () {
     $json = file_get_contents('php://input');
@@ -92,17 +103,17 @@ Route::post('/books/json', function () {
     if (count($conditions) > 0) {
         $sql .= htmlspecialchars(implode(' AND ', $conditions));
     } else {
-        if($jsonarray["sortDirection"]) {
-            return DB::table('books')->orderBy('title')->select()->paginate(6);
-        } else{
-            return DB::table('books')->orderBy('title', 'desc')->select()->paginate(6);
+        if ($jsonarray["sortDirection"]) {
+            return DB::table('books')->orderBy('title')->select()->paginate($jsonarray['item_size']);
+        } else {
+            return DB::table('books')->orderBy('title', 'desc')->select()->paginate($jsonarray['item_size']);
         }
     }
 
-    if($jsonarray["sortDirection"]) {
-        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
-        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    if ($jsonarray["sortDirection"]) {
+        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate($jsonarray['item_size']);
+    } else {
+        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate($jsonarray['item_size']);
     }
 });
 
@@ -149,10 +160,10 @@ Route::post('/books/search', function () {
         $sql .= "title LIKE '%" . $by_search . "%'";
     }
 
-    if($jsonarray["sortDirection"]) {
-        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate(6);
-    } else{
-        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate(6);
+    if ($jsonarray["sortDirection"]) {
+        return DB::table('books')->orderBy('title')->select()->whereRaw(DB::raw($sql))->paginate($jsonarray['item_size']);
+    } else {
+        return DB::table('books')->orderBy('title', 'desc')->select()->whereRaw(DB::raw($sql))->paginate($jsonarray['item_size']);
     }
 });
 
@@ -180,15 +191,18 @@ Route::get('/authors/json', function () {
     return Author::orderBy('name')->get()->pluck('name')->unique();
 });
 
-Route::get('/author/json', function () {
-    return DB::table('authors')->orderBy('name')->select()->paginate(6);
+Route::post('/author/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    return DB::table('authors')->orderBy('name')->select()->paginate($jsonarray['item_size']);
 });
 
 Route::post('/author/search', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
 
-    return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate(6);
+    return DB::table('authors')->orderBy('name')->where('name', 'LIKE', '%' . $jsonarray['search'] . '%')->select()->paginate($jsonarray['item_size']);
 });
 
 Route::post('/userdata/json', function () {
@@ -199,3 +213,17 @@ Route::post('/userdata/json', function () {
 
 //Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
 //Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
+
+Route::post('books/author/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    $authorid = DB::table('authors_books')->where('book_id', $jsonarray['id'])->first()->pluck('author_id');
+
+    $result = DB::table('authors')->where('id', $authorid)->first()->pluck('name');
+    return $result;
+});
+
+Route::post('/author/edit/', 'AuthorController@edit');
+Route::post('/author/create/', 'AuthorController@create');
+Route::post('/author/delete/', 'AuthorController@destroy');

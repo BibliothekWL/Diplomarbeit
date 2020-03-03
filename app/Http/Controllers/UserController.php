@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Hashing\BcryptHasher;
-use Illuminate\Http\Request;
-
-use \App\Book;
-use \App\Author;
-use App\Http\Resources\User as UserResource;
+use Auth;
+use Illuminate\Contracts\View\Factory;
 use \App\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Hash as Hash;
+use Illuminate\View\View;
 
 
 class UserController extends Controller
@@ -27,7 +24,7 @@ class UserController extends Controller
 
     /**
      * renders the users current data
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function editName()
     {
@@ -43,14 +40,14 @@ class UserController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         $user = User::findOrFail(auth()->user()->id);
-        if ($user->password === Hash::make($jsonarray['oldPw'])){
+        if (Hash::check($jsonarray['oldPw'], $user->password)) {
             $user->password = Hash::make($jsonarray['newPw']);
             $user->save();
+            return json_encode(['status' => '200', 'statusMsg' => 'Success']);
         }
         else{
             return json_encode(['status' => '400', 'statusMsg' => 'Failed']);
         }
-        return json_encode(['status' => '200', 'statusMsg' => 'Success']);
     }
 
     public function store()
@@ -59,7 +56,7 @@ class UserController extends Controller
 
     /**
      * updates a user
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function update()
     {

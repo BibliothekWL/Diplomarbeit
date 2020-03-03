@@ -2,7 +2,7 @@
     <div class="body">
         <div class="searchBox">
             <div class="page_title">
-                <h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Profil</h1>
+                <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Profil</h1>
             </div>
         </div>
 
@@ -53,7 +53,7 @@
             </b-modal>
 
             <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
-                     @ok="changeCredentials(false)">
+                     hide-footer>
                 <form ref="form">
                     <b-form-group
                             label="Aktuelles Password"
@@ -64,9 +64,12 @@
                         <b-form-input
                                 id="pwold-input"
                                 v-model="pw"
+                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
+
+                    <!-- Password 2x -->
                     <b-form-group
                             label="Neues Password"
                             label-for="title"
@@ -76,9 +79,27 @@
                         <b-form-input
                                 id="pwnew-input"
                                 v-model="userdata.password"
+                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
+                    <b-form-group
+                            label="Neues Password wiederholen"
+                            label-for="title"
+                            invalid-feedback="Passwörter müssen übereinstimmen"
+                    >
+
+                        <b-form-input
+                                id="pwnew-input"
+                                v-model="pwRepeat"
+                                type="password"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                    <div>
+                        <b-button :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8" @click="changeCredentials(false) ">Passwort ändern</b-button>
+                        <b-button variant="danger" @click="hideModal()">Cancel</b-button>
+                    </div>
                 </form>
             </b-modal>
 
@@ -96,12 +117,16 @@
         data() {
             return {
                 userdata: "",
-                pw: ""
+                pw: "",
+                pwRepeat: ""
             }
         },
         mounted() {
+            axios.post('books/top')
+                .then(response => {
+                    console.log(response);
+                });
             this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -110,14 +135,8 @@
         },
         methods: {
             ausgabe: function () {
-                axios.post('userdata/json', {
-                    id: this.$store.state.userID
-                })
-                    .then(response => {
-                            console.log(response);
-                            this.userdata = response.data;
-                        }
-                    );
+                this.userdata = this.$store.state.userdata;
+                console.log(this.$store.state.userdata );
             },
             //if true => username, else => password
             changeCredentials(type) {
@@ -137,22 +156,41 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if(response.status === '400'){
-                                Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
+                            if (response.status === '200') {
+                                Swal.fire({
+                                    title: 'Erfolg!',
+                                    text: 'Passwort wurde erfolgreich aktualisiert!',
+                                    icon: 'success'
+                                })
                                 this.$router.push({path: '/logout'});
-                            }else{
-                                Swal.fire({title: 'Fehler!', text: 'Eingabe stimmt nicht mit dem Passwort überein!', icon: 'error'})
+                            } else {
+                                Swal.fire({
+                                    title: 'Fehler!',
+                                    text: 'Passwort konnte nicht geändert werden! Bitte versuchen Sie es erneut!',
+                                    icon: 'error'
+                                })
                             }
                         }).catch(error => {
-                        console.log('error pw');
+                        console.log('Error in PW');
                     })
                 }
+            },
+            hideModal() {
+                this.userdata.password = "";
+                this.pw = "";
+                this.pwRepeat = "";
+                this.$refs['modal'].hide()
             }
         }
     }
 </script>
 
 <style scoped>
+
+    .center {
+        text-align: center;
+    }
+
 
     .content {
         padding: 5em;
@@ -177,11 +215,6 @@
         padding: 2em;
         width: 100%;
         background-image: url('../../img/bg_hp.jpg');
-    }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
     }
 
 </style>

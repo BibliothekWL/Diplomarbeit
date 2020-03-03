@@ -9,16 +9,19 @@
 
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
-            <div class="list">
+            <div class="list" v-if="!notFound">
                 <div v-for="book in liste.data.data" class="listitem">
                     <div class="card_flex">
-                        <div class="bildbruh" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
-                             v-b-modal.BookInformation>&#160;</div>
+                        <div class="bildbruh"
+                             v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                             v-b-modal.BookInformation>&#160;
+                        </div>
 
-                        <div class="text" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                        <div class="text"
+                             v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
                              v-b-modal.BookInformation>
                             <div class="book_title">
-                                {{book.title}}
+                                {{title_short[book.id]}}
                             </div>
 
                             <div class="beschreibung">
@@ -38,7 +41,7 @@
 
         <b-modal id="BookInformation" size="l" centered title="Information">
             <div>
-                {{ content_full }}
+                {{ content }}
             </div>
         </b-modal>
     </div>
@@ -58,17 +61,19 @@
                         data: ""
                     }
                 },
-                content_full: [],
+                content: [],
                 content_short: [],
                 notFound: false,
                 reserviert: false,
-                platzhalter: false
+                platzhalter: false,
+                title: [],
+                title_short: []
             }
         },
         mounted() {
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = true;
-            if(this.$store.state.isAdmin) {
+            if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
                 this.ausgabe();
@@ -84,7 +89,7 @@
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
-                    this.content_full[content[i].id] = content[i].content;
+                    this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
                     if (content_words.length >= 10) {
                         this.content_short[content[i].id] = "";
@@ -99,27 +104,48 @@
             },
             buecherInformationen: function (id, title, systematik, medium, content, BNR) {
                 this.id = id;
-                this.content_full = content;
+                this.content = content;
                 this.systematik = systematik;
                 this.medium = medium;
                 this.content = content;
                 this.BNR = BNR;
             },
             remove: function (id) {
-                axios.post("/cart/destroy/json", {
+                axios.post("/cart/delete", {
                     id: id
                 }).then(response => {
-                    console.log(response);
+                    if (response.data.status === 200) {
+                        this.$store.state.latestCartCount--;
+                        this.$store.commit('setCartCount');
+                        this.ausgabe();
+                    } else {
+                        console.log("error");
+                    }
                 })
+            },
+            saveTitle: function (title) {
+                console.log(title.length);
+                for (let i = 0; i < title.length; i++) {
+                    this.title[title[i].id] = title[i].title;
+                    let title_words = title[i].title.split(" ");
+                    if (title_words.length >= 8) {
+                        this.title_short[title[i].id] = "";
+                        for (let j = 0; j < 8; j++) {
+                            this.title_short[title[i].id] += title_words[j] + " ";
+                        }
+                        this.title_short[title[i].id] += "...";
+                    } else {
+                        this.title_short[title[i].id] = title[i].title;
+                    }
+                }
             },
             ausgabe: function () {
                 if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                     window.location.href = "/login"
                 } else {
                     axios.post('/cart/json', {
-                        id: this.$store.state.userID
+                        id: this.$store.state.userdata.id
                     }).then(response => {
-                            console.log(response);
                             if (response.data.length === 0) {
                                 this.notFound = true;
                             } else {
@@ -128,6 +154,7 @@
                                 this.liste.data.data = response.data;
                                 this.isLoggedInCheck();
                                 this.saveContent(response.data);
+                                this.saveTitle(response.data);
                             }
                         }
                     );
@@ -142,9 +169,9 @@
         overflow: hidden;
     }
 
-    .UserViewBody {
-        display: flex;
-        flex-direction: column;
+    .notFound {
+        text-align: center;
+        padding: 8em;
     }
 
     .list {
@@ -166,27 +193,7 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
-        cursor: pointer;
-    }
-
-    .notFound {
-        text-align: center;
-        padding-top: 6em;
-        font-size: 2em;
-    }
-
-    .text {
-        height: 7em;
-        width: 18em;
-        margin: 1.8em;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-    }
-
-    .beschreibung {
-        font-size: 14px;
-        width: 20em;
+        border-radius: 15px;
     }
 
     .card_flex {
@@ -196,22 +203,29 @@
         justify-content: space-between;
     }
 
-    .entfernen {
-        z-index: 1000;
-        border: 1px red solid;
-        border-radius: 10px;
-        color: red;
-        width: 5em;
-        padding: 0.25em;
-        margin: 1em;
-        text-align: center;
+    .listitem:hover {
         cursor: pointer;
     }
 
-    .bildbruh {
-        background-image: url("../../img/default_cover.jpg");
-        width: 125px;
-        height: 167px;
+    .beschreibung {
+        font-size: 14px;
+        width: 13em;
+    }
+
+    .page_buttons {
+        text-align: center;
+        padding: 2em;
+        color: white;
+    }
+
+    .addButton {
+        float: right;
+        margin: 1em;
+    }
+
+    .searchBar {
+        width: 50em;
+        vertical-align: top;
     }
 
     .searchBox {
@@ -224,7 +238,44 @@
         background-image: url('../../img/bg_hp.jpg');
     }
 
+    .entfernen {
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 6em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+        border-radius: 15px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .text {
+        height: 7em;
+        width: 14em;
+        margin: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
     .btn {
+        background-color: rgb(30, 30, 133);
+        border-color: rgb(30, 30, 133);
+    }
+
+    .btn-secondary {
         background-color: rgb(30, 30, 133);
         border-color: rgb(30, 30, 133);
     }

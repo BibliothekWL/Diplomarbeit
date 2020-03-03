@@ -14,7 +14,7 @@
 
             <b-input-group class="searchBar">
 
-                <b-input class="search" placeholder="Nach Büchern stöbern" type="search" v-model="search"
+                <b-input class="search" placeholder="Nach Autoren suchen" type="search" v-model="search"
                          v-on:keyup.enter="ausgabe()">
                 </b-input>
 
@@ -55,7 +55,7 @@
                             </b-button>
 
                             <b-button v-b-modal.EditAuthor pill
-                                      v-on:click="editAuthor(author.name)">
+                                      v-on:click="editAuthor(author.name, author.id)">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -90,6 +90,14 @@
             <b-button v-on:click="decrement()" :disabled=isAnfang>
                 <font-awesome-icon icon="angle-left"></font-awesome-icon>
             </b-button>
+
+            <b-dropdown id="dropdown-dropup" v-model="item_size" dropup :text="item_size">
+                <b-dropdown-item v-on:click="setItemSize(6)">6</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(12)">12</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(18)">18</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(24)">24</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(30)">30</b-dropdown-item>
+            </b-dropdown>
 
             <b-button disabled>{{page}}</b-button>
 
@@ -127,6 +135,7 @@
                                 id="name-input"
                                 v-model="name"
                                 required
+                                v-on:keyup.enter="saveAdd(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>
@@ -151,6 +160,7 @@
                                 id="name-input"
                                 v-model="name"
                                 required
+                                v-on:keyup.enter="saveEdit(name)"
                         ></b-form-input>
                     </b-form-group>
                 </form>
@@ -182,10 +192,14 @@
                 isAnfang: false,
                 isEnde: false,
                 platzhalter: false,
-                name: ""
+                name: "",
+                id: null,
+                item_size: 6
             };
         },
         mounted() {
+            this.isAnfang = true;
+            this.isEnde = true;
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
@@ -196,28 +210,39 @@
         },
         methods: {
             ausgabe: function () {
-                console.log(this.$store.state.warenkorb);
                 if (this.search === "") {
-                    axios.get('/author/json?page=' + this.page)
+                    axios.post('/author/json?page=' + this.page, {
+                        item_size: this.item_size
+                    })
                         .then(response => {
-                                console.log(response);
-                                this.platzhalter = response.data.data.length % 2 !== 0;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isAnfangfind();
-                                this.isEndefind();
+                                if (response.data.length === 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.platzhalter = response.data.data.length % 2 !== 0;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
                             }
                         );
                 } else {
                     axios.post('/author/search?page=' + this.page, {
-                        search: this.search
+                        search: this.search,
+                        item_size: this.item_size
                     })
                         .then(response => {
-                                this.platzhalter = response.data.data.length % 2 !== 0;
-                                this.liste.data.data = response.data.data;
-                                this.lastPage = response.data.last_page;
-                                this.isAnfangfind();
-                                this.isEndefind();
+                                if (response.data.length !== 0) {
+                                    this.notFound = true;
+                                } else {
+                                    this.notFound = false;
+                                    this.platzhalter = response.data.data.length % 2 !== 0;
+                                    this.liste.data.data = response.data.data;
+                                    this.lastPage = response.data.last_page;
+                                    this.isAnfangfind();
+                                    this.isEndefind();
+                                }
                             }
                         );
                 }
@@ -229,47 +254,62 @@
                 this.isEnde = this.page === this.lastPage;
             },
             increment: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page++;
                 this.ausgabe();
             },
             decrement: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page--;
                 this.ausgabe();
             },
             sendtoFirst: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = 1;
                 this.ausgabe();
             },
             sendtoLast: function () {
+                this.isAnfang = true;
+                this.isEnde = true;
                 this.page = this.lastPage;
                 this.ausgabe();
             },
             deleteAuthor: function (id) {
-                axios.post('/author/delete/json', {
+                axios.post('/author/delete', {
                     id: id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
-            editAuthor: function (name) {
+            editAuthor: function (name, id) {
                 this.name = name;
+                this.id = id;
             },
             addAuthor: function () {
                 this.name = "";
             },
             saveEdit: function (name) {
-                axios.post('/author/edit/json', {
+                axios.post('/author/edit', {
                     name: name,
+                    id: this.id
                 }).then(response => {
-                    console.log(response);
+                    this.ausgabe();
                 });
             },
             saveAdd: function (name) {
-                axios.post('/author/create/json', {
+                axios.post('/author/create', {
                     name: name
                 }).then(response => {
                     console.log(response);
                 });
+            },
+            setItemSize: function (size) {
+                this.item_size = size;
+                this.page = 1;
+                this.ausgabe();
             }
         }
     }
@@ -361,10 +401,5 @@
         flex-direction: row;
         width: 10em;
         justify-content: space-between;
-    }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
     }
 </style>
