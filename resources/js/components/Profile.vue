@@ -79,6 +79,27 @@
                                 required
                         ></b-form-input>
                     </b-form-group>
+                    <<<<<<< HEAD
+                    <b-form-group
+                            label="Neues Password wiederholen"
+                            label-for="title"
+                            invalid-feedback="Passwörter müssen übereinstimmen"
+                    >
+
+                        <b-form-input
+                                id="pwnew-input"
+                                v-model="pwRepeat"
+                                type="password"
+                                required
+                        ></b-form-input>
+                    </b-form-group>
+                    <div>
+                        <b-button
+                                :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8"
+                                @click="changeCredentials(false) ">Passwort ändern
+                        </b-button>
+                        <b-button variant="danger" @click="hideModal()">Cancel</b-button>
+                    </div>
                 </form>
             </b-modal>
 
@@ -105,6 +126,7 @@
                     console.log(response);
                 });
             this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -133,16 +155,30 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if(response.status === '400'){
-                                Swal.fire({title: 'Erfolg!', text: 'Passwort wurde erfolgreich aktualisiert!', icon: 'success'})
+                            if (response.data.status === '200') {
+                                Swal.fire({
+                                    title: 'Erfolg!',
+                                    text: 'Passwort wurde erfolgreich aktualisiert!',
+                                    icon: 'success'
+                                });
                                 this.$router.push({path: '/logout'});
-                            }else{
-                                Swal.fire({title: 'Fehler!', text: 'Eingabe stimmt nicht mit dem Passwort überein!', icon: 'error'})
+                            } else {
+                                Swal.fire({
+                                    title: 'Fehler!',
+                                    text: 'Eingabe stimmt nicht mit dem Passwort überein!',
+                                    icon: 'error'
+                                })
                             }
                         }).catch(error => {
-                        console.log('error pw');
+                        console.log('Error in PW');
                     })
                 }
+            },
+            hideModal() {
+                this.userdata.password = "";
+                this.pw = "";
+                this.pwRepeat = "";
+                this.$refs['modal'].hide()
             }
         }
     }

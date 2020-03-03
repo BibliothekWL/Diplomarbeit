@@ -18,8 +18,8 @@ class CartsController extends Controller
         }
         else{
             $cart = new Cart;
-            $cart->user_id = auth()->user()->id;
             $cart->book_id = $jsonarray['id'];
+            $cart->user_id = auth()->user()->id;
             $cart->save();
             $this->index();
             return json_encode(['status' => 200, 'statusMessage' => 'cart was created successfully']);
