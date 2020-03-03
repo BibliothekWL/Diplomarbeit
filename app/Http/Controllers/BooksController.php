@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authors_Books;
 use App\Borrowing;
 use App\Cart as Cart;
 use App\Http\Resources\Books as BooksResource;
@@ -154,6 +155,11 @@ class BooksController extends Controller
             $book->created_at = now();
             $book->updated_at = now();
             $book->save();
+
+            $authors_to_books = new Authors_Books();
+            $authors_to_books->author_id = $author_id;
+            $authors_to_books->book_id = $book->id;
+            $authors_to_books->save();
             return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
         } else {
             return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
