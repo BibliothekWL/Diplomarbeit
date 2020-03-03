@@ -54,7 +54,7 @@
 
             <div class="list">
                 <div v-for="book in liste.data.data" class="listitem"
-                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content, book.BNR)"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.systematik_long, book.category, book.medium, book.content, book.BNR)"
                      v-b-modal.BookInformation>
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
@@ -142,7 +142,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" scrollable ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, name)">
+                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, name, systematik_long, category)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -239,7 +239,7 @@
             ---------------------------------------------------------->
 
             <b-modal scrollable id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, name)">
+                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, name, systematik_long, category)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -378,7 +378,7 @@
                     size="lg"
             >
 
-                <div>
+                <div class="bookInformation">
                     {{ content_string }}
                 </div>
 
@@ -443,6 +443,8 @@
                 title: [],
                 title_short: [],
                 systematik: "",
+                systematik_long: "",
+                category: "",
                 medium: "",
                 BNR: "",
                 content_string: "",
@@ -505,6 +507,8 @@
                         this.systematik = response.data.systematik;
                         this.medium = response.data.medium;
                         this.BNR = response.data.BNR;
+                        this.systematik_long = response.data.systematik_long;
+                        this.category = response.data.category;
                         this.ausgabe();
                     }
                 );
@@ -514,16 +518,19 @@
                 this.content_string = "";
                 this.systematik = "";
                 this.medium = "";
-                this.BNR = "";
+                this.systematik_long = "irgendetwas";
+                this.category = "Fachbuch";
             },
-            saveAdd: function (title, systematik, medium, content, BNR, name) {
+            saveAdd: function (title, systematik, medium, content, BNR, name, systematik_long, category) {
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
                     medium: medium,
                     content: content,
                     BNR: BNR,
-                    authorname: name
+                    authorname: name,
+                    systematik_long: systematik_long,
+                    category: category
                 }).then(response => {
                         this.id = "";
                         this.title_string = "";
@@ -535,7 +542,7 @@
                     }
                 )
             },
-            saveEdit: function (id, title, systematik, medium, content, BNR, name) {
+            saveEdit: function (id, title, systematik, medium, content, BNR, name, systematik_long, category) {
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
@@ -543,7 +550,9 @@
                     medium: medium,
                     content: content,
                     BNR: BNR,
-                    authorname: name
+                    authorname: name,
+                    systematik_long: systematik_long,
+                    category: category
                 })
                     .then(response => {
                         if (response.data.status === 200) {
@@ -584,13 +593,22 @@
                     }
                 }
             },
-            buecherInformationen: function (id, title, systematik, medium, content, BNR) {
+            buecherInformationen: function (id, title, systematik, systematik_long, category, medium, content, BNR) {
                 this.id = id;
                 this.title_string = title;
                 this.content_string = content;
                 this.systematik = systematik;
+                this.systematik_long = systematik_long;
+                this.category = category;
                 this.medium = medium;
                 this.BNR = BNR;
+
+                axios.post('books/author/json', {
+                    id: id
+                }).then(response => {
+                    console.log(response);
+                    this.autor = response.data;
+                });
 
                 axios.post('/books/borrowed', {
                     id: id
@@ -899,5 +917,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+    }
+
+    .bookInformation {
+        text-align: justify;
     }
 </style>

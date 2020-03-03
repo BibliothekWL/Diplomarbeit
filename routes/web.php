@@ -214,6 +214,16 @@ Route::post('/userdata/json', function () {
 //Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
 //Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
 
+Route::post('books/author/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    $authorid = DB::table('authors_books')->where('book_id', $jsonarray['id'])->first()->pluck('author_id');
+
+    $result = DB::table('authors')->where('id', $authorid)->first()->pluck('name');
+    return $result;
+});
+
 Route::post('/author/edit/', 'AuthorController@edit');
 Route::post('/author/create/', 'AuthorController@create');
 Route::post('/author/delete/', 'AuthorController@destroy');
