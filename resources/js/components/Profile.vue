@@ -143,15 +143,12 @@
                         console.log('Error in PW');
                     })
                 }
-<<<<<<<<< Temporary merge branch 1
-=========
             },
             hideModal() {
                 this.userdata.password = "";
                 this.pw = "";
                 this.pwRepeat = "";
                 this.$refs['modal'].hide()
->>>>>>>>> Temporary merge branch 2
             }
         }
     }
