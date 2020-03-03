@@ -148,6 +148,8 @@ class BooksController extends Controller
             $book->user_id = 0;
             $book->title = $jsonarray['title'];
             $book->systematik = $jsonarray['systematik'];
+            $book->systematik_long = "asd";
+            $book->category = "asd";
             $book->medium = $jsonarray['medium'];
             $book->content = $jsonarray['content'];
             $book->BNR = $jsonarray['BNR'];
@@ -156,10 +158,10 @@ class BooksController extends Controller
             $book->updated_at = now();
             $book->save();
 
-            $authors_to_books = new Authors_Books();
-            $authors_to_books->author_id = $author_id;
-            $authors_to_books->book_id = $book->id;
-            $authors_to_books->save();
+            $authors_books = new Authors_Books();
+            $authors_books->author_id = $author_id;
+            $authors_books->book_id = $book->id;
+            $authors_books->save();
             return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
         } else {
             return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
