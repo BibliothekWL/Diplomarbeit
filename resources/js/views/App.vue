@@ -2,12 +2,11 @@
     <div>
         <div id="app">
             <div id="parentx">
-                <vs-sidebar :reduce="reduce" :reduce-not-hover-expand="false"
-                            color="danger" class="sidebarx" spacer v-model="active" :parent="body">
+                <vs-sidebar :reduce="reduce" reduce-not-rebound color="danger" class="sidebarx" spacer v-model="active"
+                            parent="body">
 
-                    <div style="cursor:pointer;" class="header-sidebar" slot="header" v-on:click="regular_navigation()">
-                        <font-awesome-icon v-if="reduce" icon="arrow-right"></font-awesome-icon>
-                        <font-awesome-icon v-if="!reduce" icon="arrow-left"></font-awesome-icon>
+                    <div class="header-sidebar" slot="header">
+                        <img src="../../img/logo.png" class="img-fluid">
                     </div>
 
                     <vs-sidebar-item index="1" icon="home" to="/home">
@@ -76,7 +75,6 @@
             axios.post('/cart/json', {
                 id: this.$store.state.userdata.id
             }).then(response => {
-                    console.log(response);
                     this.cart_count = response.data.length;
                     this.$store.state.latestCartCount = this.cart_count;
                     this.$store.commit('setCartCount');
@@ -142,10 +140,6 @@
                             }
                         }
                     )
-            },
-            regular_navigation: function () {
-                this.reduce = !this.reduce;
-
             }
         }
     }

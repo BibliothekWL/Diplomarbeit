@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use \App\Author as Author;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,15 +17,13 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')
     ->get('/user', function (Request $request) {
-    return $request->user();
-});
+        return $request->user();
+    });
 
-Route::post('/login/json/','\App\Http\Controllers\Auth\LoginController@login');
+Route::post('/login/json/', '\App\Http\Controllers\Auth\LoginController@login');
 
-Route::post('/books/create/json/','BooksController@BookValidator');
+Route::post('/books/create/json/', 'BooksController@BookValidator');
 
-Route::post('/books/edit/json','BooksController@BookValidator');
+Route::post('/books/edit/json', 'BooksController@BookValidator');
 
-Route::post('books/delete/json','BooksController@deleteBookValidator');
-
-
+Route::post('books/delete/json', 'BooksController@deleteBookValidator');
