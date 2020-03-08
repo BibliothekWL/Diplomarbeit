@@ -20,21 +20,21 @@
         </div>
 
         <div class="homepage_content">
-            <div v-if="topBooks != null" class="books col-12" style="border: black solid 1px">
+            <div class="books col-12">
                 <h2>Top-Bücher</h2>
                 <div class="list">
-                    <div v-for="book in topBooks" class="listitem">
+                    <div class="listitem">
                         <div class="listitem">
                             <div class="card_flex">
                                 <div class="bildbruh">&#160;</div>
 
                                 <div class="text">
                                     <div class="book_title">
-                                            {{book.id}}
+                                            {{topBooks.title}}
                                     </div>
 
                                     <div class="beschreibung">
-                                            {{book.title}}
+                                            Bereits {{topBooks.borrowed}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
@@ -42,22 +42,21 @@
                     </div>
                 </div>
             </div>
-
-            <div v-if="newestBooks != null" class="books col-12" style="border: black solid 1px">
-                        <h2>Neuerscheinungen</h2>
+            <div class="books col-12">
+                <h2>Top-Bücher</h2>
                 <div class="list">
-                    <div v-for="book in newestBooks" class="listitem">
+                    <div class="listitem">
                         <div class="listitem">
                             <div class="card_flex">
                                 <div class="bildbruh">&#160;</div>
 
                                 <div class="text">
                                     <div class="book_title">
-                                        {{book.id}}
+                                        {{newestBooks.title}}
                                     </div>
 
                                     <div class="beschreibung">
-                                        {{book.title}}
+                                        Bereits {{newestBooks.borrowed}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
@@ -77,8 +76,9 @@
         data() {
             return {
                 search: this.$store.state.search,
-                topBooks: [],
-                newestBooks: []
+                topBooks: null,
+                newestBooks: null,
+
             }
         },
         methods: {
@@ -92,14 +92,11 @@
             },
             topbooks: function () {
                 axios.post('/books/newest').then(response =>{
-                    console.log(response);
                     this.topBooks = response.data;
-                    console.log(this.topBooks.id);
                 })
             },
             newestbooks: function () {
                 axios.post('/books/top').then(response =>{
-                    console.log(response);
                     this.newestBooks = response.data;
                 })
             }
@@ -149,8 +146,119 @@
     }
 
     .books{
-        height: 300px;
+        height: auto;
         min-height: 200px;
         width: 100%;
     }
+
+    .notFound {
+        text-align: center;
+        padding: 8em;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: right;
+        padding-top: 4em;
+        padding-left: 8em;
+        padding-right: 4em;
+    }
+
+    .list > * {
+        flex-basis: 30%;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+
+    .listitem {
+        border: 1px black solid;
+        border-radius: 15px;
+    }
+
+    .card_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .listitem:hover {
+        cursor: pointer;
+    }
+
+    .beschreibung {
+        font-size: 14px;
+        width: 13em;
+    }
+
+    .page_buttons {
+        text-align: center;
+        padding: 2em;
+        color: white;
+    }
+
+    .addButton {
+        float: right;
+        margin: 1em;
+    }
+
+    .searchBar {
+        width: 50em;
+        vertical-align: top;
+    }
+
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
+    .frei {
+        border: 1px green solid;
+        border-radius: 10px;
+        color: green;
+        width: 3em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .borrowed {
+        border: 1px red solid;
+        border-radius: 10px;
+        color: red;
+        width: 6em;
+        padding: 0.25em;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
+        width: 125px;
+        height: 167px;
+        border-radius: 15px;
+    }
+
+    .book_title {
+        font-family: "Nunito", sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .text {
+        height: 7em;
+        width: 14em;
+        margin: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
 </style>

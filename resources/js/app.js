@@ -36,7 +36,6 @@ import 'vuesax/dist/vuesax.css'
 Vue.use(Vuesax);
 
 import 'material-icons/iconfont/material-icons.css';
-
 import store from './store';
 
 import Routes from '@/js/routes';

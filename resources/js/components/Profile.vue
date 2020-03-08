@@ -79,7 +79,6 @@
                                 required
                         ></b-form-input>
                     </b-form-group>
-                    <<<<<<< HEAD
                     <b-form-group
                             label="Neues Password wiederholen"
                             label-for="title"
@@ -117,7 +116,8 @@
         data() {
             return {
                 userdata: "",
-                pw: ""
+                pw: "",
+                pwRepeat: ""
             }
         },
         mounted() {
