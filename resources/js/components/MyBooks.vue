@@ -15,15 +15,15 @@
             </b-button>
 
             <div class="list">
-                <div v-for="book in liste.data.data" class="listitem" v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
-                    book.BNR, book.author_id)"
-                     v-b-modal.BookInformation>
+                <div v-for="book in liste.data.data" class="listitem"
+                     v-on:click="buecherInformationen(book.id, book.title, book.systematik, book.medium, book.content,
+                     book.BNR, book.author_id)" v-b-modal.BookInformation>
                     <div class="card_flex">
                         <div class="bildbruh">&#160;</div>
 
                         <div class="text">
                             <div class="book_title">
-                                {{book.title}}
+                                {{title_short[book.id]}}
                             </div>
 
                             <div class="beschreibung">
@@ -37,13 +37,28 @@
             </div>
         </div>
 
+        <!---------------------------------------------------------
+
+                                  NachOben
+
+        ---------------------------------------------------------->
+
+        <go-top
+                :size="45"
+                :right="30"
+                :bottom="30"
+                bg-color="#6C747F"
+                v-b-popover.hover.left="''"
+                title="Nach Oben">
+        </go-top>
+
         <h4 v-if="notFound" class="notFound">
             Sie haben keine Bücher ausgeborgt!
         </h4>
 
         <b-modal id="BookInformation" size="l" centered title="Information">
             <div>
-                {{ content_full }}
+                {{ content_string }}
             </div>
         </b-modal>
     </div>
@@ -51,9 +66,13 @@
 
 <script>
     import axios from 'axios';
+    import GoTop from '@inotom/vue-go-top';
 
     export default {
         name: "MyBooks",
+        components: {
+            GoTop
+        },
         data() {
             return {
                 notFound: "",
@@ -66,6 +85,10 @@
                 isLoggedIn: false,
                 content: [],
                 content_short: [],
+                content_string: "",
+                title_string: "",
+                title: [],
+                title_short: [],
                 platzhalter: false
             }
         },
@@ -83,9 +106,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 10) {
+                    if (content_words.length >= 7) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 10; j++) {
+                        for (let j = 0; j < 7; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -94,9 +117,24 @@
                     }
                 }
             },
+            saveTitle: function (title) {
+                for (let i = 0; i < title.length; i++) {
+                    this.title[title[i].id] = title[i].title;
+                    let title_words = title[i].title.split(" ");
+                    if (title_words.length >= 3) {
+                        this.title_short[title[i].id] = "";
+                        for (let j = 0; j < 3; j++) {
+                            this.title_short[title[i].id] += title_words[j] + " ";
+                        }
+                        this.title_short[title[i].id] += "...";
+                    } else {
+                        this.title_short[title[i].id] = title[i].title;
+                    }
+                }
+            },
             buecherInformationen: function (id, title, systematik, medium, content, BNR) {
                 this.id = id;
-                this.content_full = content;
+                this.content_string = content;
                 this.systematik = systematik;
                 this.medium = medium;
                 this.content = content;
@@ -112,6 +150,7 @@
                                 this.notFound = false;
                                 this.liste.data.data = response.data.data;
                                 this.saveContent(response.data.data);
+                                this.saveTitle(response.data.data);
                             }
                         }
                     );
@@ -122,10 +161,19 @@
 
 <style scoped>
 
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
     .notFound {
         text-align: center;
-        padding: 6em;
-        font-size: 2em;
+        padding: 8em;
     }
 
     .list {
@@ -133,9 +181,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
-        padding-top: 6em;
-        padding-left: 8em;
-        padding-right: 4em;
+        padding: 4em 4em 0 8em;
     }
 
     .list > * {
@@ -147,6 +193,7 @@
     .listitem {
         margin: 2em;
         border: 1px black solid;
+        border-radius: 15px;
     }
 
     .card_flex {
@@ -162,7 +209,7 @@
 
     .beschreibung {
         font-size: 14px;
-        width: 17em;
+        width: 13em;
     }
 
     .addButton {
@@ -170,10 +217,21 @@
         margin: 1em;
     }
 
+    .searchBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        background-image: url('../../img/bg_hp.jpg');
+    }
+
     .bildbruh {
         background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
+        border-radius: 15px;
     }
 
     .book_title {
@@ -189,15 +247,5 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-    }
-
-    .searchBox {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 2em;
-        width: 100%;
-        background-image: url('../../img/bg_hp.jpg');
     }
 </style>

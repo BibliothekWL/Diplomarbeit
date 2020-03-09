@@ -24,6 +24,7 @@ Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
 Route::get('/authorlist  ', 'SinglePageController@index');
+Route::get('/admin  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -75,6 +76,13 @@ Route::post('/getBook', function () {
     $jsonarray = json_decode($json, true);
     $book = Book::where('id', $jsonarray['id'])->first();
     return $book;
+});
+
+Route::get('/getBorrowings', function () {
+    return DB::table('books')->where('borrowed', '=',1)
+        ->join('users','user_id', '=', 'users.id')
+        ->select( 'books.id', 'books.title', 'users.name')
+        ->get();
 });
 
 //Route::get('/books/mybooks', '');
@@ -173,8 +181,8 @@ Route::post('/cart/json', function () {
     $cartArray = Cart::where('user_id', $jsonarray['id'])->get();
     $books = array();
     for ($i = 0; $i < count($cartArray); $i++) {
-        $book = Book::findOrFail($cartArray[$i]['book_id']);
-        array_push($books, $book);
+        $book = Book::where('id', $cartArray[$i]['book_id'])->get();
+        array_push($books, $book[0]);
     }
     return $books;
 });
@@ -188,7 +196,17 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/authors/json', function () {
-    return Author::orderBy('name')->get()->pluck('name')->unique();
+    $authorArray = Author::orderBy('name')->get()->unique();
+    $authors = array();
+    for ($i = 0; $i < count($authorArray); $i++) {
+        $author = $authorArray[$i]['name'];
+        array_push($authors, $author);
+    }
+    return $authors;
+});
+
+Route::get('/carts/json', function () {
+    return Cart::orderBy('book_id')->get()->pluck('book_id')->unique();
 });
 
 Route::post('/author/json', function () {

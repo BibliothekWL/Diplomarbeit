@@ -25,6 +25,11 @@
                         Autorliste
                     </vs-sidebar-item>
 
+                    <vs-sidebar-item v-if="isAdmin & loggedIn" index="15" icon="dashboard" to="/admin">
+                        Admin-Dashboard
+                    </vs-sidebar-item>
+
+
                     <br v-if="!isAdmin & loggedIn">
 
                     <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">
@@ -52,16 +57,6 @@
                 </vs-sidebar>
             </div>
         </div>
-
-        <b-button class="warenkorb" v-if="loggedIn && !isAdmin && $store.state.warenkorb"
-                  to="/warenkorb" variant="light">
-            <font-awesome-icon icon="shopping-cart" class="fa-lg"></font-awesome-icon>
-            <b-badge variant="transparent">{{cart_count}}</b-badge>
-        </b-button>
-
-        <b-button class="warenkorb_checkout" v-if="$store.state.warenkorbCheckout & loggedIn" v-on:click="checkout()">
-            Ausborgen
-        </b-button>
         <router-view></router-view>
     </div>
 </template>
@@ -72,14 +67,6 @@
 
     export default {
         mounted() {
-            axios.post('/cart/json', {
-                id: this.$store.state.userdata.id
-            }).then(response => {
-                    this.cart_count = response.data.length;
-                    this.$store.state.latestCartCount = this.cart_count;
-                    this.$store.commit('setCartCount');
-                }
-            );
         },
         data() {
             return {
@@ -104,12 +91,6 @@
                 },
                 immediate: true
             },
-            '$store.state.cart_count': {
-                handler() {
-                    this.cart_count = this.$store.state.cart_count;
-                },
-                immediate: true
-            }
         },
         methods: {
             logout: function () {
@@ -128,18 +109,6 @@
                             this.loggedIn = response.data;
                         }
                     )
-            },
-            checkout: function () {
-                axios.get('/cart/checkout')
-                    .then(
-                        response => {
-                            if (response.data.status === 200) {
-                                this.$store.state.latestCartCount = 0;
-                                this.$store.commit('setCartCount');
-                                this.$router.push({path: '/list'});
-                            }
-                        }
-                    )
             }
         }
     }
@@ -155,23 +124,6 @@
         background: rgba(227, 0, 19, 1);
         color: white;
         overflow-x: hidden;
-    }
-
-    .warenkorb {
-        cursor: pointer;
-        position: absolute;
-        z-index: 1000;
-        top: 0;
-        right: 0;
-        margin: 1em;
-    }
-
-    .warenkorb_checkout {
-        position: absolute;
-        z-index: 1000;
-        top: 5em;
-        right: 1.3em;
-        margin: 0.8em;
     }
 
     .header-sidebar {

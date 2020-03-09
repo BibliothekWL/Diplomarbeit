@@ -14,8 +14,8 @@
 
             <b-input-group class="searchBar">
 
-                <b-input class="search" placeholder="Nach Autoren suchen" type="search" v-model="search"
-                         v-on:keyup.enter="ausgabe()">
+                <b-input class="search" placeholder="Nach Büchern suchen" type="search" v-model="search" debounce="20"
+                         v-on:keyup="ausgabe()">
                 </b-input>
 
                 <b-input-group-append>
@@ -34,9 +34,18 @@
 
         <div v-if="!notFound" class="UserViewBody">
             <b-button v-if="isAdmin" type="light" class="addButton" pill v-b-modal.AddAuthor
-                      v-on:click="addAuthor(liste.length)">
+                      v-on:click="addAuthor(liste.length)" v-b-popover.hover.bottom="''" title="Autor erstellen">
                 <font-awesome-icon icon="plus"/>
             </b-button>
+
+            <b-dropdown id="dropdown-dropdown" v-model="item_size" class="BooksCount" :text="item_size"
+                        v-b-popover.hover.left="''" title="Bücher pro Seite">
+                <b-dropdown-item v-on:click="setItemSize(6)">6</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(12)">12</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(18)">18</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(24)">24</b-dropdown-item>
+                <b-dropdown-item v-on:click="setItemSize(30)">30</b-dropdown-item>
+            </b-dropdown>
 
             <div class="list">
                 <div v-for="author in liste.data.data" class="listitem">
@@ -50,12 +59,13 @@
                         </div>
 
                         <div class="buttons">
-                            <b-button pill v-on:click="deleteAuthor(author.id)">
+                            <b-button pill v-on:click="deleteAuthor(author.id)" v-b-popover.hover.top="''"
+                                      title="Autor löschen">
                                 <font-awesome-icon icon="trash"></font-awesome-icon>
                             </b-button>
 
-                            <b-button v-b-modal.EditAuthor pill
-                                      v-on:click="editAuthor(author.name, author.id)">
+                            <b-button v-b-modal.EditAuthor pill v-on:click="editAuthor(author.name, author.id)"
+                                      v-b-popover.hover.top="''" title="Autor bearbeiten">
                                 <font-awesome-icon icon="pen"></font-awesome-icon>
                             </b-button>
                         </div>
@@ -84,30 +94,38 @@
         ---------------------------------------------------------->
 
         <div class="page_buttons">
-            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang>
+            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang v-b-popover.hover.top="''" title="Erste Seite">
                 <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
             </b-button>
-            <b-button v-on:click="decrement()" :disabled=isAnfang>
+            <b-button v-on:click="decrement()" :disabled=isAnfang v-b-popover.hover.top="''" title="Eine Seite zurück">
                 <font-awesome-icon icon="angle-left"></font-awesome-icon>
             </b-button>
 
-            <b-dropdown id="dropdown-dropup" v-model="item_size" dropup :text="item_size">
-                <b-dropdown-item v-on:click="setItemSize(6)">6</b-dropdown-item>
-                <b-dropdown-item v-on:click="setItemSize(12)">12</b-dropdown-item>
-                <b-dropdown-item v-on:click="setItemSize(18)">18</b-dropdown-item>
-                <b-dropdown-item v-on:click="setItemSize(24)">24</b-dropdown-item>
-                <b-dropdown-item v-on:click="setItemSize(30)">30</b-dropdown-item>
-            </b-dropdown>
-
             <b-button disabled>{{page}}</b-button>
 
-            <b-button v-on:click="increment()" :disabled=isEnde>
+            <b-button v-on:click="increment()" :disabled=isEnde v-b-popover.hover.top="''" title="Eine Seite weiter">
                 <font-awesome-icon icon="angle-right"></font-awesome-icon>
             </b-button>
-            <b-button v-on:click="sendtoLast()" :disabled=isEnde>
-                <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+            <b-button v-on:click="sendtoLast()" :disabled=isEnde v-b-popover.hover.top="''" title="Letzte Seite">
+                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
             </b-button>
         </div>
+
+
+        <!---------------------------------------------------------
+
+                                  NachOben
+
+        ---------------------------------------------------------->
+
+        <go-top
+                :size="45"
+                :right="30"
+                :bottom="30"
+                bg-color="#6C747F"
+                v-b-popover.hover.left="''"
+                title="Nach Oben">
+        </go-top>
 
         <!---------------------------------------------------------
 
@@ -171,9 +189,14 @@
 
 <script>
     import axios from 'axios';
+    import Swal from 'sweetalert2';
+    import GoTop from '@inotom/vue-go-top';
 
     export default {
         name: "AuthorList",
+        components: {
+            GoTop
+        },
         data() {
             return {
                 page: 1,
@@ -194,7 +217,7 @@
                 platzhalter: false,
                 name: "",
                 id: null,
-                item_size: 6
+                item_size: '6'
             };
         },
         mounted() {
@@ -233,7 +256,8 @@
                         item_size: this.item_size
                     })
                         .then(response => {
-                                if (response.data.length !== 0) {
+                                console.log(response);
+                                if (response.data.length === 0) {
                                     this.notFound = true;
                                 } else {
                                     this.notFound = false;
@@ -281,7 +305,20 @@
                 axios.post('/author/delete', {
                     id: id
                 }).then(response => {
-                    this.ausgabe();
+                    if (response.data.status === 200) {
+                        this.ausgabe();
+                        Swal.fire({
+                            title: 'Erfolg!',
+                            text: 'Der ausgewählte Autor wurde erfolgreich gelöscht!',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Fehler!',
+                            text: 'Der ausgewählte Autor konnte nicht gelöscht werden!',
+                            icon: 'error'
+                        });
+                    }
                 });
             },
             editAuthor: function (name, id) {
@@ -296,14 +333,40 @@
                     name: name,
                     id: this.id
                 }).then(response => {
-                    this.ausgabe();
+                    if (response.data.status === 200) {
+                        this.ausgabe();
+                        Swal.fire({
+                            title: 'Erfolg!',
+                            text: 'Der ausgewählte Autor wurde erfolgreich bearbeitet!',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Fehler!',
+                            text: 'Der ausgewählte Autor konnte nicht bearbeitet werden!',
+                            icon: 'error'
+                        });
+                    }
                 });
             },
             saveAdd: function (name) {
                 axios.post('/author/create', {
                     name: name
                 }).then(response => {
-                    console.log(response);
+                    if (response.data.status === 200) {
+                        this.ausgabe();
+                        Swal.fire({
+                            title: 'Erfolg!',
+                            text: 'Der ausgewählte Autor wurde erfolgreich erstellt!',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Fehler!',
+                            text: 'Der ausgewählte Autor konnte nicht erstellt werden!',
+                            icon: 'error'
+                        });
+                    }
                 });
             },
             setItemSize: function (size) {
@@ -401,5 +464,11 @@
         flex-direction: row;
         width: 10em;
         justify-content: space-between;
+    }
+
+    .BooksCount {
+        position: absolute;
+        right: 11em;
+        top: 16em;
     }
 </style>
