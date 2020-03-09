@@ -34,7 +34,7 @@
                                     </div>
 
                                     <div class="beschreibung">
-                                            Bereits {{topBooks.borrowed}}-mal ausgeborgt!
+                                            Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="books col-12">
-                <h2>Top-Bücher</h2>
+                <h2>Neuerscheinungen</h2>
                 <div class="list">
                     <div class="listitem">
                         <div class="listitem">
@@ -56,7 +56,7 @@
                                     </div>
 
                                     <div class="beschreibung">
-                                        Bereits {{newestBooks.borrowed}}-mal ausgeborgt!
+                                        Am {{newestBooks.created_at.split(" ")[0]}} hinzugefügt!
                                     </div>
                                 </div>
                             </div>
@@ -76,10 +76,17 @@
         data() {
             return {
                 search: this.$store.state.search,
-                topBooks: null,
-                newestBooks: null,
+                topBooks: {},
+                newestBooks: {},
 
             }
+        },
+        mounted() {
+            this.$store.state.warenkorb = false;
+            this.$store.state.warenkorbCheckout = false;
+            this.search = "";
+            this.newestbooks();
+            this.topbooks();
         },
         methods: {
             ausgabe: function () {
@@ -97,17 +104,11 @@
             },
             newestbooks: function () {
                 axios.post('/books/top').then(response =>{
+                    console.log(response.data.created_at);
                     this.newestBooks = response.data;
                 })
             }
         },
-        mounted() {
-            this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = false;
-            this.search = "";
-            this.newestbooks();
-            this.topbooks();
-        }
     }
 </script>
 

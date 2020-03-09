@@ -80,7 +80,10 @@ Route::post('/getBook', function () {
 });
 
 Route::get('/getBorrowings', function () {
-    return DB::table('borrowings')->get();
+    return DB::table('books')->where('borrowed', '=',1)
+        ->join('users','user_id', '=', 'users.id')
+        ->select( 'books.id', 'books.title', 'users.name')
+        ->get();
 });
 
 //Route::get('/books/mybooks', '');

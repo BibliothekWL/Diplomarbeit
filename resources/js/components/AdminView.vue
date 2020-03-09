@@ -2,58 +2,102 @@
     <div id="body">
         <div class="col-8" style="margin: auto; text-align: center; color: black;">
             <h1 style="color: black;">Ausgeborgte Buecher</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Transakionsnummer</th>
-                        <th scope="col">Nutzer</th>
-                        <th scope="col">Nutzer-ID</th>
-                        <th scope="col">Buchtitel</th>
-                        <th scope="col">Buch-ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="book in userdata">
-                        <td>{{book.id}}</td>
-                        <td>ExampleName</td>
-                        <td>{{book.user_id}}</td>
-                        <td>ExampleBook</td>
-                    </tr>
-                </tbody>
-            </table>
+            <b-table striped hover :fields="fields" :items="userdata">
+                <template v-slot:cell(index)="data">
+                    {{ data.index + 1 }}
+                </template>
+                <template v-slot:cell(abgebenBtn)="data">
+                    <b-button size="sm" @click="returnBook(data.item.id)" class="mr-2">
+                        Zurückgeben
+                    </b-button>
+                </template>
+
+            </b-table>
         </div>
     </div>
 </template>
 
 <script>
     import axios from "axios";
+    import Swal from "sweetalert2";
 
     export default {
         name: "AdminView",
         data() {
             return {
-                userdata: null
+                isAdmin: this.$store.state.isAdmin,
+                isLoggedIn: this.$store.state.isLoggedIn,
+                userdata: null,
+                fields: [
+                    'index',
+                    {
+                    key: 'name',
+                    label: 'Ausgeborgt von:',
+                    sortable: true
+                },{
+                    key: 'id',
+                    label: 'Buchnummer',
+                    sortable: true
+                },{
+                    key: 'title',
+                    label: 'Buchtitel'
+                },{
+                    key: 'abgebenBtn',
+                    label: 'Zurückgeben'
+                }],
             }
         },
+        mounted() {
+
+            //Authentification
+            if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
+                this.$router.push({path: '/login'})
+            } else {
+                //API-call for Book Items
+                this.getBorrowed();
+            }
+        },
+
         methods: {
             getBorrowed: function () {
+                this.isLoggedInCheck();
                 axios.get('/getBorrowings').then(response => {
                     console.log(response);
                     this.userdata = response.data;
                 })
             },
-            getUsername: function (id) {
-                axios.post('/userdata/json', {id: id}).then(response => {
-                    return response.data.name
-                })
+            isLoggedInCheck: function(){
+                axios.get('/session')
+                .then(response => {
+                        this.$store.state.isLoggedIn = response.data;
+                        if(response.data) {
+                            this.$store.commit('UserLoggedIn');
+                        } else {
+                            this.$store.commit('UsernotLoggedIn');
+                        }
+                    }
+                )
             },
-            getBookTitle: function (id) {
-                axios.post('/getBook', {id: id}).then(response => {
-                    return response.data.title;
-                })
-            },
-            mounted() {
-                this.getBorrowed();
+            returnBook: function (id) {
+                axios.post('/returnBooks', {
+                    id: id
+                }).then(response => {
+                    console.log(id);
+                        if (response.data.status === 200) {
+                            Swal.fire({
+                                title: 'Erfolg!',
+                                text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!',
+                                icon: 'success'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Fehler!',
+                                text: 'Versuchen Sie es später nochmal!',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                )
             }
         }
     }
