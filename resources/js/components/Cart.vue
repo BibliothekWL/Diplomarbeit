@@ -3,13 +3,18 @@
         <div class="UserViewBody">
             <div class="searchBox">
                 <div class="page_title">
-                    <h1 style="color: white; text-shadow: 3px 3px 0px black; padding: 1em">Einkaufswagen</h1>
+                    <h1 style="color: white; text-shadow: 3px 3px 0 black; padding: 1em">Einkaufswagen</h1>
                 </div>
             </div>
 
             <h4 class="notFound" v-if="notFound">Ihr Einkaufswagen ist leer!</h4>
 
             <div class="list" v-if="!notFound">
+                <b-button class="warenkorb_checkout" v-if="isLoggedIn & !isAdmin" v-on:click="checkout()"
+                          v-b-popover.hover.left="''" title="Alle Bücher ausborgen">
+                    Ausborgen
+                </b-button>
+
                 <div v-for="book in liste.data.data" class="listitem">
                     <div class="card_flex">
                         <div class="bildbruh"
@@ -29,7 +34,8 @@
                             </div>
                         </div>
 
-                        <div class="info entfernen" v-on:click="remove(book.id)">
+                        <div class="info entfernen" v-on:click="remove(book.id)" v-b-popover.hover.top="''"
+                             title="Buch entfernen">
                             Entfernen
                         </div>
                     </div>
@@ -44,18 +50,39 @@
                 {{ content }}
             </div>
         </b-modal>
+
+        <!---------------------------------------------------------
+
+                                NachOben
+
+        ---------------------------------------------------------->
+
+        <go-top
+                :size="45"
+                :right="30"
+                :bottom="30"
+                bg-color="#6C747F"
+                v-b-popover.hover.left="''"
+                title="Nach Oben">
+        </go-top>
+
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    import Swal from 'sweetalert2';
+    import GoTop from '@inotom/vue-go-top';
 
     export default {
         name: "Cart",
+        components: {
+            GoTop
+        },
         data() {
             return {
                 isAdmin: this.$store.state.isAdmin,
-                isLoggedIn: false,
+                isLoggedIn: this.$store.state.isLoggedIn,
                 liste: {
                     data: {
                         data: ""
@@ -71,8 +98,6 @@
             }
         },
         mounted() {
-            this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = true;
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -91,9 +116,9 @@
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 10) {
+                    if (content_words.length >= 7) {
                         this.content_short[content[i].id] = "";
-                        for (let j = 0; j < 10; j++) {
+                        for (let j = 0; j < 7; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
                         }
                         this.content_short[content[i].id] += "...";
@@ -118,19 +143,27 @@
                         this.$store.state.latestCartCount--;
                         this.$store.commit('setCartCount');
                         this.ausgabe();
+                        Swal.fire({
+                            title: 'Erfolg!',
+                            text: 'Das Buch befindet sich nun nicht mehr im Warenkorb!',
+                            icon: 'success'
+                        });
                     } else {
-                        console.log("error");
+                        Swal.fire({
+                            title: 'Fehler!',
+                            text: 'Das Buch konnte nicht entfernt werden!',
+                            icon: 'error'
+                        });
                     }
                 })
             },
             saveTitle: function (title) {
-                console.log(title.length);
                 for (let i = 0; i < title.length; i++) {
                     this.title[title[i].id] = title[i].title;
                     let title_words = title[i].title.split(" ");
-                    if (title_words.length >= 8) {
+                    if (title_words.length >= 3) {
                         this.title_short[title[i].id] = "";
-                        for (let j = 0; j < 8; j++) {
+                        for (let j = 0; j < 3; j++) {
                             this.title_short[title[i].id] += title_words[j] + " ";
                         }
                         this.title_short[title[i].id] += "...";
@@ -140,6 +173,7 @@
                 }
             },
             ausgabe: function () {
+                this.isLoggedInCheck();
                 if (this.$store.state.isLoggedIn === false || this.$store.state.isAdmin === true) {
                     window.location.href = "/login"
                 } else {
@@ -152,13 +186,38 @@
                                 this.platzhalter = response.data.length % 2 !== 0;
                                 this.notFound = false;
                                 this.liste.data.data = response.data;
-                                this.isLoggedInCheck();
                                 this.saveContent(response.data);
                                 this.saveTitle(response.data);
                             }
                         }
                     );
                 }
+            },
+            checkout: function () {
+                axios.get('/cart/checkout')
+                    .then(
+                        response => {
+                            if (response.data.status === 200) {
+                                this.$store.state.latestCartCount--;
+                                this.$store.commit('setCartCount');
+                                this.$store.state.latestCartCount = 0;
+                                this.$store.commit('setCartCount');
+                                this.ausgabe();
+                                Swal.fire({
+                                    title: 'Erfolg!',
+                                    text: 'Die Bücher wurden erfolgreich ausgeborgt!',
+                                    icon: 'success'
+                                });
+                                this.$router.push({path: '/list'});
+                            } else {
+                                Swal.fire({
+                                    title: 'Fehler!',
+                                    text: 'Die Bücher konnten nicht ausgeborgt werden!',
+                                    icon: 'error'
+                                });
+                            }
+                        }
+                    )
             }
         }
     }
@@ -212,22 +271,6 @@
         width: 13em;
     }
 
-    .page_buttons {
-        text-align: center;
-        padding: 2em;
-        color: white;
-    }
-
-    .addButton {
-        float: right;
-        margin: 1em;
-    }
-
-    .searchBar {
-        width: 50em;
-        vertical-align: top;
-    }
-
     .searchBox {
         display: flex;
         flex-direction: column;
@@ -246,6 +289,14 @@
         padding: 0.25em;
         margin: 1em;
         text-align: center;
+    }
+
+    .warenkorb_checkout {
+        position: fixed;
+        z-index: 1000;
+        top: 5em;
+        right: 1.3em;
+        margin: 0.8em;
     }
 
     .bildbruh {
@@ -268,15 +319,5 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-    }
-
-    .btn {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
-    }
-
-    .btn-secondary {
-        background-color: rgb(30, 30, 133);
-        border-color: rgb(30, 30, 133);
     }
 </style>
