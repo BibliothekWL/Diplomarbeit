@@ -26,7 +26,6 @@ Route::get('/profil  ', 'SinglePageController@index');
 Route::get('/authorlist  ', 'SinglePageController@index');
 Route::get('/admin  ', 'SinglePageController@index');
 
-
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
 });
