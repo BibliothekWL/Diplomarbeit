@@ -198,6 +198,8 @@ Route::get('/medium/json', function () {
 Route::get('/authors/json', function () {
     $authorArray = Author::orderBy('name')->get()->unique();
     $authors = array();
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
     for ($i = 0; $i < count($authorArray); $i++) {
         $author = $authorArray[$i]['name'];
         array_push($authors, $author);
@@ -212,8 +214,13 @@ Route::get('/carts/json', function () {
 Route::post('/author/json', function () {
     $json = file_get_contents('php://input');
     $jsonarray = json_decode($json, true);
-
-    return DB::table('authors')->orderBy('name')->select()->paginate($jsonarray['item_size']);
+    $authors_books = \App\Authors_Books::where('book_id',$jsonarray['id'])->get();
+    $authorNames = array();
+    for($i = 0; $i < count($authors_books); $i++){
+        $author = Author::findOrFail($authors_books[$i]->author_id);
+        $authorNames[$i] = $author->name;
+    }
+    return json_encode($authorNames);
 });
 
 Route::post('/author/search', function () {

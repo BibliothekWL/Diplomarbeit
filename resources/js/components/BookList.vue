@@ -712,9 +712,10 @@
                 this.medium = medium;
                 this.BNR = BNR;
 
-                axios.post('books/author/json', {
+                axios.post('author/json', {
                     id: id
                 }).then(response => {
+                    console.log(response);
                     this.names = response.data;
                 });
 
@@ -967,7 +968,6 @@
 
     .list {
         display: flex;
-        width: 95%;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
@@ -981,7 +981,6 @@
     }
 
     .listitem {
-        width: 45%;
         margin: 2em;
         border: 1px black solid;
         border-radius: 15px;
