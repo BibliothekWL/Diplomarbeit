@@ -967,7 +967,7 @@
 
     .list {
         display: flex;
-        width: 90%;
+        width: 95%;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
