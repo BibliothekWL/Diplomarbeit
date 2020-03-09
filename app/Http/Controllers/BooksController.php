@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authors_Books;
 use App\Borrowing;
 use App\Cart as Cart;
 use App\Http\Resources\Books as BooksResource;
@@ -145,9 +146,10 @@ class BooksController extends Controller
         if (sizeof($jsonarray) != 0) {
             $book = new Book();
             $book->user_id = 0;
-            $book->author_id = 1;
             $book->title = $jsonarray['title'];
             $book->systematik = $jsonarray['systematik'];
+            $book->systematik_long = "asd";
+            $book->category = "asd";
             $book->medium = $jsonarray['medium'];
             $book->content = $jsonarray['content'];
             $book->BNR = $jsonarray['BNR'];
@@ -155,6 +157,11 @@ class BooksController extends Controller
             $book->created_at = now();
             $book->updated_at = now();
             $book->save();
+
+            $authors_books = new Authors_Books();
+            $authors_books->author_id = $author_id;
+            $authors_books->book_id = $book->id;
+            $authors_books->save();
             return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
         } else {
             return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);

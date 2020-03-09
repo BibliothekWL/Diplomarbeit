@@ -53,7 +53,7 @@
             </b-modal>
 
             <b-modal id="ChangePassword" scrollable ref="modal" centered title="Passwort ändern"
-                     @ok="changeCredentials(false)">
+                     hide-footer>
                 <form ref="form">
                     <b-form-group
                             label="Aktuelles Password"
@@ -64,9 +64,12 @@
                         <b-form-input
                                 id="pwold-input"
                                 v-model="pw"
+                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
+
+                    <!-- Password 2x -->
                     <b-form-group
                             label="Neues Password"
                             label-for="title"
@@ -76,6 +79,7 @@
                         <b-form-input
                                 id="pwnew-input"
                                 v-model="userdata.password"
+                                type="password"
                                 required
                         ></b-form-input>
                     </b-form-group>
@@ -93,10 +97,7 @@
                         ></b-form-input>
                     </b-form-group>
                     <div>
-                        <b-button
-                                :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8"
-                                @click="changeCredentials(false) ">Passwort ändern
-                        </b-button>
+                        <b-button :disabled="userdata.password !== pwRepeat||userdata.password.length<8||pwRepeat.length<8" @click="changeCredentials(false) ">Passwort ändern</b-button>
                         <b-button variant="danger" @click="hideModal()">Cancel</b-button>
                     </div>
                 </form>
@@ -126,7 +127,6 @@
                     console.log(response);
                 });
             this.$store.state.warenkorb = false;
-            this.$store.state.warenkorbCheckout = false;
             if (!this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -136,6 +136,7 @@
         methods: {
             ausgabe: function () {
                 this.userdata = this.$store.state.userdata;
+                console.log(this.$store.state.userdata );
             },
             //if true => username, else => password
             changeCredentials(type) {
@@ -155,17 +156,17 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.data.status === '200') {
+                            if (response.status === '200') {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
-                                });
+                                })
                                 this.$router.push({path: '/logout'});
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',
-                                    text: 'Eingabe stimmt nicht mit dem Passwort überein!',
+                                    text: 'Passwort konnte nicht geändert werden! Bitte versuchen Sie es erneut!',
                                     icon: 'error'
                                 })
                             }

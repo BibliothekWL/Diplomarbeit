@@ -182,8 +182,8 @@ Route::post('/cart/json', function () {
     $cartArray = Cart::where('user_id', $jsonarray['id'])->get();
     $books = array();
     for ($i = 0; $i < count($cartArray); $i++) {
-        $book = Book::findOrFail($cartArray[$i]['book_id']);
-        array_push($books, $book);
+        $book = Book::where('id', $cartArray[$i]['book_id'])->get();
+        array_push($books, $book[0]);
     }
     return $books;
 });
@@ -197,7 +197,17 @@ Route::get('/medium/json', function () {
 });
 
 Route::get('/authors/json', function () {
-    return Author::orderBy('name')->get()->pluck('name')->unique();
+    $authorArray = Author::orderBy('name')->get()->unique();
+    $authors = array();
+    for ($i = 0; $i < count($authorArray); $i++) {
+        $author = $authorArray[$i]['name'];
+        array_push($authors, $author);
+    }
+    return $authors;
+});
+
+Route::get('/carts/json', function () {
+    return Cart::orderBy('book_id')->get()->pluck('book_id')->unique();
 });
 
 Route::post('/author/json', function () {
@@ -222,6 +232,16 @@ Route::post('/userdata/json', function () {
 
 //Route::get('/email/verify/{id}/{code}/', 'UserController@verifyEmail');
 //Route::get('/email/verify/{id}/{code}', [ 'as' => 'login', 'uses' => 'UserController@verifyEmail']);
+
+Route::post('books/author/json', function () {
+    $json = file_get_contents('php://input');
+    $jsonarray = json_decode($json, true);
+
+    $authorid = DB::table('authors_books')->where('book_id', $jsonarray['id'])->first()->pluck('author_id');
+
+    $result = DB::table('authors')->where('id', $authorid)->first()->pluck('name');
+    return $result;
+});
 
 Route::post('/author/edit/', 'AuthorController@edit');
 Route::post('/author/create/', 'AuthorController@create');

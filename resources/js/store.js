@@ -13,8 +13,6 @@ export default new Vuex.Store({
         searchAuthor: "",
         userdata_login: [],
         userdata: [],
-        warenkorb: false,
-        warenkorbCheckout: false,
         latestCartCount: 0,
         cart_count: 0,
         showalpha: true,

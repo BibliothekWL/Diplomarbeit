@@ -2,8 +2,9 @@
     <div id="body">
         <div class="col-8" style="margin: auto; text-align: center; color: black;">
             <h1 style="color: black;">Ausgeborgte Buecher</h1>
-            <b-table striped hover :fields="fields" :items="userdata">
-                <template v-slot:cell(index)="data">
+            <b-input placeholder="Nach Schlüsselwortern filtern.." id="filter" v-model="filter"/>
+            <b-table striped hover :filter="filter" :fields="fields" :items="userdata">
+                <template v-slot:cell(#)="data">
                     {{ data.index + 1 }}
                 </template>
                 <template v-slot:cell(abgebenBtn)="data">
@@ -14,48 +15,59 @@
 
             </b-table>
         </div>
+        <go-top
+                :size="45"
+                :right="30"
+                :bottom="30"
+                bg-color="#6C747F"
+                v-b-popover.hover.left="''"
+                title="Nach Oben">
+        </go-top>
     </div>
 </template>
 
 <script>
     import axios from "axios";
     import Swal from "sweetalert2";
+    import GoTop from '@inotom/vue-go-top';
 
     export default {
         name: "AdminView",
+        components: {
+            GoTop
+        },
         data() {
             return {
+                sortBy: 'name',
                 isAdmin: this.$store.state.isAdmin,
                 isLoggedIn: this.$store.state.isLoggedIn,
+                filter: "",
                 userdata: null,
                 fields: [
-                    'index',
                     {
+                        key: '#',
+                        sortable: true
+                    },{
                     key: 'name',
                     label: 'Ausgeborgt von:',
                     sortable: true
                 },{
                     key: 'id',
                     label: 'Buchnummer',
-                    sortable: true
+                    sortable: false
                 },{
                     key: 'title',
-                    label: 'Buchtitel'
+                    label: 'Buchtitel',
+                        sortable: false
                 },{
                     key: 'abgebenBtn',
-                    label: 'Zurückgeben'
-                }],
+                    label: 'Zurückgeben',
+                        sortable: false
+                    }],
             }
         },
         mounted() {
-
-            //Authentification
-            if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
-                this.$router.push({path: '/login'})
-            } else {
-                //API-call for Book Items
-                this.getBorrowed();
-            }
+            this.ausgabe();
         },
 
         methods: {
@@ -89,6 +101,7 @@
                                 text: 'Das ausgewählte Buch wurde erfolgreich zurückgegeben!',
                                 icon: 'success'
                             });
+                            this.ausgabe();
                         } else {
                             Swal.fire({
                                 title: 'Fehler!',
@@ -98,6 +111,15 @@
                         }
                     }
                 )
+            },
+            ausgabe: function () {
+                //Authentification
+                if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
+                    this.$router.push({path: '/login'})
+                } else {
+                    //API-call for Book Items
+                    this.getBorrowed();
+                }
             }
         }
     }
