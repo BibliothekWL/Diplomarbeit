@@ -24,6 +24,7 @@ Route::get('/myBooks', 'SinglePageController@index');
 Route::get('/warenkorb  ', 'SinglePageController@index');
 Route::get('/profil  ', 'SinglePageController@index');
 Route::get('/authorlist  ', 'SinglePageController@index');
+Route::get('/admin  ', 'SinglePageController@index');
 
 Route::get('/session', function () {
     return json_encode(session()->has('id'));
@@ -75,6 +76,13 @@ Route::post('/getBook', function () {
     $jsonarray = json_decode($json, true);
     $book = Book::where('id', $jsonarray['id'])->first();
     return $book;
+});
+
+Route::get('/getBorrowings', function () {
+    return DB::table('books')->where('borrowed', '=',1)
+        ->join('users','user_id', '=', 'users.id')
+        ->select( 'books.id', 'books.title', 'users.name')
+        ->get();
 });
 
 //Route::get('/books/mybooks', '');

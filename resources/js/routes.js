@@ -9,6 +9,7 @@ import MyBooks from "@/js/components/MyBooks";
 import Cart from "@/js/components/Cart";
 import Profil from "@/js/components/Profile";
 import AuthorList from "@/js/components/AuthorList";
+import AdminView from "@/js/components/AdminView";
 
 
 Vue.use(VueRouter);
@@ -60,6 +61,11 @@ const router = new VueRouter({
             path: '/authorlist',
             name: 'authorlist',
             component: AuthorList
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: AdminView
         }
     ]
 });
