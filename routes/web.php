@@ -52,7 +52,7 @@ Route::post('/books/newest', function () {
 });
 
 Route::post('/books/top', function () {
-    $top = DB::table('books')->orderBy('borrowCounter', 'desc')->first();
+    $top = Book::orderBy('borrowCounter','desc')->first();
     return json_encode($top);
 });
 

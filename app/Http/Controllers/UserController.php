@@ -40,6 +40,9 @@ class UserController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         $user = User::findOrFail(auth()->user()->id);
+
+
+        //return json_encode(['status' => '400', 'statusMsg' => $jsonarray['oldPw']]);
         if (Hash::check($jsonarray['oldPw'], $user->password)) {
             $user->password = Hash::make($jsonarray['newPw']);
             $user->save();
