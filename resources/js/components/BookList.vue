@@ -140,7 +140,8 @@
                     <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
                 </b-button>
 
-                <b-popover target="popover-manual-1" placement="top" triggers="hover" :show.sync="pop1" title="Erste Seite">
+                <b-popover target="popover-manual-1" placement="top" triggers="hover" :show.sync="pop1"
+                           title="Erste Seite">
                 </b-popover>
             </div>
 
@@ -150,7 +151,8 @@
                     <font-awesome-icon icon="angle-left"></font-awesome-icon>
                 </b-button>
 
-                <b-popover target="popover-manual-2" placement="top" triggers="hover" :show.sync="pop2" title="Eine Seite zurück">
+                <b-popover target="popover-manual-2" placement="top" triggers="hover" :show.sync="pop2"
+                           title="Eine Seite zurück">
                 </b-popover>
             </div>
 
@@ -162,7 +164,8 @@
                     <font-awesome-icon icon="angle-right"></font-awesome-icon>
                 </b-button>
 
-                <b-popover target="popover-manual-3" placement="top" triggers="hover" :show.sync="pop3" title="Eine Seite weiter">
+                <b-popover target="popover-manual-3" placement="top" triggers="hover" :show.sync="pop3"
+                           title="Eine Seite weiter">
                 </b-popover>
             </div>
 
@@ -171,7 +174,8 @@
                     <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
                 </b-button>
 
-                <b-popover target="popover-manual-4" placement="top" triggers="hover" :show.sync="pop4" title="Letzte Seite">
+                <b-popover target="popover-manual-4" placement="top" triggers="hover" :show.sync="pop4"
+                           title="Letzte Seite">
                 </b-popover>
             </div>
         </div>
@@ -261,16 +265,16 @@
 
                         <template>
                             <div>
-                                <label class="typo__label">Simple select / dropdown</label>
                                 <multiselect v-model="value" :options="options" :multiple="true"
                                              :close-on-select="false" :clear-on-select="false" :preserve-search="true"
-                                             placeholder="Pick some" label="name" track-by="name"
-                                             :preselect-first="true">
+                                             placeholder="Wählen Sie Autoren aus" label="name" track-by="name">
                                     <template slot="selection" slot-scope="{ values, search, isOpen }"><span
-                                            class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
+                                            class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
+                                        {{ values.length }} options selected</span>
                                     </template>
                                 </multiselect>
-                                <pre class="language-json"><code>{{ value  }}</code></pre>
+
+                                {{value}}
                             </div>
                         </template>
 
@@ -363,11 +367,9 @@
 
                     <template>
                         <multiselect v-model="names" :options="autoren" :multiple="true" :close-on-select="false"
-                                     :clear-on-select="false" :preserve-search="true" placeholder="Pick some"
-                                     label="name" track-by="names" :preselect-first="true">
-                            <template slot="selection" slot-scope="{ values, search, isOpen }"><span
-                                    class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
-                            </template>
+                                     :clear-on-select="false" :preserve-search="true"
+                                     placeholder="Wählen Sie Autoren aus"
+                                     label="name" track-by="names">
                         </multiselect>
                     </template>
 
@@ -551,12 +553,19 @@
                 item_size: '6',
                 cart_count: 0,
                 cartList: [],
-                value: '',
+                value: [],
                 pop1: false,
                 pop2: false,
                 pop3: false,
                 pop4: false,
-                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
+                options: [
+                    {name: 'Vue.js'},
+                    {name: 'Adonis'},
+                    {name: 'Rails'},
+                    {name: 'Sinatra'},
+                    {name: 'Laravel'},
+                    {name: 'Phoenix'}
+                ]
             };
         },
         mounted() {
@@ -631,6 +640,7 @@
                 this.content_string = "";
                 this.systematik = "";
                 this.medium = "";
+                this.BNR = null;
                 this.systematik_long = "irgendetwas";
                 this.category = "Fachbuch";
             },
@@ -740,7 +750,7 @@
                 this.medium = medium;
                 this.BNR = BNR;
 
-                axios.post('books/author/json', {
+                axios.post('author/json', {
                     id: id
                 }).then(response => {
                     this.names = response.data;
@@ -934,7 +944,8 @@
             getAuthor: function () {
                 axios.get('/authors/json')
                     .then(response => {
-                            this.autoren = response.data;
+                            this.autoren = JSON.stringify(response.data);
+                            console.log(response.data);
                         }
                     )
             },
@@ -1001,7 +1012,6 @@
 
     .list {
         display: flex;
-        width: 95%;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
@@ -1015,7 +1025,6 @@
     }
 
     .listitem {
-        width: 45%;
         margin: 2em;
         border: 1px black solid;
         border-radius: 15px;
@@ -1048,7 +1057,7 @@
 
     .addButton {
         float: right;
-        margin: 1em;
+        margin: 1.2em;
     }
 
     .searchBar {
