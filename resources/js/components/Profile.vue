@@ -156,13 +156,15 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
+                            if (response.status === 200) {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
-                                })
-                                this.$router.push({path: '/logout'});
+                                });
+                                this.$store.commit('UsernotLoggedIn');
+                                this.$store.commit('UserisnotAdmin');
+                                window.location.href = "/login";
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',

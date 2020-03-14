@@ -135,21 +135,45 @@
         ---------------------------------------------------------->
 
         <div class="page_buttons">
-            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang v-b-popover.hover.top="''" title="Erste Seite">
-                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="decrement()" :disabled=isAnfang v-b-popover.hover.top="''" title="Eine Seite zurück">
-                <font-awesome-icon icon="angle-left"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoFirst()" :disabled=isAnfang id="popover-manual-1" title="Erste Seite">
+                    <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+                </b-button>
 
-            <b-button disabled>{{page}}</b-button>
+                <b-popover target="popover-manual-1" placement="top" triggers="hover" :show.sync="pop1" title="Erste Seite">
+                </b-popover>
+            </div>
 
-            <b-button v-on:click="increment()" :disabled=isEnde v-b-popover.hover.top="''" title="Eine Seite weiter">
-                <font-awesome-icon icon="angle-right"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="sendtoLast()" :disabled=isEnde v-b-popover.hover.top="''" title="Letzte Seite">
-                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="decrement()" :disabled=isAnfang id="popover-manual-2"
+                          title="Eine Seite zurück">
+                    <font-awesome-icon icon="angle-left"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-2" placement="top" triggers="hover" :show.sync="pop2" title="Eine Seite zurück">
+                </b-popover>
+            </div>
+
+            <b-button class="paging_buttons" disabled>{{page}}</b-button>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="increment()" :disabled=isEnde id="popover-manual-3"
+                          title="Eine Seite weiter">
+                    <font-awesome-icon icon="angle-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-3" placement="top" triggers="hover" :show.sync="pop3" title="Eine Seite weiter">
+                </b-popover>
+            </div>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoLast()" :disabled=isEnde id="popover-manual-4" title="Letzte Seite">
+                    <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-4" placement="top" triggers="hover" :show.sync="pop4" title="Letzte Seite">
+                </b-popover>
+            </div>
         </div>
 
         <!---------------------------------------------------------
@@ -528,6 +552,10 @@
                 cart_count: 0,
                 cartList: [],
                 value: '',
+                pop1: false,
+                pop2: false,
+                pop3: false,
+                pop4: false,
                 options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
             };
         },
@@ -568,9 +596,9 @@
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich gelöscht!',
                                 icon: 'success'
-                            }).ok(
-                                this.$refs['BookInformation'].toggle()
-                            );
+                            });
+
+                            this.$refs['BookInformation'].toggle();
                             this.ausgabe();
                         } else {
                             Swal.fire({
@@ -716,6 +744,8 @@
                     id: id
                 }).then(response => {
                     this.names = response.data;
+                    console.log(this.names);
+                    console.log(this.options);
                 });
 
                 axios.post('/books/borrowed', {
@@ -816,24 +846,28 @@
                 this.page++;
                 this.isAnfang = true;
                 this.isEnde = true;
+                this.pop3 = false;
                 this.ausgabe();
             },
             decrement: function () {
                 this.page--;
                 this.isAnfang = true;
                 this.isEnde = true;
+                this.pop2 = false;
                 this.ausgabe();
             },
             sendtoFirst: function () {
                 this.isAnfang = true;
                 this.isEnde = true;
                 this.page = 1;
+                this.pop1 = false;
                 this.ausgabe();
             },
             sendtoLast: function () {
                 this.isAnfang = true;
                 this.isEnde = true;
                 this.page = this.lastPage;
+                this.pop4 = false;
                 this.ausgabe();
             },
             returnBook: function (id) {
@@ -1004,6 +1038,9 @@
     }
 
     .page_buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
         text-align: center;
         padding: 2em;
         color: white;
@@ -1120,5 +1157,9 @@
         position: absolute;
         right: 11em;
         top: 16em;
+    }
+
+    .paging_buttons {
+        margin: .1em;
     }
 </style>

@@ -105,7 +105,7 @@ Route::post('/books/json', function () {
         $conditions[] = "medium='$by_medium'";
     }
     if (!($jsonarray['systematik'] == null)) {
-        $conditions[] = "systematik='$by_systematik'";
+        $conditions[] = "systematik_long='$by_systematik'";
     }
 
     $sql = "";
@@ -159,7 +159,7 @@ Route::post('/books/search', function () {
         $conditions[] = "medium='$by_medium'";
     }
     if (!($jsonarray['systematik'] == null)) {
-        $conditions[] = "systematik='$by_systematik'";
+        $conditions[] = "systematik_long='$by_systematik'";
     }
 
     $sql = "";
@@ -189,7 +189,7 @@ Route::post('/cart/json', function () {
 });
 
 Route::get('/systematik/json', function () {
-    return Book::orderBy('systematik')->get()->pluck('systematik')->unique();
+    return Book::orderBy('systematik_long')->get()->pluck('systematik_long')->unique();
 });
 
 Route::get('/medium/json', function () {

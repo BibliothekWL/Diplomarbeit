@@ -12,7 +12,7 @@
             <div class="list" v-if="!notFound">
                 <b-button class="warenkorb_checkout" v-if="isLoggedIn & !isAdmin" v-on:click="checkout()"
                           v-b-popover.hover.left="''" title="Alle Bücher ausborgen">
-                    Ausborgen
+                    <font-awesome-icon icon="cart-arrow-down"></font-awesome-icon>
                 </b-button>
 
                 <div v-for="book in liste.data.data" class="listitem">
@@ -294,7 +294,7 @@
     .warenkorb_checkout {
         position: fixed;
         z-index: 1000;
-        top: 5em;
+        top: 10em;
         right: 1.3em;
         margin: 0.8em;
     }
