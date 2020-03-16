@@ -188,7 +188,7 @@ Route::post('/cart/json', function () {
 });
 
 Route::get('/systematik/json', function () {
-    return Book::orderBy('systematik')->get()->pluck('systematik')->unique();
+    return Book::orderBy('systematik_long')->get()->pluck('systematik_long')->unique();
 });
 
 Route::get('/medium/json', function () {
