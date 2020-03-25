@@ -12,9 +12,6 @@
                     <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
-                    <b-button>
-                        <font-awesome-icon icon="filter"></font-awesome-icon>
-                    </b-button>
                 </b-input-group-append>
             </b-input-group>
         </div>
