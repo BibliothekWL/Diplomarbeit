@@ -15,7 +15,7 @@ export default new Vuex.Store({
         userdata: [],
         latestCartCount: 0,
         cart_count: 0,
-        showalpha: true,
+        showalpha: true
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -24,6 +24,7 @@ export default new Vuex.Store({
         UserisAdmin: state => state.isAdmin = true,
         UserisnotAdmin: state => state.isAdmin = false,
         setUserdata: state => state.userdata = state.userdata_login,
-        setCartCount: state => state.cart_count = state.latestCartCount
+        setCartCount: state => state.cart_count = state.latestCartCount,
+        setSearchEmpty: state => state.search = ""
     }
 });
