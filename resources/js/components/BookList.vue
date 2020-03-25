@@ -459,6 +459,11 @@
 
                 <div class="bookInformation">
                     {{ content_string }}
+
+                    <br>
+                    <br>
+
+                    <b>Autor/en:</b> <div v-for="autor in autoren"> {{autor}} <br></div>
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -559,7 +564,8 @@
                 pop1: false,
                 pop2: false,
                 pop3: false,
-                pop4: false
+                pop4: false,
+                autoren: []
             };
         },
         mounted() {
@@ -643,8 +649,6 @@
                 for (let i = 0; i < name.length; i++) {
                     name[i] = name[i].name;
                 }
-
-                console.log(name);
 
                 axios.post('/books/create/json/', {
                     title: title,
@@ -753,6 +757,7 @@
                 this.medium = medium;
                 this.BNR = BNR;
                 this.value = [];
+                this.autoren = [];
 
                 axios.post('book/authors', {
                     id: id
@@ -761,7 +766,11 @@
                         this.value.push({name: response.data[i][0]});
                     }
 
-                    console.log(this.value);
+                    for (let i = 0; i < this.value.length; i++) {
+                        this.autoren[i] = this.value[i].name;
+                    }
+
+                    console.log(this.autoren);
                 });
 
                 axios.post('/books/borrowed', {
