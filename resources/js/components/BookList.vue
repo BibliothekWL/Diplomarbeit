@@ -650,6 +650,8 @@
                     name[i] = name[i].name;
                 }
 
+                console.log(name);
+
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
@@ -701,6 +703,7 @@
                 })
                     .then(response => {
                         this.$refs['BookInformation'].toggle();
+                        console.log(response);
                         if (response.data.status === 200) {
                             Swal.fire({
                                 title: 'Erfolg!',
