@@ -67,6 +67,7 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             if (this.$store.state.isLoggedIn) {
@@ -100,6 +101,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             register: function () {
                 if (this.password === this.passwordRepeat) {
                     Swal.showLoading();

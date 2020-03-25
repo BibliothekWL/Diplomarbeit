@@ -31,7 +31,6 @@
                         Admin-Dashboard
                     </vs-sidebar-item>
 
-
                     <br v-if="!isAdmin & loggedIn">
 
                     <vs-sidebar-item v-if="!isAdmin & loggedIn" index=10 icon="bookmarks" to="/myBooks">

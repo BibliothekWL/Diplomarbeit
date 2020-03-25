@@ -47,6 +47,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             login: function () {
                 axios.post('/login/json', {
                     email: this.email,
