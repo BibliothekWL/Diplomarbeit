@@ -122,6 +122,7 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             axios.post('books/top')
                 .then(response => {
                     console.log(response);
@@ -134,6 +135,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 this.userdata = this.$store.state.userdata;
                 console.log(this.$store.state.userdata );

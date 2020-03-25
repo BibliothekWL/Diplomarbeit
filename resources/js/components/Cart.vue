@@ -98,6 +98,7 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -108,7 +109,12 @@
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
-                            this.isLoggedIn = response.data;
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
                         }
                     )
             },

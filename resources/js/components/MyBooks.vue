@@ -95,6 +95,7 @@
         mounted() {
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
+            this.isLoggedInCheck();
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -102,6 +103,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;

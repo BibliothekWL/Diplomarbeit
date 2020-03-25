@@ -210,7 +210,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, names, systematik_long, category)">
+                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, value, systematik_long, category)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -258,23 +258,22 @@
                     </b-form-group>
 
                     <b-form-group
-                            label="Autor"
+                            label="Autoren"
                             label-for="title"
                             invalid-feedback="Autor is required"
                     >
 
                         <template>
                             <div>
-                                <multiselect v-model="value" :options="options" :multiple="true"
-                                             :close-on-select="false" :clear-on-select="false" :preserve-search="true"
-                                             placeholder="Wählen Sie Autoren aus" label="name" track-by="name">
-                                    <template slot="selection" slot-scope="{ values, search, isOpen }"><span
-                                            class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
-                                        {{ values.length }} options selected</span>
-                                    </template>
-                                </multiselect>
-
-                                {{value}}
+                                <div>
+                                    <multiselect v-model="value" :options="options" :multiple="true"
+                                                 :allow-empty="false"
+                                                 :close-on-select="false" :clear-on-select="false"
+                                                 :preserve-search="true" placeholder="Wählen Sie Autoren aus"
+                                                 label="name"
+                                                 track-by="name">
+                                    </multiselect>
+                                </div>
                             </div>
                         </template>
 
@@ -314,7 +313,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, names, systematik_long, category)">
+                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, value, systematik_long, category)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -360,17 +359,21 @@
                 </b-form-group>
 
                 <b-form-group
-                        label="Autor"
+                        label="Autoren"
                         label-for="title"
                         invalid-feedback="Autor is required"
                 >
 
                     <template>
-                        <multiselect v-model="names" :options="autoren" :multiple="true" :close-on-select="false"
-                                     :clear-on-select="false" :preserve-search="true"
-                                     placeholder="Wählen Sie Autoren aus"
-                                     label="name" track-by="names">
-                        </multiselect>
+                        <div>
+                            <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false"
+                                         :clear-on-select="false" :preserve-search="true"
+                                         placeholder="Wählen Sie Autoren aus" label="name" track-by="name">
+                                <template slot="selection" slot-scope="{ values, search, isOpen }"><span
+                                        class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
+                                </template>
+                            </multiselect>
+                        </div>
                     </template>
 
                 </b-form-group>
@@ -542,30 +545,21 @@
                 platzhalter: false,
                 systematiken: [],
                 medien: [],
-                autoren: [],
+                options: [],
                 autor: [],
                 showalpha: this.$store.state.showalpha,
                 filter_medium: null,
                 filter_systematik: null,
                 filterList: [],
                 filter_show: false,
-                names: "",
+                value: [],
                 item_size: '6',
                 cart_count: 0,
                 cartList: [],
-                value: [],
                 pop1: false,
                 pop2: false,
                 pop3: false,
-                pop4: false,
-                options: [
-                    {name: 'Vue.js'},
-                    {name: 'Adonis'},
-                    {name: 'Rails'},
-                    {name: 'Sinatra'},
-                    {name: 'Laravel'},
-                    {name: 'Phoenix'}
-                ]
+                pop4: false
             };
         },
         mounted() {
@@ -643,8 +637,15 @@
                 this.BNR = null;
                 this.systematik_long = "irgendetwas";
                 this.category = "Fachbuch";
+                this.value = [];
             },
             saveAdd: function (title, systematik, medium, content, BNR, name, systematik_long, category) {
+                for (let i = 0; i < name.length; i++) {
+                    name[i] = name[i].name;
+                }
+
+                console.log(name);
+
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
@@ -655,20 +656,18 @@
                     systematik_long: systematik_long,
                     category: category
                 }).then(response => {
-                        this.id = "";
-                        this.title_string = "";
-                        this.content_string = "";
-                        this.systematik = "";
-                        this.medium = "";
-                        this.BNR = "";
                         if (response.data.status === 200) {
-                            this.$refs['BookInformation'].toggle();
+                            this.id = "";
+                            this.title_string = "";
+                            this.content_string = "";
+                            this.systematik = "";
+                            this.medium = "";
+                            this.BNR = "";
                             Swal.fire({
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich erstellt!',
                                 icon: 'success'
                             });
-                            this.ausgabe();
                         } else {
                             Swal.fire({
                                 title: 'Fehler!',
@@ -676,10 +675,15 @@
                                 icon: 'error'
                             });
                         }
+                        this.ausgabe();
                     }
                 )
             },
             saveEdit: function (id, title, systematik, medium, content, BNR, name, systematik_long, category) {
+                for (let i = 0; i < name.length; i++) {
+                    name[i] = name[i].name;
+                }
+
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
@@ -694,13 +698,11 @@
                     .then(response => {
                         this.$refs['BookInformation'].toggle();
                         if (response.data.status === 200) {
-                            this.ausgabe();
                             Swal.fire({
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich bearbeitet!',
                                 icon: 'success'
                             });
-                            this.ausgabe();
                         } else {
                             Swal.fire({
                                 title: 'Fehler!',
@@ -708,13 +710,14 @@
                                 icon: 'error'
                             });
                         }
+                        this.ausgabe();
                     })
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 7) {
+                    if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
                         for (let j = 0; j < 7; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
@@ -729,7 +732,7 @@
                 for (let i = 0; i < title.length; i++) {
                     this.title[title[i].id] = title[i].title;
                     let title_words = title[i].title.split(" ");
-                    if (title_words.length >= 3) {
+                    if (title_words.length >= 4) {
                         this.title_short[title[i].id] = "";
                         for (let j = 0; j < 3; j++) {
                             this.title_short[title[i].id] += title_words[j] + " ";
@@ -749,13 +752,16 @@
                 this.category = category;
                 this.medium = medium;
                 this.BNR = BNR;
+                this.value = [];
 
-                axios.post('author/json', {
+                axios.post('book/authors', {
                     id: id
                 }).then(response => {
-                    this.names = response.data;
-                    console.log(this.names);
-                    console.log(this.options);
+                    for (let i = 0; i < response.data.length; i++) {
+                        this.value.push({name: response.data[i][0]});
+                    }
+
+                    console.log(this.value);
                 });
 
                 axios.post('/books/borrowed', {
@@ -817,6 +823,7 @@
                             }
                         );
                 } else {
+                    this.page = 1;
                     axios.post('/books/search?page=' + this.page, {
                         search: this.search,
                         sortDirection: this.showalpha,
@@ -828,7 +835,6 @@
                         item_size: this.item_size
                     })
                         .then(response => {
-                                this.page = 1;
                                 if (response.data.data.length === 0) {
                                     this.notFound = true;
                                 } else {
@@ -944,8 +950,9 @@
             getAuthor: function () {
                 axios.get('/authors/json')
                     .then(response => {
-                            this.autoren = JSON.stringify(response.data);
-                            console.log(response.data);
+                            for (let i = 0; i < response.data.length; i++) {
+                                this.options.push({name: response.data[i]});
+                            }
                         }
                     )
             },
@@ -962,10 +969,6 @@
                 this.ausgabe();
             },
             setFilter: function () {
-                this.$store.state.latestFilterMedium = this.filter_medium;
-                this.$store.state.latestFilterSystematik = this.filter_systematik;
-                this.$store.commit("setFilterMedium");
-                this.$store.commit("setFilterSystematik");
                 this.ausgabe();
             },
             setItemSize: function (size) {
