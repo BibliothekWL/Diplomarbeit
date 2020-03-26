@@ -117,10 +117,11 @@ class BooksController extends Controller
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
             return json_encode(['status' => 400, 'statusMessage' => 'Book does not exist failed']);
         } else {
+            $old_author_books = Authors_Books::where('book_id', $jsonarray['id'])->delete();
             for($i = 0; $i < count($jsonarray['authorname']); $i++ ) {
-                if (Author::where('name',$jsonarray['authorname'][$i])->get()->count() == 0) {
+                if (Author::where('name',$jsonarray['authorname'][$i])->get()->count() === 0) {
                     $author = new Author();
-                    $author->name = "asdasdasdasd";
+                    $author->name = $jsonarray['authorname'][$i];
                     $author->save();
 
                     $authors_books = new Authors_Books();
