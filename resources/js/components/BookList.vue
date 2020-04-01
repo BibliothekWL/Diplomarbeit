@@ -463,7 +463,9 @@
                     <br>
                     <br>
 
-                    <b>Autor/en:</b> <div v-for="autor in autoren"> {{autor}} <br></div>
+                    <b>Autor/en:</b>
+                    <div v-for="autor in autoren"> {{autor}} <br></div>
+                    <div v-if="autoren.length === 0"><b>-</b></div>
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -1189,4 +1191,5 @@
     .paging_buttons {
         margin: .1em;
     }
+
 </style>
