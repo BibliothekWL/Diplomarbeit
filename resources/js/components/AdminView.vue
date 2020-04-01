@@ -68,6 +68,7 @@
         },
         mounted() {
             this.ausgabe();
+            this.isLoggedInCheck();
         },
 
         methods: {
@@ -78,17 +79,17 @@
                     this.userdata = response.data;
                 })
             },
-            isLoggedInCheck: function(){
+            isLoggedInCheck: function () {
                 axios.get('/session')
-                .then(response => {
-                        this.$store.state.isLoggedIn = response.data;
-                        if(response.data) {
-                            this.$store.commit('UserLoggedIn');
-                        } else {
-                            this.$store.commit('UsernotLoggedIn');
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
                         }
-                    }
-                )
+                    )
             },
             returnBook: function (id) {
                 axios.post('/returnBooks', {

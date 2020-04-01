@@ -70,7 +70,7 @@ class BooksController extends Controller
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
             $counter = $book->borrowCounter;
-            $counter1 = $counter+1;
+            $counter1 = $counter + 1;
             $book->borrowed = 1;
             $book->user_id = auth()->user()->id;
             $book->borrowCounter = $counter1;
@@ -117,9 +117,16 @@ class BooksController extends Controller
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
             return json_encode(['status' => 400, 'statusMessage' => 'update failed']);
         } else {
-            DB::table('books')
-                ->where('id', $jsonarray['id'])
-                ->update($jsonarray);
+            $book = Book::where($jsonarray['id'])->update(array(''));
+
+            for ($i = 0; $i < sizeof($jsonarray['authorname']); $i++) {
+                $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'][$i])->pluck('id');
+                $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
+                $authors_books = new Authors_Books();
+                $authors_books->author_id = $author_id;
+                $authors_books->book_id = $jsonarray['id'];
+                $authors_books->save();
+            }
             return json_encode(['status' => 200, 'statusMessage' => 'updated book']);
         }
     }
@@ -141,8 +148,6 @@ class BooksController extends Controller
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
-        $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'])->pluck('id');
-        $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
         if (sizeof($jsonarray) != 0) {
             $book = new Book();
             $book->user_id = 0;
@@ -158,10 +163,14 @@ class BooksController extends Controller
             $book->updated_at = now();
             $book->save();
 
-            $authors_books = new Authors_Books();
-            $authors_books->author_id = $author_id;
-            $authors_books->book_id = $book->id;
-            $authors_books->save();
+            for ($i = 0; $i < sizeof($jsonarray['authorname']); $i++) {
+                $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'][$i])->pluck('id');
+                $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
+                $authors_books = new Authors_Books();
+                $authors_books->author_id = $author_id;
+                $authors_books->book_id = $book->id;
+                $authors_books->save();
+            }
             return json_encode(['status' => 200, 'statusMessage' => 'created successfully']);
         } else {
             return json_encode(['status' => 400, 'statusMessage' => 'failed creating']);
