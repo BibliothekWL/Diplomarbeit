@@ -75,12 +75,14 @@ class RegisterController extends Controller
             $user->updated_at = now();
             $user->verificationCode = sha1($jsonarray['email']);
             $user->save();
+            //Mail::to($user->email->send(new register()));
             return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
         }
         return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
     }
 
-    protected function sendVerificationEmail(){
+    protected function sendVerificationEmail()
+    {
     }
 
 }
