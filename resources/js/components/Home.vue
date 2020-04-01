@@ -117,7 +117,6 @@
             },
             newestbooks: function () {
                 axios.post('/books/top').then(response => {
-                    console.log(response.data.created_at);
                     this.newestBooks = response.data;
                 })
             }

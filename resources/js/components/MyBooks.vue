@@ -156,7 +156,6 @@
             ausgabe: function () {
                 axios.get('/books/mybooks/json')
                     .then(response => {
-                            console.log(response);
                             if (response.data.length === 0) {
                                 this.notFound = true;
                             } else {
