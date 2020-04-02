@@ -138,6 +138,16 @@
                 this.userdata = this.$store.state.userdata;
                 console.log(this.$store.state.userdata );
             },
+            logout: function () {
+                axios.get('/logout/json')
+                    .then(response => {
+                        this.$store.commit('UsernotLoggedIn');
+                        this.$store.commit('UserisnotAdmin');
+                        window.location.href = "/login";
+                    }).catch(error => {
+                    console.log(error.message)
+                });
+            },
             //if true => username, else => password
             changeCredentials(type) {
                 if (type) {
@@ -156,13 +166,14 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
+                            console.log(response.status);
+                            if (response.status === 200) {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
                                 })
-                                this.$router.push({path: '/logout'});
+                                this.logout()
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',

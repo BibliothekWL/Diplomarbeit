@@ -747,7 +747,10 @@
                 }
 
                 this.filter_show = this.filterList.length > 0;
-
+                if (this.$store.state.search !== "") {
+                    this.search = this.$store.state.search;
+                    this.$store.commit("setSearchEmpty");
+                }
                 if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
