@@ -28,7 +28,7 @@ class register extends Mailable
      */
     public function build()
     {
-        return $this->from('niklas.zijlstra@aon.at')
+        return $this->from('wienerliniendiplomarbeit@gmail.com')
                     ->view('emails.registered');
     }
 }

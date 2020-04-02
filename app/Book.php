@@ -1,8 +1,6 @@
 <?php
 
 namespace App;
-header("Access-Control-Allow-Origin: *");
-
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
@@ -12,7 +10,6 @@ class Book extends Model
         return $this->hasMany(Cart::class);
     }
 
-
     public function borrowings(){
         return $this->hasMany(Borrowing::class);
     }
@@ -20,7 +17,8 @@ class Book extends Model
     public function authors(){
         return $this->hasMany(Author::class);
     }
-
-
-
 }
+
+
+
+

@@ -73,6 +73,4 @@ class UserController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         return view('user.edit', compact('user'));
     }
-
-
 }

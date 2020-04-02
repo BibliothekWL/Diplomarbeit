@@ -94,21 +94,49 @@
         ---------------------------------------------------------->
 
         <div class="page_buttons">
-            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang v-b-popover.hover.top="''" title="Erste Seite">
-                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="decrement()" :disabled=isAnfang v-b-popover.hover.top="''" title="Eine Seite zurück">
-                <font-awesome-icon icon="angle-left"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoFirst()" :disabled=isAnfang id="popover-manual-1" title="Erste Seite">
+                    <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+                </b-button>
 
-            <b-button disabled>{{page}}</b-button>
+                <b-popover target="popover-manual-1" placement="top" triggers="hover" :show.sync="pop1"
+                           title="Erste Seite">
+                </b-popover>
+            </div>
 
-            <b-button v-on:click="increment()" :disabled=isEnde v-b-popover.hover.top="''" title="Eine Seite weiter">
-                <font-awesome-icon icon="angle-right"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="sendtoLast()" :disabled=isEnde v-b-popover.hover.top="''" title="Letzte Seite">
-                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="decrement()" :disabled=isAnfang id="popover-manual-2"
+                          title="Eine Seite zurück">
+                    <font-awesome-icon icon="angle-left"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-2" placement="top" triggers="hover" :show.sync="pop2"
+                           title="Eine Seite zurück">
+                </b-popover>
+            </div>
+
+            <b-button class="paging_buttons" disabled>{{page}}</b-button>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="increment()" :disabled=isEnde id="popover-manual-3"
+                          title="Eine Seite weiter">
+                    <font-awesome-icon icon="angle-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-3" placement="top" triggers="hover" :show.sync="pop3"
+                           title="Eine Seite weiter">
+                </b-popover>
+            </div>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoLast()" :disabled=isEnde id="popover-manual-4" title="Letzte Seite">
+                    <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-4" placement="top" triggers="hover" :show.sync="pop4"
+                           title="Letzte Seite">
+                </b-popover>
+            </div>
         </div>
 
 
@@ -217,7 +245,11 @@
                 platzhalter: false,
                 name: "",
                 id: null,
-                item_size: '6'
+                item_size: '6',
+                pop1: false,
+                pop2: false,
+                pop3: false,
+                pop4: false
             };
         },
         mounted() {
@@ -225,6 +257,7 @@
             this.isEnde = true;
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
+            this.isLoggedInCheck();
             if (!this.$store.state.isAdmin || !this.$store.state.isLoggedIn) {
                 this.$router.push({path: '/login'})
             } else {
@@ -232,6 +265,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 if (this.search === "") {
                     axios.post('/author/json?page=' + this.page, {
@@ -251,6 +296,7 @@
                             }
                         );
                 } else {
+                    this.page = 1;
                     axios.post('/author/search?page=' + this.page, {
                         search: this.search,
                         item_size: this.item_size
@@ -457,6 +503,19 @@
         justify-content: center;
         align-items: center;
         width: 100%;
+    }
+
+    .page_buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        padding: 2em;
+        color: white;
+    }
+
+    .paging_buttons {
+        margin: .1em;
     }
 
     .buttons {

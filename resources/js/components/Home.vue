@@ -30,16 +30,11 @@
 
                                 <div class="text">
                                     <div class="book_title">
-                                            {{topBooks.title}}
+                                        {{topBooks.title}}
                                     </div>
-                                    <!--
-                                    <div class="book_author">
-                                        {{topBooks.author}}
-                                    </div>
-                                    -->
 
                                     <div class="beschreibung">
-                                            Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
+                                        Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
@@ -53,17 +48,12 @@
                     <div class="listitem">
                         <div class="listitem">
                             <div class="card_flex">
-                                <div class="bildbruh2">&#160;</div>
+                                <div class="bildbruh">&#160;</div>
 
                                 <div class="text">
                                     <div class="book_title">
                                         {{newestBooks.title}}
                                     </div>
-
-                                    <!--<div class="book_author">
-                                        {{newestBooks.author}}
-                                    </div>
-                                    -->
 
                                     <div class="beschreibung">
                                         Am {{newestBooks.created_at.split(" ")[0]}} hinzugefügt!
@@ -95,23 +85,38 @@
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             this.search = "";
+            this.isLoggedInCheck();
             this.newestbooks();
             this.topbooks();
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 if (this.search !== "") {
-                    this.$store.state.search = this.search;
+                    this.$store.state.latestSearch = this.search;
+                    this.$store.commit("setSearch");
+                    this.$store.commit("isFirstPage");
                     this.$router.push({path: "/list"});
                 }
             },
             topbooks: function () {
-                axios.post('/books/top').then(response =>{
+                axios.post('/books/newest').then(response => {
                     this.topBooks = response.data;
                 })
             },
             newestbooks: function () {
-                axios.post('/books/newest').then(response =>{
+                axios.post('/books/top').then(response => {
                     console.log(response.data.created_at);
                     this.newestBooks = response.data;
                 })
@@ -124,6 +129,7 @@
     html {
         overflow: hidden;
     }
+
     .body {
         display: flex;
         align-items: flex-start;
@@ -154,10 +160,10 @@
         justify-content: flex-start;
     }
 
-    .books{
+    .books {
         height: auto;
         min-height: 200px;
-        padding: 1em;
+        width: 100%;
     }
 
     .notFound {
@@ -170,6 +176,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
+        padding-top: 4em;
         padding-left: 8em;
         padding-right: 4em;
     }
@@ -247,20 +254,12 @@
         text-align: center;
     }
 
-    .bildbruh{
-        background-image: url("../../img/bookcover1.jpg");
+    .bildbruh {
+        background-image: url("../../img/default_cover.jpg");
         width: 125px;
         height: 167px;
         border-radius: 15px;
     }
-
-    .bildbruh2{
-        background-image: url("../../img/bookcover2.jpg");
-        width: 125px;
-        height: 167px;
-        border-radius: 15px;
-    }
-
 
     .book_title {
         font-family: "Nunito", sans-serif;
