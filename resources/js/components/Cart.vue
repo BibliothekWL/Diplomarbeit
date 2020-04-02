@@ -12,7 +12,7 @@
             <div class="list" v-if="!notFound">
                 <b-button class="warenkorb_checkout" v-if="isLoggedIn & !isAdmin" v-on:click="checkout()"
                           v-b-popover.hover.left="''" title="Alle Bücher ausborgen">
-                    Ausborgen
+                    <font-awesome-icon icon="cart-arrow-down"></font-awesome-icon>
                 </b-button>
 
                 <div v-for="book in liste.data.data" class="listitem">
@@ -98,6 +98,7 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -108,7 +109,12 @@
             isLoggedInCheck: function () {
                 axios.get('/session')
                     .then(response => {
-                            this.isLoggedIn = response.data;
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
                         }
                     )
             },
@@ -294,7 +300,7 @@
     .warenkorb_checkout {
         position: fixed;
         z-index: 1000;
-        top: 5em;
+        top: 10em;
         right: 1.3em;
         margin: 0.8em;
     }

@@ -30,11 +30,11 @@
 
                                 <div class="text">
                                     <div class="book_title">
-                                            {{topBooks.title}}
+                                        {{topBooks.title}}
                                     </div>
 
                                     <div class="beschreibung">
-                                            Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
+                                        Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
@@ -85,10 +85,23 @@
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
             this.search = "";
+            this.isLoggedInCheck();
             this.newestbooks();
             this.topbooks();
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 if (this.search !== "") {
                     this.$store.state.latestSearch = this.search;
@@ -98,13 +111,12 @@
                 }
             },
             topbooks: function () {
-                axios.post('/books/newest').then(response =>{
+                axios.post('/books/newest').then(response => {
                     this.topBooks = response.data;
                 })
             },
             newestbooks: function () {
-                axios.post('/books/top').then(response =>{
-                    console.log(response.data.created_at);
+                axios.post('/books/top').then(response => {
                     this.newestBooks = response.data;
                 })
             }
@@ -116,6 +128,7 @@
     html {
         overflow: hidden;
     }
+
     .body {
         display: flex;
         align-items: flex-start;
@@ -146,7 +159,7 @@
         justify-content: flex-start;
     }
 
-    .books{
+    .books {
         height: auto;
         min-height: 200px;
         width: 100%;

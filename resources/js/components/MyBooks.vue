@@ -95,6 +95,7 @@
         mounted() {
             this.$store.state.warenkorb = false;
             this.$store.state.warenkorbCheckout = false;
+            this.isLoggedInCheck();
             if (this.$store.state.isAdmin) {
                 this.$router.push({path: '/login'})
             } else {
@@ -102,6 +103,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
@@ -143,14 +156,14 @@
             ausgabe: function () {
                 axios.get('/books/mybooks/json')
                     .then(response => {
-                            if (response.data.data.length === 0) {
+                            if (response.data.length === 0) {
                                 this.notFound = true;
                             } else {
-                                this.platzhalter = response.data.data.length % 2 !== 0;
+                                this.platzhalter = response.data.length % 2 !== 0;
                                 this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.saveContent(response.data.data);
-                                this.saveTitle(response.data.data);
+                                this.liste.data.data = response.data;
+                                this.saveContent(response.data);
+                                this.saveTitle(response.data);
                             }
                         }
                     );

@@ -47,6 +47,18 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             login: function () {
                 axios.post('/login/json', {
                     email: this.email,
@@ -55,12 +67,9 @@
                     .then(response => {
                         if (response.data.status !== '200') {
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
-                            console.log(response);
                         } else {
                             this.$store.commit('UserLoggedIn');
-                            console.log(response.data.isAdmin);
                             if (response.data.isAdmin === true) {
-                                console.log("sadas");
                                 this.$store.state.isAdmin = true;
                                 this.$store.commit('UserisAdmin');
                             } else {
@@ -83,7 +92,6 @@
                         text: 'Something went wrong, try to refresh the site or try it later!',
                         icon: 'error'
                     });
-                    console.log(error);
                 })
             }
         }

@@ -135,21 +135,49 @@
         ---------------------------------------------------------->
 
         <div class="page_buttons">
-            <b-button v-on:click="sendtoFirst()" :disabled=isAnfang v-b-popover.hover.top="''" title="Erste Seite">
-                <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="decrement()" :disabled=isAnfang v-b-popover.hover.top="''" title="Eine Seite zurück">
-                <font-awesome-icon icon="angle-left"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoFirst()" :disabled=isAnfang id="popover-manual-1" title="Erste Seite">
+                    <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+                </b-button>
 
-            <b-button disabled>{{page}}</b-button>
+                <b-popover target="popover-manual-1" placement="top" triggers="hover" :show.sync="pop1"
+                           title="Erste Seite">
+                </b-popover>
+            </div>
 
-            <b-button v-on:click="increment()" :disabled=isEnde v-b-popover.hover.top="''" title="Eine Seite weiter">
-                <font-awesome-icon icon="angle-right"></font-awesome-icon>
-            </b-button>
-            <b-button v-on:click="sendtoLast()" :disabled=isEnde v-b-popover.hover.top="''" title="Letzte Seite">
-                <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
-            </b-button>
+            <div class="paging_buttons">
+                <b-button v-on:click="decrement()" :disabled=isAnfang id="popover-manual-2"
+                          title="Eine Seite zurück">
+                    <font-awesome-icon icon="angle-left"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-2" placement="top" triggers="hover" :show.sync="pop2"
+                           title="Eine Seite zurück">
+                </b-popover>
+            </div>
+
+            <b-button class="paging_buttons" disabled>{{page}}</b-button>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="increment()" :disabled=isEnde id="popover-manual-3"
+                          title="Eine Seite weiter">
+                    <font-awesome-icon icon="angle-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-3" placement="top" triggers="hover" :show.sync="pop3"
+                           title="Eine Seite weiter">
+                </b-popover>
+            </div>
+
+            <div class="paging_buttons">
+                <b-button v-on:click="sendtoLast()" :disabled=isEnde id="popover-manual-4" title="Letzte Seite">
+                    <font-awesome-icon class="secondary" icon="angle-double-right"></font-awesome-icon>
+                </b-button>
+
+                <b-popover target="popover-manual-4" placement="top" triggers="hover" :show.sync="pop4"
+                           title="Letzte Seite">
+                </b-popover>
+            </div>
         </div>
 
         <!---------------------------------------------------------
@@ -182,7 +210,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="AddItem" ref="modal" centered title="Buch erstellen"
-                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, names, systematik_long, category)">
+                     @ok="saveAdd(title_string, systematik, medium, content_string, BNR, value, systematik_long, category)">
                 <form ref="form">
                     <b-form-group
                             label="Title"
@@ -230,23 +258,22 @@
                     </b-form-group>
 
                     <b-form-group
-                            label="Autor"
+                            label="Autoren"
                             label-for="title"
                             invalid-feedback="Autor is required"
                     >
 
                         <template>
                             <div>
-                                <label class="typo__label">Simple select / dropdown</label>
-                                <multiselect v-model="value" :options="options" :multiple="true"
-                                             :close-on-select="false" :clear-on-select="false" :preserve-search="true"
-                                             placeholder="Pick some" label="name" track-by="name"
-                                             :preselect-first="true">
-                                    <template slot="selection" slot-scope="{ values, search, isOpen }"><span
-                                            class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
-                                    </template>
-                                </multiselect>
-                                <pre class="language-json"><code>{{ value  }}</code></pre>
+                                <div>
+                                    <multiselect v-model="value" :options="options" :multiple="true"
+                                                 :allow-empty="false"
+                                                 :close-on-select="false" :clear-on-select="false"
+                                                 :preserve-search="true" placeholder="Wählen Sie Autoren aus"
+                                                 label="name"
+                                                 track-by="name">
+                                    </multiselect>
+                                </div>
                             </div>
                         </template>
 
@@ -286,7 +313,7 @@
             ---------------------------------------------------------->
 
             <b-modal id="EditItem" centered title="Edit Book"
-                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, names, systematik_long, category)">
+                     @ok="saveEdit(id, title_string, systematik, medium, content_string, BNR, value, systematik_long, category)">
                 <b-form-group
                         label="Title"
                         label-for="title"
@@ -332,19 +359,21 @@
                 </b-form-group>
 
                 <b-form-group
-                        label="Autor"
+                        label="Autoren"
                         label-for="title"
                         invalid-feedback="Autor is required"
                 >
 
                     <template>
-                        <multiselect v-model="names" :options="autoren" :multiple="true" :close-on-select="false"
-                                     :clear-on-select="false" :preserve-search="true" placeholder="Pick some"
-                                     label="name" track-by="names" :preselect-first="true">
-                            <template slot="selection" slot-scope="{ values, search, isOpen }"><span
-                                    class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
-                            </template>
-                        </multiselect>
+                        <div>
+                            <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false"
+                                         :clear-on-select="false" :preserve-search="true"
+                                         placeholder="Wählen Sie Autoren aus" label="name" track-by="name">
+                                <template slot="selection" slot-scope="{ values, search, isOpen }"><span
+                                        class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span>
+                                </template>
+                            </multiselect>
+                        </div>
                     </template>
 
                 </b-form-group>
@@ -430,6 +459,13 @@
 
                 <div class="bookInformation">
                     {{ content_string }}
+
+                    <br>
+                    <br>
+
+                    <b>Autor/en:</b>
+                    <div v-for="autor in autoren"> {{autor}} <br></div>
+                    <div v-if="autoren.length === 0"><b>-</b></div>
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -516,19 +552,22 @@
                 platzhalter: false,
                 systematiken: [],
                 medien: [],
-                autoren: [],
+                options: [],
                 autor: [],
                 showalpha: this.$store.state.showalpha,
                 filter_medium: null,
                 filter_systematik: null,
                 filterList: [],
                 filter_show: false,
-                names: "",
+                value: [],
                 item_size: '6',
                 cart_count: 0,
                 cartList: [],
-                value: '',
-                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
+                pop1: false,
+                pop2: false,
+                pop3: false,
+                pop4: false,
+                autoren: []
             };
         },
         mounted() {
@@ -568,9 +607,9 @@
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich gelöscht!',
                                 icon: 'success'
-                            }).ok(
-                                this.$refs['BookInformation'].toggle()
-                            );
+                            });
+
+                            this.$refs['BookInformation'].toggle();
                             this.ausgabe();
                         } else {
                             Swal.fire({
@@ -603,10 +642,16 @@
                 this.content_string = "";
                 this.systematik = "";
                 this.medium = "";
+                this.BNR = null;
                 this.systematik_long = "irgendetwas";
                 this.category = "Fachbuch";
+                this.value = [];
             },
             saveAdd: function (title, systematik, medium, content, BNR, name, systematik_long, category) {
+                for (let i = 0; i < name.length; i++) {
+                    name[i] = name[i].name;
+                }
+
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
@@ -617,20 +662,18 @@
                     systematik_long: systematik_long,
                     category: category
                 }).then(response => {
-                        this.id = "";
-                        this.title_string = "";
-                        this.content_string = "";
-                        this.systematik = "";
-                        this.medium = "";
-                        this.BNR = "";
                         if (response.data.status === 200) {
-                            this.$refs['BookInformation'].toggle();
+                            this.id = "";
+                            this.title_string = "";
+                            this.content_string = "";
+                            this.systematik = "";
+                            this.medium = "";
+                            this.BNR = "";
                             Swal.fire({
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich erstellt!',
                                 icon: 'success'
                             });
-                            this.ausgabe();
                         } else {
                             Swal.fire({
                                 title: 'Fehler!',
@@ -638,10 +681,15 @@
                                 icon: 'error'
                             });
                         }
+                        this.ausgabe();
                     }
                 )
             },
             saveEdit: function (id, title, systematik, medium, content, BNR, name, systematik_long, category) {
+                for (let i = 0; i < name.length; i++) {
+                    name[i] = name[i].name;
+                }
+
                 axios.post('/books/edit/json/', {
                     id: id,
                     title: title,
@@ -656,13 +704,11 @@
                     .then(response => {
                         this.$refs['BookInformation'].toggle();
                         if (response.data.status === 200) {
-                            this.ausgabe();
                             Swal.fire({
                                 title: 'Erfolg!',
                                 text: 'Das ausgewählte Buch wurde erfolgreich bearbeitet!',
                                 icon: 'success'
                             });
-                            this.ausgabe();
                         } else {
                             Swal.fire({
                                 title: 'Fehler!',
@@ -670,13 +716,14 @@
                                 icon: 'error'
                             });
                         }
+                        this.ausgabe();
                     })
             },
             saveContent: function (content) {
                 for (let i = 0; i < content.length; i++) {
                     this.content[content[i].id] = content[i].content;
                     let content_words = content[i].content.split(" ");
-                    if (content_words.length >= 7) {
+                    if (content_words.length >= 8) {
                         this.content_short[content[i].id] = "";
                         for (let j = 0; j < 7; j++) {
                             this.content_short[content[i].id] += content_words[j] + " ";
@@ -691,7 +738,7 @@
                 for (let i = 0; i < title.length; i++) {
                     this.title[title[i].id] = title[i].title;
                     let title_words = title[i].title.split(" ");
-                    if (title_words.length >= 3) {
+                    if (title_words.length >= 4) {
                         this.title_short[title[i].id] = "";
                         for (let j = 0; j < 3; j++) {
                             this.title_short[title[i].id] += title_words[j] + " ";
@@ -711,11 +758,19 @@
                 this.category = category;
                 this.medium = medium;
                 this.BNR = BNR;
+                this.value = [];
+                this.autoren = [];
 
-                axios.post('books/author/json', {
+                axios.post('book/authors', {
                     id: id
                 }).then(response => {
-                    this.names = response.data;
+                    for (let i = 0; i < response.data.length; i++) {
+                        this.value.push({name: response.data[i][0]});
+                    }
+
+                    for (let i = 0; i < this.value.length; i++) {
+                        this.autoren[i] = this.value[i].name;
+                    }
                 });
 
                 axios.post('/books/borrowed', {
@@ -747,7 +802,10 @@
                 }
 
                 this.filter_show = this.filterList.length > 0;
-
+                if (this.$store.state.search !== "") {
+                    this.search = this.$store.state.search;
+                    this.$store.commit("setSearchEmpty");
+                }
                 if (this.search === "") {
                     axios.post('/books/json?page=' + this.page, {
                         sortDirection: this.showalpha,
@@ -777,6 +835,7 @@
                             }
                         );
                 } else {
+                    this.page = 1;
                     axios.post('/books/search?page=' + this.page, {
                         search: this.search,
                         sortDirection: this.showalpha,
@@ -788,7 +847,6 @@
                         item_size: this.item_size
                     })
                         .then(response => {
-                                this.page = 1;
                                 if (response.data.data.length === 0) {
                                     this.notFound = true;
                                 } else {
@@ -816,24 +874,28 @@
                 this.page++;
                 this.isAnfang = true;
                 this.isEnde = true;
+                this.pop3 = false;
                 this.ausgabe();
             },
             decrement: function () {
                 this.page--;
                 this.isAnfang = true;
                 this.isEnde = true;
+                this.pop2 = false;
                 this.ausgabe();
             },
             sendtoFirst: function () {
                 this.isAnfang = true;
                 this.isEnde = true;
                 this.page = 1;
+                this.pop1 = false;
                 this.ausgabe();
             },
             sendtoLast: function () {
                 this.isAnfang = true;
                 this.isEnde = true;
                 this.page = this.lastPage;
+                this.pop4 = false;
                 this.ausgabe();
             },
             returnBook: function (id) {
@@ -900,7 +962,9 @@
             getAuthor: function () {
                 axios.get('/authors/json')
                     .then(response => {
-                            this.autoren = response.data;
+                            for (let i = 0; i < response.data.length; i++) {
+                                this.options.push({name: response.data[i]});
+                            }
                         }
                     )
             },
@@ -917,10 +981,6 @@
                 this.ausgabe();
             },
             setFilter: function () {
-                this.$store.state.latestFilterMedium = this.filter_medium;
-                this.$store.state.latestFilterSystematik = this.filter_systematik;
-                this.$store.commit("setFilterMedium");
-                this.$store.commit("setFilterSystematik");
                 this.ausgabe();
             },
             setItemSize: function (size) {
@@ -967,7 +1027,6 @@
 
     .list {
         display: flex;
-        width: 95%;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: right;
@@ -981,7 +1040,6 @@
     }
 
     .listitem {
-        width: 45%;
         margin: 2em;
         border: 1px black solid;
         border-radius: 15px;
@@ -1004,6 +1062,9 @@
     }
 
     .page_buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
         text-align: center;
         padding: 2em;
         color: white;
@@ -1011,7 +1072,7 @@
 
     .addButton {
         float: right;
-        margin: 1em;
+        margin: 1.2em;
     }
 
     .searchBar {
@@ -1121,4 +1182,9 @@
         right: 11em;
         top: 16em;
     }
+
+    .paging_buttons {
+        margin: .1em;
+    }
+
 </style>

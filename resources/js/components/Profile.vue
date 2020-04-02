@@ -122,9 +122,9 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             axios.post('books/top')
                 .then(response => {
-                    console.log(response);
                 });
             this.$store.state.warenkorb = false;
             if (!this.$store.state.isLoggedIn) {
@@ -134,9 +134,20 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 this.userdata = this.$store.state.userdata;
-                console.log(this.$store.state.userdata );
             },
             //if true => username, else => password
             changeCredentials(type) {
@@ -145,7 +156,6 @@
                         name: this.userdata.name
                     })
                         .then(response => {
-                            console.log(response);
                             Swal.fire({title: 'Success!', text: 'Username successfully changed!', icon: 'success'})
                         }).catch(error => {
                         Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
@@ -156,13 +166,15 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            if (response.status === '200') {
+                            if (response.status === 200) {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
-                                })
-                                this.$router.push({path: '/logout'});
+                                });
+                                this.$store.commit('UsernotLoggedIn');
+                                this.$store.commit('UserisnotAdmin');
+                                window.location.href = "/login";
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',

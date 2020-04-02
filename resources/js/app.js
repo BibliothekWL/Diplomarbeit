@@ -23,9 +23,10 @@ import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {faSortAlphaDown} from '@fortawesome/free-solid-svg-icons';
 import {faSortAlphaDownAlt} from '@fortawesome/free-solid-svg-icons';
+import {faCartArrowDown} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-library.add(faPlus, faSortAlphaDown, faSortAlphaDownAlt, faArrowRight, faArrowLeft, faAngleUp, faShoppingCart, faTimes, faFilter, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
+library.add(faPlus, faSortAlphaDown, faCartArrowDown, faSortAlphaDownAlt, faArrowRight, faArrowLeft, faAngleUp, faShoppingCart, faTimes, faFilter, faTrash, faPen, faSearch, faLevelUpAlt, faCartPlus, faAngleLeft, faAngleDoubleLeft, faAngleRight, faAngleDoubleRight, faChevronLeft);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

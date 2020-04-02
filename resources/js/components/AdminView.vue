@@ -68,33 +68,32 @@
         },
         mounted() {
             this.ausgabe();
+            this.isLoggedInCheck();
         },
 
         methods: {
             getBorrowed: function () {
                 this.isLoggedInCheck();
                 axios.get('/getBorrowings').then(response => {
-                    console.log(response);
                     this.userdata = response.data;
                 })
             },
-            isLoggedInCheck: function(){
+            isLoggedInCheck: function () {
                 axios.get('/session')
-                .then(response => {
-                        this.$store.state.isLoggedIn = response.data;
-                        if(response.data) {
-                            this.$store.commit('UserLoggedIn');
-                        } else {
-                            this.$store.commit('UsernotLoggedIn');
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
                         }
-                    }
-                )
+                    )
             },
             returnBook: function (id) {
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                    console.log(id);
                         if (response.data.status === 200) {
                             Swal.fire({
                                 title: 'Erfolg!',
