@@ -81,7 +81,8 @@ class RegisterController extends Controller
         return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
     }
 
-    protected function sendVerificationEmail(){
+    protected function sendVerificationEmail()
+    {
     }
 
 }

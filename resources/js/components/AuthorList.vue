@@ -302,7 +302,6 @@
                         item_size: this.item_size
                     })
                         .then(response => {
-                                console.log(response);
                                 if (response.data.length === 0) {
                                     this.notFound = true;
                                 } else {

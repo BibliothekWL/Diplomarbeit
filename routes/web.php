@@ -268,3 +268,5 @@ Route::post('books/author/json', function () {
 Route::post('/author/edit/', 'AuthorController@edit');
 Route::post('/author/create/', 'AuthorController@create');
 Route::post('/author/delete/', 'AuthorController@destroy');
+
+

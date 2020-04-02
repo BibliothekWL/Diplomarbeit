@@ -125,7 +125,6 @@
             this.isLoggedInCheck();
             axios.post('books/top')
                 .then(response => {
-                    console.log(response);
                 });
             this.$store.state.warenkorb = false;
             if (!this.$store.state.isLoggedIn) {
@@ -149,7 +148,6 @@
             },
             ausgabe: function () {
                 this.userdata = this.$store.state.userdata;
-                console.log(this.$store.state.userdata );
             },
             //if true => username, else => password
             changeCredentials(type) {
@@ -158,7 +156,6 @@
                         name: this.userdata.name
                     })
                         .then(response => {
-                            console.log(response);
                             Swal.fire({title: 'Success!', text: 'Username successfully changed!', icon: 'success'})
                         }).catch(error => {
                         Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})

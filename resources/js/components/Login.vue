@@ -67,12 +67,9 @@
                     .then(response => {
                         if (response.data.status !== '200') {
                             Swal.fire({title: 'Oops!', text: response.data.statusMsg, icon: 'error'});
-                            console.log(response);
                         } else {
                             this.$store.commit('UserLoggedIn');
-                            console.log(response.data.isAdmin);
                             if (response.data.isAdmin === true) {
-                                console.log("sadas");
                                 this.$store.state.isAdmin = true;
                                 this.$store.commit('UserisAdmin');
                             } else {
@@ -95,7 +92,6 @@
                         text: 'Something went wrong, try to refresh the site or try it later!',
                         icon: 'error'
                     });
-                    console.log(error);
                 })
             }
         }

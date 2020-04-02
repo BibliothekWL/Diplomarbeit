@@ -123,12 +123,10 @@
                         password: this.password
                     })
                         .then(response => {
-                            console.log(response);
                             this.$router.push({path: '/login'});
-                            Swal.close()
+                            Swal.close();
                             Swal.fire({title: 'User successfully created!', icon: 'success'})
                         }).catch(error => {
-                        console.log(error.message);
                         Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})
                     })
                 }
