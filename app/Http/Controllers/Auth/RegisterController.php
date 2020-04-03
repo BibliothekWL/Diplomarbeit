@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mail\register;
 use App\User as User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -73,7 +75,7 @@ class RegisterController extends Controller
             $user->updated_at = now();
             $user->verificationCode = sha1($jsonarray['email']);
             $user->save();
-            $user->sendEmailVerificationNotification();
+            Mail::to($user->email->send(new register()));
             return json_encode(['status' => 200, 'statusMessage' => 'user creation successful']);
         }
         return json_encode(['status' => 400, 'statusMessage' => 'user creation failed']);
@@ -81,8 +83,5 @@ class RegisterController extends Controller
 
     protected function sendVerificationEmail(){
     }
-
-
-
 
 }

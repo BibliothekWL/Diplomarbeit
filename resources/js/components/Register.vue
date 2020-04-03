@@ -10,23 +10,23 @@
                     <!-- NAME -->
                     <div class="form-group" :class="{ 'form-group--error': name.$error }">
                         <b-form-input type="text" v-model.trim="$v.name.$model"
-                                      placeholder="Enter Name and Surname"></b-form-input>
+                                      placeholder="Name und Nachname"></b-form-input>
                     </div>
-                    <div class="error" v-if="$v.name.$error">Field is required</div>
+                    <div class="error" v-if="$v.name.$error">Dieses Feld ist erforderlich!</div>
 
                     <!-- ID -->
                     <div class="form-group" :class="{ 'form-group--error': id.$error }">
-                        <b-form-input type="number" v-model.trim="$v.id.$model" placeholder="Enter ID"></b-form-input>
+                        <b-form-input type="number" v-model.trim="$v.id.$model" placeholder="Mitarbeiter-ID"></b-form-input>
                     </div>
-                    <div class="error" v-if="$v.id.$error">Field is required</div>
+                    <div class="error" v-if="$v.id.$error">Dieses Feld ist erforderlich!</div>
 
                     <!-- EMAIL -->
                     <div class="form-group" :class="{ 'form-group--error': email.$error }">
                         <b-form-input type="text" v-model.trim="$v.email.$model"
-                                      placeholder="Enter E-Mail"></b-form-input>
+                                      placeholder="Email Adresse"></b-form-input>
                     </div>
-                    <div class="error" v-if="$v.email.$error">Field is required</div>
-                    <div class="error" v-if="!$v.email.email">Email has to be correct</div>
+                    <div class="error" v-if="$v.email.$error">Dieses Feld ist erforderlich!</div>
+                    <div class="error" v-if="!$v.email.email">Das E-ail Format stimmt nicht!</div>
 
 
                     <!-- PW -->
@@ -34,8 +34,8 @@
                         <b-form-input type="password" v-model.trim="$v.password.$model"
                                       placeholder="Enter Password"></b-form-input>
                     </div>
-                    <div class="error" v-if="$v.password.$error">Field is required</div>
-                    <div class="error" v-if="!$v.password.minLength">Must be longer than 8 Chars</div>
+                    <div class="error" v-if="$v.password.$error">Dieses Feld ist erforderlich!</div>
+                    <div class="error" v-if="!$v.password.minLength">Passwort muss mindestens 8 Symbole lang sein!</div>
 
 
                     <!-- PWREPEAT -->
@@ -43,10 +43,10 @@
                         <b-form-input type="password" v-model.trim="$v.passwordRepeat.$model"
                                       placeholder="Repeat Password"></b-form-input>
                     </div>
-                    <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Passwords must be the same</div>
+                    <div class="error" v-if="!$v.passwordRepeat.sameAsPassword">Die Passwörter stimmen nicht überein!</div>
                 </form>
             </div>
-            <b-button class="inputs" v-on:click="register()" :disabled="$v.$invalid">Register</b-button>
+            <b-button class="inputs" v-on:click="register()" :disabled="$v.$invalid">Registrieren</b-button>
         </div>
     </div>
 </template>
@@ -126,10 +126,10 @@
                             console.log(response);
                             this.$router.push({path: '/login'});
                             Swal.close()
-                            Swal.fire({title: 'User successfully created!', icon: 'success'})
+                            Swal.fire({title: 'Benutzer wurde erfolgreich erstellt!', icon: 'success'})
                         }).catch(error => {
                         console.log(error.message);
-                        Swal.fire({title: 'Duplicate Email! Use a different Email-Address!', icon: 'error'})
+                        Swal.fire({title: 'Email wird bereits verwendet!', icon: 'error'})
                     })
                 }
             }
@@ -138,5 +138,7 @@
 </script>
 
 <style scoped>
-
+    .form-group{
+        margin-bottom: 1.25em;
+    }
 </style>

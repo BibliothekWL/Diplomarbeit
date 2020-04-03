@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div id="body">
         <div class="col-8" style="margin: auto; text-align: center; color: black;">
             <h1 style="color: black;">Ausgeborgte Buecher</h1>

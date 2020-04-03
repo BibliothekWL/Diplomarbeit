@@ -122,6 +122,7 @@
             }
         },
         mounted() {
+            this.isLoggedInCheck();
             axios.post('books/top')
                 .then(response => {
                     console.log(response);
@@ -134,19 +135,21 @@
             }
         },
         methods: {
+            isLoggedInCheck: function () {
+                axios.get('/session')
+                    .then(response => {
+                            this.$store.state.isLoggedIn = response.data;
+                            if (response.data) {
+                                this.$store.commit('UserLoggedIn');
+                            } else {
+                                this.$store.commit('UsernotLoggedIn');
+                            }
+                        }
+                    )
+            },
             ausgabe: function () {
                 this.userdata = this.$store.state.userdata;
                 console.log(this.$store.state.userdata );
-            },
-            logout: function () {
-                axios.get('/logout/json')
-                    .then(response => {
-                        this.$store.commit('UsernotLoggedIn');
-                        this.$store.commit('UserisnotAdmin');
-                        window.location.href = "/login";
-                    }).catch(error => {
-                    console.log(error.message)
-                });
             },
             //if true => username, else => password
             changeCredentials(type) {
@@ -156,9 +159,9 @@
                     })
                         .then(response => {
                             console.log(response);
-                            Swal.fire({title: 'Success!', text: 'Username successfully changed!', icon: 'success'})
+                            Swal.fire({title: 'Erfolg!', text: 'Benutzername wurde erfolgreich geändert!', icon: 'success'})
                         }).catch(error => {
-                        Swal.fire({title: 'Oops!', text: 'Username already exists!', icon: 'error'})
+                        Swal.fire({title: 'Oje!', text: 'Benutzername existiert bereits!', icon: 'error'})
                     })
                 } else {
                     axios.post('/user/editPassword', {
@@ -166,14 +169,15 @@
                         newPw: this.userdata.password
                     })
                         .then(response => {
-                            console.log(response.status);
                             if (response.status === 200) {
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
-                                })
-                                this.logout()
+                                });
+                                this.$store.commit('UsernotLoggedIn');
+                                this.$store.commit('UserisnotAdmin');
+                                window.location.href = "/login";
                             } else {
                                 Swal.fire({
                                     title: 'Fehler!',
@@ -182,7 +186,7 @@
                                 })
                             }
                         }).catch(error => {
-                        console.log('Error in PW');
+                        console.log('Fehler im Passwort');
                     })
                 }
             },

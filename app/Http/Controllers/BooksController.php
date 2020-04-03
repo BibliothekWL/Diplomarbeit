@@ -70,7 +70,7 @@ class BooksController extends Controller
         foreach ($books as $item) {
             $book = Book::findorFail($item->id);
             $counter = $book->borrowCounter;
-            $counter1 = $counter + 1;
+            $counter1 = $counter+1;
             $book->borrowed = 1;
             $book->user_id = auth()->user()->id;
             $book->borrowCounter = $counter1;
@@ -115,17 +115,27 @@ class BooksController extends Controller
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
-            return json_encode(['status' => 400, 'statusMessage' => 'update failed']);
+            return json_encode(['status' => 400, 'statusMessage' => 'Book does not exist failed']);
         } else {
-            $book = Book::where($jsonarray['id'])->update(array(''));
+            $old_author_books = Authors_Books::where('book_id', $jsonarray['id'])->delete();
+            for($i = 0; $i < count($jsonarray['authorname']); $i++ ) {
+                if (Author::where('name',$jsonarray['authorname'][$i])->get()->count() === 0) {
+                    $author = new Author();
+                    $author->name = $jsonarray['authorname'][$i];
+                    $author->save();
 
-            for ($i = 0; $i < sizeof($jsonarray['authorname']); $i++) {
-                $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'][$i])->pluck('id');
-                $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
-                $authors_books = new Authors_Books();
-                $authors_books->author_id = $author_id;
-                $authors_books->book_id = $jsonarray['id'];
-                $authors_books->save();
+                    $authors_books = new Authors_Books();
+                    $authors_books->author_id = $author->id;
+                    $authors_books->book_id = $jsonarray['id'];
+                    $authors_books->save();
+                }
+                else{
+                    $authors_books = new Authors_Books();
+                    $author = Author::where('name',$jsonarray['authorname'][$i])->first();
+                    $authors_books->author_id = $author->id;
+                    $authors_books->book_id = $jsonarray['id'];
+                    $authors_books->save();
+                }
             }
             return json_encode(['status' => 200, 'statusMessage' => 'updated book']);
         }
@@ -148,6 +158,8 @@ class BooksController extends Controller
     {
         $json = file_get_contents('php://input');
         $jsonarray = json_decode($json, true);
+        $author_id_raw = DB::table('authors')->where('name', $jsonarray['authorname'])->pluck('id');
+        $author_id = explode("]", explode("[", $author_id_raw)[1])[0];
         if (sizeof($jsonarray) != 0) {
             $book = new Book();
             $book->user_id = 0;
