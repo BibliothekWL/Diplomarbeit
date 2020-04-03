@@ -26,7 +26,7 @@
                                       placeholder="Email Adresse"></b-form-input>
                     </div>
                     <div class="error" v-if="$v.email.$error">Dieses Feld ist erforderlich!</div>
-                    <div class="error" v-if="!$v.email.email">Das E-ail Format stimmt nicht!</div>
+                    <div class="error" v-if="!$v.email.email">Das E-Mail Format stimmt nicht!</div>
 
 
                     <!-- PW -->

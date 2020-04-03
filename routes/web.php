@@ -47,12 +47,12 @@ Route::post('/cart/delete', 'CartsController@destroy');
 Route::post('returnBooks', 'BooksController@returnBooks');
 
 Route::post('/books/newest', function () {
-    $newest = DB::table('books')->orderBy('created_at', 'desc')->first();
+    $newest = DB::table('books')->orderBy('created_at', 'desc')->take(3)->get();
     return json_encode($newest);
 });
 
 Route::post('/books/top', function () {
-    $top = Book::orderBy('borrowCounter', 'desc')->first();
+    $top = Book::orderBy('borrowCounter', 'desc')->take(3)->get();
     return json_encode($top);
 });
 

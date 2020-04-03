@@ -12,52 +12,47 @@
                     <b-button v-on:click="ausgabe()">
                         <font-awesome-icon icon="search"></font-awesome-icon>
                     </b-button>
-                    <b-button>
-                        <font-awesome-icon icon="filter"></font-awesome-icon>
-                    </b-button>
                 </b-input-group-append>
             </b-input-group>
         </div>
 
         <div class="homepage_content">
             <div class="books col-12">
-                <h2>Top-Bücher</h2>
+                <h2 class="label">Top-Bücher</h2>
                 <div class="list">
-                    <div class="listitem">
-                        <div class="listitem">
+                    <div v-for="book in listeTop.data.data" class="listitem" v-on:click="sendToModal(book)"
+                         v-b-modal.StatistikBuch>
                             <div class="card_flex">
                                 <div class="bildbruh">&#160;</div>
 
                                 <div class="text">
                                     <div class="book_title">
-                                        {{topBooks.title}}
+                                        {{book.title}}
                                     </div>
 
                                     <div class="beschreibung">
-                                        Bereits {{topBooks.borrowCounter}}-mal ausgeborgt!
+                                        Bereits {{book.borrowCounter}}-mal ausgeborgt!
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                         </div>
                     </div>
                 </div>
-            </div>
             <div class="books col-12">
-                <h2>Neuerscheinungen</h2>
+                <h2 class="label">Neuerscheinungen</h2>
                 <div class="list">
-                    <div class="listitem">
-                        <div class="listitem">
-                            <div class="card_flex">
-                                <div class="bildbruh">&#160;</div>
+                    <div v-for="book in listeNew.data.data" class="listitem" v-on:click="sendToModal(book)"
+                          v-b-modal.StatistikBuch>
+                        <div class="card_flex">
+                            <div class="bildbruh">&#160;</div>
 
-                                <div class="text">
-                                    <div class="book_title">
-                                        {{newestBooks.title}}
-                                    </div>
+                            <div class="text">
+                                <div class="book_title">
+                                    {{book.title}}
+                                </div>
 
-                                    <div class="beschreibung">
-                                        Am {{newestBooks.created_at.split(" ")[0]}} hinzugefügt!
-                                    </div>
+                                <div class="beschreibung">
+                                    Am {{book.created_at.split(" ")[0]}} hinzugefügt!
                                 </div>
                             </div>
                         </div>
@@ -65,6 +60,30 @@
                 </div>
             </div>
         </div>
+
+        <b-modal id="StatistikBuch" size="l" ref="modal" centered title="Information">
+            <div>
+                <b>{{ selectedBook.title }}</b>
+                <br>
+                {{selectedBook.content}}
+            </div>
+            <template v-slot:modal-footer>
+                <div>
+
+                    <b-button
+                            variant="secondary"
+                            size="md"
+                            class="float-right"
+                            @click="ausgabe(selectedBook.title)"
+                    >
+                        Zum buch
+                    </b-button>
+
+                    <b-button variant="danger" @click="hideModal()">Cancel</b-button>
+                </div>
+            </template>
+        </b-modal>
+
     </div>
 </template>
 
@@ -75,9 +94,20 @@
         name: "Home",
         data() {
             return {
+                listeTop: {
+                    data: {
+                        data: ""
+                    },
+                },
+                listeNew: {
+                    data: {
+                        data: ""
+                    },
+                },
                 search: this.$store.state.search,
                 topBooks: {title: null, created_at: ""},
                 newestBooks: {title: null, created_at: ""},
+                selectedBook: {}
 
             }
         },
@@ -102,23 +132,34 @@
                         }
                     )
             },
-            ausgabe: function () {
+            ausgabe: function (modalBuchtitel) {
+                if(modalBuchtitel !== ""){
+                    this.$store.state.search = modalBuchtitel;
+                    this.$router.push({path: "/list"});
+                }
                 if (this.search !== "") {
-                    this.$store.state.latestSearch = this.search;
-                    this.$store.commit("setSearch");
-                    this.$store.commit("isFirstPage");
+                    this.$store.state.search = this.search;
                     this.$router.push({path: "/list"});
                 }
             },
             topbooks: function () {
                 axios.post('/books/top').then(response => {
-                    this.topBooks = response.data;
+                    this.listeTop.data.data = response.data;
+                    console.log(this.listeTop)
                 })
             },
             newestbooks: function () {
                 axios.post('/books/newest').then(response => {
-                    this.newestBooks = response.data;
+                    this.listeNew.data.data = response.data;
+                    console.log(this.listeNew)
                 })
+            },
+            sendToModal: function (selected) {
+                this.selectedBook = selected;
+                console.log(this.selectedBook)
+            },
+            hideModal() {
+                this.$refs['modal'].hide()
             }
         },
     }
@@ -189,6 +230,7 @@
     .listitem {
         border: 1px black solid;
         border-radius: 15px;
+        margin: 1em;
     }
 
     .card_flex {
@@ -275,4 +317,12 @@
         justify-content: space-around;
     }
 
+    .label{
+        text-align: center;
+        margin-top: 1em;
+    }
+
+    .float-right{
+        margin-left: 1em;
+    }
 </style>

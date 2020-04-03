@@ -8,24 +8,23 @@
 
         <div class="content">
 
-            <h4 class="col-6">E-Mail: {{userdata.email}}</h4>
 
             <div class="content_item col-12">
-                <h4 class="col-4">Username</h4>
+                <h4 class="col-4">Benutzername:</h4>
                 <b-input class="search col-8" v-bind:value="userdata.name" disabled>
                 </b-input>
-                <b-button class="col-2" style="width: 10em;" v-b-modal.ChangeUsername variant="outline-dark">
-                    Username Ändern
+                <b-button class="col-3" style="width: 10em; margin-left: 1em" v-b-modal.ChangeUsername variant="outline-dark">
+                    Benutzernamen Ändern
                 </b-button>
             </div>
 
             <div class="content_item col-12">
-                <h4 class="col-4">Password:</h4>
+                <h4 class="col-4">Passwort:</h4>
                 <b-input class="search col-8" type="password" placeholder="••••••••" disabled>
                 </b-input>
 
-                <b-button class="col-2" style="width: 10em;" v-b-modal.ChangePassword variant="outline-dark">
-                    Passwort Ändern
+                <b-button class="col-3" style="width: 10em; margin-left: 1em" v-b-modal.ChangePassword variant="outline-dark">
+                    Passwort <br> Ändern
                 </b-button>
             </div>
 
@@ -56,7 +55,7 @@
                      hide-footer>
                 <form ref="form">
                     <b-form-group
-                            label="Aktuelles Password"
+                            label="Aktuelles Passwort"
                             label-for="title"
                             invalid-feedback="Passwort muss angegeben werden"
                     >
@@ -71,7 +70,7 @@
 
                     <!-- Password 2x -->
                     <b-form-group
-                            label="Neues Password"
+                            label="Neues Passwort"
                             label-for="title"
                             invalid-feedback="Passwort muss angegeben werden"
                     >
@@ -84,7 +83,7 @@
                         ></b-form-input>
                     </b-form-group>
                     <b-form-group
-                            label="Neues Password wiederholen"
+                            label="Neues Passwort wiederholen"
                             label-for="title"
                             invalid-feedback="Passwörter müssen übereinstimmen"
                     >
@@ -170,13 +169,13 @@
                     })
                         .then(response => {
                             if (response.status === 200) {
+                                this.$store.commit('UsernotLoggedIn');
+                                this.$store.commit('UserisnotAdmin');
                                 Swal.fire({
                                     title: 'Erfolg!',
                                     text: 'Passwort wurde erfolgreich aktualisiert!',
                                     icon: 'success'
                                 });
-                                this.$store.commit('UsernotLoggedIn');
-                                this.$store.commit('UserisnotAdmin');
                                 window.location.href = "/login";
                             } else {
                                 Swal.fire({
