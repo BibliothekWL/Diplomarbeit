@@ -463,7 +463,9 @@
                     <br>
                     <br>
 
-                    <b>Autor/en:</b> <div v-for="autor in autoren"> {{autor}} <br></div>
+                    <b>Autor/en:</b>
+                    <div v-for="autor in autoren"> {{autor}} <br></div>
+                    <div v-if="autoren.length === 0"><b>-</b></div>
                 </div>
 
                 <template v-slot:modal-footer="{cancel}">
@@ -650,8 +652,6 @@
                     name[i] = name[i].name;
                 }
 
-                console.log(name);
-
                 axios.post('/books/create/json/', {
                     title: title,
                     systematik: systematik,
@@ -703,7 +703,6 @@
                 })
                     .then(response => {
                         this.$refs['BookInformation'].toggle();
-                        console.log(response);
                         if (response.data.status === 200) {
                             Swal.fire({
                                 title: 'Erfolg!',
@@ -772,8 +771,6 @@
                     for (let i = 0; i < this.value.length; i++) {
                         this.autoren[i] = this.value[i].name;
                     }
-
-                    console.log(this.autoren);
                 });
 
                 axios.post('/books/borrowed', {
@@ -1189,4 +1186,5 @@
     .paging_buttons {
         margin: .1em;
     }
+
 </style>

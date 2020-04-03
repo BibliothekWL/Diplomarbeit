@@ -93,19 +93,13 @@ class BooksController extends Controller
         if (Book::where('id', $jsonarray['id'])->get()->count() == 0) {
             return json_encode(['status' => 400, 'statusMessage' => 'return failed']);
         } else {
-//            $books = User::findOrFail(auth()->user()->id)->books;
-//            Borrowing::where('user_id', auth()->user()->id)->delete();
-//
-//            foreach ($books as $book) {
-//                $book->borrowed = 0;
-//                $book->save();
-//            }
             DB::table('books')
                 ->where('id', $jsonarray['id'])
                 ->update([
                     'borrowed' => 0,
                     'user_id' => 0
                 ]);
+            Borrowing::where('book_id', $jsonarray['id'])->delete();
             return json_encode(['status' => 200, 'statusMessage' => 'return successful']);
         }
     }
@@ -123,7 +117,6 @@ class BooksController extends Controller
                     $author = new Author();
                     $author->name = $jsonarray['authorname'][$i];
                     $author->save();
-
                     $authors_books = new Authors_Books();
                     $authors_books->author_id = $author->id;
                     $authors_books->book_id = $jsonarray['id'];

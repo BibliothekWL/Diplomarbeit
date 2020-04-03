@@ -156,14 +156,14 @@
             ausgabe: function () {
                 axios.get('/books/mybooks/json')
                     .then(response => {
-                            if (response.data.data.length === 0) {
+                            if (response.data.length === 0) {
                                 this.notFound = true;
                             } else {
-                                this.platzhalter = response.data.data.length % 2 !== 0;
+                                this.platzhalter = response.data.length % 2 !== 0;
                                 this.notFound = false;
-                                this.liste.data.data = response.data.data;
-                                this.saveContent(response.data.data);
-                                this.saveTitle(response.data.data);
+                                this.liste.data.data = response.data;
+                                this.saveContent(response.data);
+                                this.saveTitle(response.data);
                             }
                         }
                     );

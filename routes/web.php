@@ -139,7 +139,13 @@ Route::patch('/user/edit', 'UserController@update');
  * all books for one user with json
  */
 Route::get('/books/mybooks/json', function () {
-    return BooksResource::collection(User::findOrFail(auth()->user()->id)->books);
+    $borrowings = User::findOrFail(auth()->user()->id)->borrowings;
+    $books = array();
+    for($i = 0; $i < count($borrowings); $i++) {
+        $book = Book::findOrFail($borrowings[$i]['book_id']);
+        array_push($books, $book);
+    }
+    return $books;
 });
 
 
@@ -262,3 +268,5 @@ Route::post('books/author/json', function () {
 Route::post('/author/edit/', 'AuthorController@edit');
 Route::post('/author/create/', 'AuthorController@create');
 Route::post('/author/delete/', 'AuthorController@destroy');
+
+

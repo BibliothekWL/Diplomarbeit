@@ -75,7 +75,6 @@
             getBorrowed: function () {
                 this.isLoggedInCheck();
                 axios.get('/getBorrowings').then(response => {
-                    console.log(response);
                     this.userdata = response.data;
                 })
             },
@@ -95,7 +94,6 @@
                 axios.post('/returnBooks', {
                     id: id
                 }).then(response => {
-                    console.log(id);
                         if (response.data.status === 200) {
                             Swal.fire({
                                 title: 'Erfolg!',
